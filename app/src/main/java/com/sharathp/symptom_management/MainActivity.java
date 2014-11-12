@@ -1,35 +1,64 @@
 package com.sharathp.symptom_management;
 
-import android.support.v7.app.ActionBarActivity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.app.ActionBarActivity;
+
+import com.sharathp.symptom_management.login.Session;
 
 
 public class MainActivity extends ActionBarActivity {
 
+    public static final int REQUEST_LOGIN = 99;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
+        Session session = Session.restore(this);
+        if (null == session) {
+            launchLoginActivity();
+        } else {
+            launchUserActivity(session);
         }
-        return super.onOptionsItemSelected(item);
+    }
+
+    private void launchLoginActivity() {
+        startActivityForResult(new Intent(this, LoginActivity.class), REQUEST_LOGIN);
+    }
+
+    private void launchUserActivity(final Session session) {
+        if(session.isDoctor()) {
+            launchDoctorActivity();
+        } else if(session.isPatient()) {
+            launchPatientActivity();
+        } else {
+            // TODO - Log an error and clear session?
+        }
+        finish();
+    }
+
+    private void launchPatientActivity() {
+        // TODO - launch patient activity
+    }
+
+    private void launchDoctorActivity() {
+        // TODO - launch doctor activity
+    }
+
+    @Override
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        switch (requestCode) {
+            case REQUEST_LOGIN:
+                final Session session = Session.restore(this);
+                if (resultCode == RESULT_OK && null != session) {
+                    launchUserActivity(session);
+                } else {
+                    // TODO - this shouldn't happen, log error and quit..
+                    finish();
+                }
+                return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
