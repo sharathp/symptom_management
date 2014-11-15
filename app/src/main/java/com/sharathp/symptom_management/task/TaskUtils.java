@@ -4,9 +4,6 @@ import android.annotation.TargetApi;
 import android.os.AsyncTask;
 import android.os.Build;
 
-/**
- * Created by sharath on 11/11/14.
- */
 public class TaskUtils {
 
     /**
