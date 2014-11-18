@@ -24,4 +24,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:20.0.0'
     compile 'com.android.support:support-v4:20.0.0'
     compile 'com.squareup.retrofit:retrofit:1.7.1'
+    compile 'com.beardedhen:androidbootstrap:1.0.0'
 }
