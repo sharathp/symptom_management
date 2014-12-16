@@ -4,6 +4,9 @@ import android.app.Application;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.sharathp.symptom_management.data.SymptomManagementSQLiteHelper;
+import com.sharathp.symptom_management.http.SymptomManagementAPI;
+
+import retrofit.RestAdapter;
 
 /**
  *
@@ -12,6 +15,7 @@ public class SymptomManagementApplication extends Application {
     private static SymptomManagementApplication singleton;
     private SymptomManagementSQLiteHelper dbHelper;
     private Thread uiThread;
+    private SymptomManagementAPI symptomManagementAPI;
 
     public static SymptomManagementApplication getInstance() {
         return singleton;
@@ -29,5 +33,9 @@ public class SymptomManagementApplication extends Application {
         if (Thread.currentThread().equals(uiThread)) {
             throw new RuntimeException("Database opened on main thread"); }
         return dbHelper.getWritableDatabase();
+    }
+
+    public SymptomManagementAPI getSymptomManagementAPI() {
+        return symptomManagementAPI;
     }
 }
