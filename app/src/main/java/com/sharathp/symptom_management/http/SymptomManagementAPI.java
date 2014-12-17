@@ -23,14 +23,6 @@ import retrofit.http.Query;
  */
 public interface SymptomManagementAPI {
 
-    @FormUrlEncoded
-    @POST("/doctors/login")
-    Response loginAsDoctor(@Field("username") String username, @Field("password") String password);
-
-    @FormUrlEncoded
-    @POST("/patients/login")
-    Response loginAsPatient(@Field("username") String username, @Field("password") String password);
-
     @GET("/doctors/{id}")
     Doctor getDoctorById(@Path("id") String id);
 
