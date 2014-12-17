@@ -1,21 +1,23 @@
-package com.sharathp.symptom_management;
+package com.sharathp.symptom_management.activity;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.sharathp.symptom_management.login.Session;
 
 
 public class MainActivity extends Activity {
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     public static final int REQUEST_LOGIN = 99;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Session session = Session.restore(this);
+        final Session session = Session.restore(this);
         if (null == session) {
             launchLoginActivity();
         } else {
@@ -33,13 +35,13 @@ public class MainActivity extends Activity {
         } else if(session.isPatient()) {
             launchPatientActivity();
         } else {
-            // TODO - Log an error and clear session?
+            Log.e(TAG, "Invalid session, user-type: " + session.getUserType());
         }
         finish();
     }
 
     private void launchPatientActivity() {
-        // TODO - launch patient activity
+        startActivity(new Intent(this, PatientActivity.class));
     }
 
     private void launchDoctorActivity() {
@@ -54,10 +56,10 @@ public class MainActivity extends Activity {
                 if (resultCode == RESULT_OK && null != session) {
                     launchUserActivity(session);
                 } else {
-                    // TODO - this shouldn't happen, log error and quit..
-                    finish();
+                    Log.e(TAG, "Unsuccessful login, result-code: " + resultCode);
                 }
-                return;
+                finish();
+                break;
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

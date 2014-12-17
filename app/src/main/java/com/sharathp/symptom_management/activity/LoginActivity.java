@@ -1,8 +1,9 @@
-package com.sharathp.symptom_management;
+package com.sharathp.symptom_management.activity;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -12,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.sharathp.symptom_management.R;
 import com.sharathp.symptom_management.http.LoginAPI;
 import com.sharathp.symptom_management.http.RestClient;
 import com.sharathp.symptom_management.login.Session;
@@ -64,11 +66,11 @@ public class LoginActivity extends Activity {
     }
 
     private void attemptPatientLogin() {
-        attemptLogin(RestClient.patientLoginApi());
+        attemptLogin(Session.PATIENT);
     }
 
     private void attemptDoctorLogin() {
-        attemptLogin(RestClient.doctorLoginApi());
+        attemptLogin(Session.DOCTOR);
     }
 
     /**
@@ -76,11 +78,11 @@ public class LoginActivity extends Activity {
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
-    private void attemptLogin(final LoginAPI loginAPI) {
+    private void attemptLogin(final int userType) {
+        final LoginAPI loginAPI = getLoginAPI(userType);
 
         // Reset errors.
-        mUserNameView.setError(null);
-        mPasswordView.setError(null);
+        resetViewErrors();
 
         // Store values at the time of the login attempt.
         final String username = mUserNameView.getText().toString();
@@ -88,7 +90,6 @@ public class LoginActivity extends Activity {
 
         boolean cancel = false;
         View focusView = null;
-
 
         // Check for a valid password, if the user entered one.
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
@@ -116,24 +117,50 @@ public class LoginActivity extends Activity {
                 @Override
                 public void success(final AccessTokenResponse accessTokenResponse, final Response response) {
                     Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_LONG).show();
-
-//                    setResult(RESULT_OK);
-//                    finish();
-                    showProgress(false);
+                    Log.d(TAG, "Login Successful");
+                    if(Session.saveSession(LoginActivity.this, username, accessTokenResponse.getAccessToken(), userType)) {
+                        setResult(RESULT_OK);
+                        finish();
+                    } else {
+                        showPasswordError();
+                        showProgress(false);
+                    }
                 }
 
                 @Override
                 public void failure(final RetrofitError error) {
+                    Log.d(TAG, "Login failed: " + error.getMessage());
+                    showPasswordError();
+                    showProgress(false);
+                }
+
+                private void showPasswordError() {
                     mPasswordView.setError(getString(R.string.error_incorrect_password));
                     mPasswordView.requestFocus();
-                    showProgress(false);
                 }
             });
         }
     }
 
+    private void resetViewErrors() {
+        mUserNameView.setError(null);
+        mPasswordView.setError(null);
+    }
+
+    private LoginAPI getLoginAPI(final int userType) {
+        LoginAPI loginAPI = null;
+        switch(userType) {
+            case Session.PATIENT:
+                loginAPI = RestClient.patientLoginApi();
+                break;
+            case Session.DOCTOR:
+                loginAPI = RestClient.doctorLoginApi();
+                break;
+        }
+        return loginAPI;
+    }
+
     private boolean isPasswordValid(final String password) {
-        //TODO: Replace this with your own logic
         return password.length() > 4;
     }
 

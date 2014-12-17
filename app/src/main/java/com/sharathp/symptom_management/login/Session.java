@@ -2,25 +2,26 @@ package com.sharathp.symptom_management.login;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 /**
  * Represents the session of this logged-in user.
  */
 public class Session {
+    private static final String TAG = Session.class.getSimpleName();
+
     // Preference keys
     private static final String KEY = "session";
     private static final String ACCESS_TOKEN = "access_token";
     private static final String USER_TYPE = "user_type";
-    private static final String USER_ID = "user_id";
     private static final String USER_NAME = "user_name";
 
     // User-type constants
-    private static final int DOCTOR = 1;
-    private static final int PATIENT = 2;
+    public static final int DOCTOR = 1;
+    public static final int PATIENT = 2;
 
     // Session fields
     private String userName;
-    private String userId;
     private String accessToken;
     private int userType;
 
@@ -32,44 +33,67 @@ public class Session {
 
     /**
      * Load the session data from disk.
+     *
+     * @param context
+     * @return session
      */
     public static synchronized Session restore(final Context context) {
         final SharedPreferences prefs = context.getSharedPreferences(KEY, Context.MODE_PRIVATE);
 
         final String accessToken = prefs.getString(ACCESS_TOKEN, null);
-
-        if(accessToken == null) {
+        final String userName = prefs.getString(USER_NAME, null);
+        final int userType = prefs.getInt(USER_TYPE, -1);
+        if(!isValid(userName, accessToken, userType)) {
+            clearSavedSession(context);
             return null;
         }
 
-        final String userId = prefs.getString(USER_ID, null);
-        final String userName = prefs.getString(USER_NAME, null);
-        final int userType = prefs.getInt(USER_TYPE, 0);
-
         instance = new Session();
-        instance.userId = userId;
         instance.userName = userName;
         instance.userType = userType;
         instance.accessToken = accessToken;
-
         return instance;
+    }
+
+    /**
+     * Create session.
+     *
+     * @param context
+     * @param userName
+     * @param accessToken
+     * @param userType
+     */
+    public static synchronized boolean saveSession(final Context context,
+                                    final String userName, final String accessToken, int userType) {
+        if(!isValid(userName, accessToken, userType)) {
+            final StringBuilder sb = new StringBuilder("Invalid session parameters: ");
+            sb.append("user-name: ").append(userName).append("; user-type: ").append(userType)
+            .append("; access-token: ").append(accessToken);
+            Log.e(TAG, sb.toString());
+            return false;
+        }
+        final SharedPreferences.Editor editor = context.getSharedPreferences(KEY, Context.MODE_PRIVATE).edit();
+        return editor.putString(USER_NAME, userName)
+                .putString(ACCESS_TOKEN, accessToken)
+                .putInt(USER_TYPE, userType)
+                .commit();
+    }
+
+    private static boolean isValid(final String userName, final String accessToken, int userType) {
+        return (userName != null && (userType == DOCTOR || userType == PATIENT) && accessToken != null);
     }
 
     /**
      * Clears the saved session data.
      */
     public static synchronized void clearSavedSession(Context context) {
-        SharedPreferences.Editor editor = context.getSharedPreferences(KEY, Context.MODE_PRIVATE).edit();
+        final SharedPreferences.Editor editor = context.getSharedPreferences(KEY, Context.MODE_PRIVATE).edit();
         editor.clear().commit();
         instance = null;
     }
 
     public String getUserName() {
         return userName;
-    }
-
-    public String getUserId() {
-        return userId;
     }
 
     public String getAccessToken() {

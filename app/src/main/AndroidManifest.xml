@@ -11,21 +11,21 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.sharathp.symptom_management.MainActivity"
+            android:name=".activity.MainActivity"
             android:label="@string/app_name" >
-        </activity>
-        <activity
-            android:name="com.sharathp.symptom_management.LoginActivity"
-            android:label="@string/title_activity_login"
-            android:windowSoftInputMode="adjustResize|stateVisible" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
-            android:name="com.sharathp.symptom_management.PatientActivity"
+            android:name=".activity.LoginActivity"
+            android:label="@string/title_activity_login" >
+        </activity>
+
+        <activity
+            android:name=".activity.PatientActivity"
             android:label="@string/title_activity_patient" >
         </activity>
     </application>
