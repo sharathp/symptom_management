@@ -2,20 +2,20 @@ package com.sharathp.symptom_management;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.app.Activity;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.KeyEvent;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.Toast;
 
+import com.sharathp.symptom_management.http.LoginAPI;
 import com.sharathp.symptom_management.http.RestClient;
+import com.sharathp.symptom_management.login.Session;
+import com.sharathp.symptom_management.model.AccessTokenResponse;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -26,38 +26,36 @@ import retrofit.client.Response;
  * A login screen that offers login via username/password.
  */
 public class LoginActivity extends Activity {
+    private static final String TAG = LoginActivity.class.getSimpleName();
 
     // UI references.
-    private EditText mEmailView;
+    private EditText mUserNameView;
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
         // Set up the login form.
-        mEmailView = (EditText) findViewById(R.id.username);
-
+        mUserNameView = (EditText) findViewById(R.id.username);
         mPasswordView = (EditText) findViewById(R.id.password);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+        final Button doctorSignInButton = (Button) findViewById(R.id.doctor_sign_in_button);
+        doctorSignInButton.setOnClickListener(new OnClickListener() {
             @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
-                    return true;
-                }
-                return false;
+            public void onClick(final View view) {
+                attemptDoctorLogin();
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+        final Button patientSignInButton = (Button) findViewById(R.id.patient_sign_in_button);
+        patientSignInButton.setOnClickListener(new OnClickListener() {
             @Override
-            public void onClick(View view) {
-                attemptLogin();
+            public void onClick(final View view) {
+                attemptPatientLogin();
             }
         });
 
@@ -65,20 +63,28 @@ public class LoginActivity extends Activity {
         mProgressView = findViewById(R.id.login_progress);
     }
 
+    private void attemptPatientLogin() {
+        attemptLogin(RestClient.patientLoginApi());
+    }
+
+    private void attemptDoctorLogin() {
+        attemptLogin(RestClient.doctorLoginApi());
+    }
+
     /**
      * Attempts to sign in or register the account specified by the login form.
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
-    public void attemptLogin() {
+    private void attemptLogin(final LoginAPI loginAPI) {
 
         // Reset errors.
-        mEmailView.setError(null);
+        mUserNameView.setError(null);
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        final String username = mUserNameView.getText().toString();
+        final String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -92,13 +98,9 @@ public class LoginActivity extends Activity {
         }
 
         // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
-            cancel = true;
-        } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
+        if (TextUtils.isEmpty(username)) {
+            mUserNameView.setError(getString(R.string.error_field_required));
+            focusView = mUserNameView;
             cancel = true;
         }
 
@@ -110,29 +112,27 @@ public class LoginActivity extends Activity {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            RestClient.doctorLoginApi().login(email, password, new Callback<Void>() {
-
+            loginAPI.login(username, password, RestClient.GRANT_TYPE_PASSWORD, new Callback<AccessTokenResponse>() {
                 @Override
-                public void success(Void aVoid, Response response) {
-                    setResult(RESULT_OK);
-                    finish();
+                public void success(final AccessTokenResponse accessTokenResponse, final Response response) {
+                    Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_LONG).show();
+
+//                    setResult(RESULT_OK);
+//                    finish();
+                    showProgress(false);
                 }
 
                 @Override
-                public void failure(RetrofitError error) {
+                public void failure(final RetrofitError error) {
                     mPasswordView.setError(getString(R.string.error_incorrect_password));
                     mPasswordView.requestFocus();
+                    showProgress(false);
                 }
             });
         }
     }
 
-    private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
-    }
-
-    private boolean isPasswordValid(String password) {
+    private boolean isPasswordValid(final String password) {
         //TODO: Replace this with your own logic
         return password.length() > 4;
     }
@@ -141,13 +141,13 @@ public class LoginActivity extends Activity {
      * Shows the progress UI and hides the login form.
      */
     public void showProgress(final boolean show) {
-        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+        final int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
         mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         mLoginFormView.animate().setDuration(shortAnimTime).alpha(
                 show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
             @Override
-            public void onAnimationEnd(Animator animation) {
+            public void onAnimationEnd(final Animator animation) {
                 mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
             }
         });
@@ -156,13 +156,9 @@ public class LoginActivity extends Activity {
         mProgressView.animate().setDuration(shortAnimTime).alpha(
                 show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
             @Override
-            public void onAnimationEnd(Animator animation) {
+            public void onAnimationEnd(final Animator animation) {
                 mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             }
         });
-
     }
 }
-
-
-

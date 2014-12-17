@@ -1,13 +1,13 @@
 package com.sharathp.symptom_management;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 
 import com.sharathp.symptom_management.login.Session;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends Activity {
 
     public static final int REQUEST_LOGIN = 99;
 
