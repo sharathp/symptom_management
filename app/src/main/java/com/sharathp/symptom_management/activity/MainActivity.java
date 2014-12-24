@@ -7,7 +7,10 @@ import android.util.Log;
 
 import com.sharathp.symptom_management.login.Session;
 
-
+/**
+ * Entry point activity that "redirects" to login page if there is no session. or
+ * to the proper activity if there is an existing session.
+ */
 public class MainActivity extends Activity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -45,7 +48,7 @@ public class MainActivity extends Activity {
     }
 
     private void launchDoctorActivity() {
-        // TODO - launch doctor activity
+        startActivity(new Intent(this, DoctorActivity.class));
     }
 
     @Override

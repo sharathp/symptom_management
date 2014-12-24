@@ -28,6 +28,11 @@
             android:name=".activity.PatientActivity"
             android:label="@string/title_activity_patient" >
         </activity>
+
+        <activity
+            android:name=".activity.DoctorActivity"
+            android:label="@string/title_activity_doctor" >
+        </activity>
     </application>
 
 </manifest>

@@ -38,8 +38,11 @@ public class Session {
      * @return session
      */
     public static synchronized Session restore(final Context context) {
-        final SharedPreferences prefs = context.getSharedPreferences(KEY, Context.MODE_PRIVATE);
+        if(instance != null) {
+            return instance;
+        }
 
+        final SharedPreferences prefs = context.getSharedPreferences(KEY, Context.MODE_PRIVATE);
         final String accessToken = prefs.getString(ACCESS_TOKEN, null);
         final String userName = prefs.getString(USER_NAME, null);
         final int userType = prefs.getInt(USER_TYPE, -1);
