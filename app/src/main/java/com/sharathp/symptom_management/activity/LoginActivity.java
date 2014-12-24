@@ -3,7 +3,6 @@ package com.sharathp.symptom_management.activity;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -16,12 +15,11 @@ import android.widget.Toast;
 import com.sharathp.symptom_management.R;
 import com.sharathp.symptom_management.http.LoginAPI;
 import com.sharathp.symptom_management.http.RestClient;
+import com.sharathp.symptom_management.loader.Callback;
+import com.sharathp.symptom_management.loader.RetrofitLoader;
+import com.sharathp.symptom_management.loader.RetrofitLoaderUtil;
 import com.sharathp.symptom_management.login.Session;
 import com.sharathp.symptom_management.model.AccessTokenResponse;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 
 /**
@@ -29,6 +27,7 @@ import retrofit.client.Response;
  */
 public class LoginActivity extends Activity {
     private static final String TAG = LoginActivity.class.getSimpleName();
+    private static final int LOGIN_LOADER_ID = 0;
 
     // UI references.
     private EditText mUserNameView;
@@ -105,20 +104,24 @@ public class LoginActivity extends Activity {
             cancel = true;
         }
 
-        if (cancel) {
+        if(cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
             focusView.requestFocus();
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            showProgress(true);
-            loginAPI.login(username, password, RestClient.GRANT_TYPE_PASSWORD, new Callback<AccessTokenResponse>() {
+            RetrofitLoaderUtil.init(getLoaderManager(), LOGIN_LOADER_ID, new RetrofitLoader<AccessTokenResponse, LoginAPI>(this, loginAPI) {
                 @Override
-                public void success(final AccessTokenResponse accessTokenResponse, final Response response) {
+                public AccessTokenResponse call(final LoginAPI service) {
+                    return service.login(username, password, RestClient.GRANT_TYPE_PASSWORD);
+                }
+            }, new Callback<AccessTokenResponse>() {
+                @Override
+                public void onSuccess(final AccessTokenResponse result) {
                     Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_LONG).show();
                     Log.d(TAG, "Login Successful");
-                    if(Session.saveSession(LoginActivity.this, username, accessTokenResponse.getAccessToken(), userType)) {
+                    if(Session.saveSession(LoginActivity.this, username, result.getAccessToken(), userType)) {
                         setResult(RESULT_OK);
                         finish();
                     } else {
@@ -128,8 +131,8 @@ public class LoginActivity extends Activity {
                 }
 
                 @Override
-                public void failure(final RetrofitError error) {
-                    Log.d(TAG, "Login failed: " + error.getMessage());
+                public void onFailure(final Exception e) {
+                    Log.d(TAG, "Login failed: " + e.getMessage());
                     showPasswordError();
                     showProgress(false);
                 }

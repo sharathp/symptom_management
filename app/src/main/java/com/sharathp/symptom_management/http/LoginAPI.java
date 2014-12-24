@@ -13,8 +13,7 @@ public interface LoginAPI {
 
     @FormUrlEncoded
     @POST("/oauth/token")
-    void login(@Field("username") String username,
+    AccessTokenResponse login(@Field("username") String username,
                @Field("password") String password,
-               @Field("grant_type") String grantType,
-               Callback<AccessTokenResponse> callback);
+               @Field("grant_type") String grantType);
 }

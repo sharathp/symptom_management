@@ -20,7 +20,7 @@ public class RestClient {
     private static LoginAPI DOCTOR_LOGIN_API;
     private static LoginAPI PATIENT_LOGIN_API;
 
-    private static String ROOT = "http://192.168.0.109:8080";
+    private static String ROOT = "http://192.168.0.102:8080";
     private static String AUTHORIZATION_HEADER = "Authorization";
     private static String AUTHORIZATION_BASIC = "Basic";
     public static String GRANT_TYPE_PASSWORD = "password";
