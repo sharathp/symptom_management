@@ -11,23 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.sharathp.symptom_management.R;
+import com.sharathp.symptom_management.fragment.PatientFragment;
 import com.sharathp.symptom_management.login.Session;
 
 
-public class PatientActivity extends Activity {
+public class PatientActivity extends SingleFragmentActivity {
     private static final String TAG = PatientActivity.class.getSimpleName();
-
-    @Override
-    protected void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_patient);
-        if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
-                    .commit();
-        }
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
@@ -63,19 +52,8 @@ public class PatientActivity extends Activity {
         startActivity(intent);
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
-                                 final Bundle savedInstanceState) {
-            final View rootView = inflater.inflate(R.layout.fragment_patient, container, false);
-            return rootView;
-        }
+    @Override
+    protected Fragment getFragment() {
+        return new PatientFragment();
     }
 }
