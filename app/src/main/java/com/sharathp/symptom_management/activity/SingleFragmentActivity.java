@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.os.Bundle;
 
 import com.sharathp.symptom_management.R;
+import com.sharathp.symptom_management.app.SymptomManagementApplication;
 
 /**
  * {@link Activity} base class for single fragment activities.
@@ -25,4 +26,8 @@ public abstract class SingleFragmentActivity extends Activity {
     }
 
     protected abstract Fragment getFragment();
+
+    protected void inject(final Object object) {
+        ((SymptomManagementApplication)getApplication()).inject(object);
+    }
 }

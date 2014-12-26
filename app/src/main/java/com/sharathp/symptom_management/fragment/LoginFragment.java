@@ -15,8 +15,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.sharathp.symptom_management.R;
+import com.sharathp.symptom_management.app.RestClientModule;
 import com.sharathp.symptom_management.http.LoginAPI;
-import com.sharathp.symptom_management.http.RestClient;
 import com.sharathp.symptom_management.loader.Callback;
 import com.sharathp.symptom_management.loader.RetrofitLoader;
 import com.sharathp.symptom_management.loader.RetrofitLoaderUtil;
@@ -118,7 +118,7 @@ public class LoginFragment extends Fragment {
             RetrofitLoaderUtil.init(getLoaderManager(), LOGIN_LOADER_ID, new RetrofitLoader<AccessTokenResponse, LoginAPI>(getActivity(), loginAPI) {
                 @Override
                 public AccessTokenResponse call(final LoginAPI service) {
-                    return service.login(username, password, RestClient.GRANT_TYPE_PASSWORD);
+                    return service.login(username, password, RestClientModule.GRANT_TYPE_PASSWORD);
                 }
             }, new Callback<AccessTokenResponse>() {
                 @Override
@@ -158,10 +158,10 @@ public class LoginFragment extends Fragment {
         LoginAPI loginAPI = null;
         switch(userType) {
             case Session.PATIENT:
-                loginAPI = RestClient.patientLoginApi();
+                loginAPI = RestClientModule.patientLoginApi();
                 break;
             case Session.DOCTOR:
-                loginAPI = RestClient.doctorLoginApi();
+                loginAPI = RestClientModule.doctorLoginApi();
                 break;
         }
         return loginAPI;

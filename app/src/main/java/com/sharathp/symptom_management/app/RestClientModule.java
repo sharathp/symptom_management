@@ -1,0 +1,85 @@
+package com.sharathp.symptom_management.app;
+
+import android.util.Base64;
+
+import com.sharathp.symptom_management.http.LoginAPI;
+import com.sharathp.symptom_management.http.SymptomManagementAPI;
+import com.squareup.okhttp.OkHttpClient;
+
+import javax.inject.Singleton;
+
+import dagger.Module;
+import dagger.Provides;
+import retrofit.RequestInterceptor;
+import retrofit.RestAdapter;
+import retrofit.client.OkClient;
+
+@Module(library = true)
+public class RestClientModule {
+    private static final String AUTHORIZATION_HEADER = "Authorization";
+    private static final String AUTHORIZATION_BASIC = "Basic";
+    public static final String GRANT_TYPE_PASSWORD = "password";
+
+    private static final String DOCTOR_CLIENT_ID = "mobile_doctor";
+    private static final String DOCTOR_CLIENT_SECRET = "mobile_doctor";
+
+    private static final String PATIENT_CLIENT_ID = "mobile_patient";
+    private static final String PATIENT_CLIENT_SECRET = "mobile_patient";
+
+    private static final String ROOT = "http://192.168.0.102:8080";
+
+    @Provides
+    @Singleton
+    SymptomManagementAPI provideSymptomManagementAPI(final OkClient okClient) {
+        final RestAdapter commonAdapter = restAdapterBuilder(okClient).build();
+        return commonAdapter.create(SymptomManagementAPI.class);
+    }
+
+    @Provides
+    @Singleton
+    LoginAPI provideDoctorLoginApi(final OkClient okClient) {
+        final RestAdapter.Builder doctorLoginAdapter = restAdapterBuilder(okClient);
+        doctorLoginAdapter.setRequestInterceptor(
+                loginInterceptor(DOCTOR_CLIENT_ID, DOCTOR_CLIENT_SECRET));
+        return doctorLoginAdapter.build().create(LoginAPI.class);
+    }
+
+    @Provides
+    @Singleton
+    LoginAPI providePatientLoginApi(final OkClient okClient) {
+        final RestAdapter.Builder patientLoginAdapter = restAdapterBuilder(okClient);
+        patientLoginAdapter.setRequestInterceptor(
+                loginInterceptor(PATIENT_CLIENT_ID, PATIENT_CLIENT_SECRET));
+
+        return patientLoginAdapter.build().create(LoginAPI.class);
+    }
+
+    @Provides
+    @Singleton
+    OkClient provideOkClient() {
+        final OkHttpClient okHttpClient = new OkHttpClient();
+        final OkClient okClient = new OkClient(okHttpClient);
+        return okClient;
+    }
+
+    private RestAdapter.Builder restAdapterBuilder(final OkClient okClient) {
+        final RestAdapter.Builder commonBuilder = new RestAdapter.Builder()
+                .setEndpoint(ROOT)
+                .setClient(okClient)
+                .setLogLevel(RestAdapter.LogLevel.FULL);
+        return commonBuilder;
+    }
+
+    private RequestInterceptor loginInterceptor(final String clientId,
+                                                       final String clientSecret) {
+        final String base64Encoded = Base64.encodeToString(
+                (clientId + ":" + clientSecret).getBytes(), Base64.NO_WRAP);
+        final String authorizationHeader = AUTHORIZATION_BASIC + " " + base64Encoded;
+        return new RequestInterceptor() {
+            @Override
+            public void intercept(final RequestFacade request) {
+                request.addHeader(AUTHORIZATION_HEADER, authorizationHeader);
+            }
+        };
+    }
+}
