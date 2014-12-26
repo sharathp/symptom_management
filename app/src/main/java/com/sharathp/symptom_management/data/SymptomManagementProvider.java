@@ -2,14 +2,13 @@ package com.sharathp.symptom_management.data;
 
 import android.content.ContentUris;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteQueryBuilder;
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
 
-import com.sharathp.symptom_management.SymptomManagementApplication;
+import com.sharathp.symptom_management.app.SymptomManagementApplication;
 
 /**
  *

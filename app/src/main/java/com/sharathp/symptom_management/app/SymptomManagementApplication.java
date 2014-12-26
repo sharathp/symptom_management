@@ -1,12 +1,10 @@
-package com.sharathp.symptom_management;
+package com.sharathp.symptom_management.app;
 
 import android.app.Application;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.sharathp.symptom_management.data.SymptomManagementSQLiteHelper;
 import com.sharathp.symptom_management.http.SymptomManagementAPI;
-
-import retrofit.RestAdapter;
 
 /**
  *
