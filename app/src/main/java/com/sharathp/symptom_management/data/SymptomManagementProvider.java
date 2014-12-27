@@ -1,14 +1,18 @@
 package com.sharathp.symptom_management.data;
 
-import android.content.ContentUris;
-import android.database.sqlite.SQLiteDatabase;
 import android.content.ContentProvider;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
 import com.sharathp.symptom_management.app.SymptomManagementApplication;
+
+import javax.inject.Inject;
+
+import dagger.Lazy;
 
 /**
  *
@@ -19,7 +23,8 @@ public class SymptomManagementProvider extends ContentProvider {
     private static final int REMINDER = 100;
     private static final int REMINDER_ID = 101;
 
-    private SQLiteDatabase database;
+    @Inject
+    Lazy<SQLiteDatabase> database;
 
     private static UriMatcher buildUriMatcher() {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -33,7 +38,7 @@ public class SymptomManagementProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        database = SymptomManagementApplication.getInstance().getDb();
+        ((SymptomManagementApplication)getContext().getApplicationContext()).inject(this);
         return true;
     }
 
@@ -42,7 +47,7 @@ public class SymptomManagementProvider extends ContentProvider {
         Cursor retCursor = null;
         switch (sUriMatcher.match(uri)) {
             case REMINDER_ID: {
-                retCursor = database.query(
+                retCursor = database.get().query(
                         SymptomManagementContract.ReminderEntry.TABLE_NAME,
                         projection,
                         SymptomManagementContract.ReminderEntry._ID + " = '" + ContentUris.parseId(uri) + "'",
@@ -55,7 +60,7 @@ public class SymptomManagementProvider extends ContentProvider {
             }
             // "location"
             case REMINDER: {
-                retCursor = database.query(
+                retCursor = database.get().query(
                         SymptomManagementContract.ReminderEntry.TABLE_NAME,
                         projection,
                         selection,

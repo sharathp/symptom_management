@@ -1,4 +1,4 @@
-package com.sharathp.symptom_management.app;
+package com.sharathp.symptom_management.app.modules;
 
 import android.util.Base64;
 
@@ -6,6 +6,7 @@ import com.sharathp.symptom_management.http.LoginAPI;
 import com.sharathp.symptom_management.http.SymptomManagementAPI;
 import com.squareup.okhttp.OkHttpClient;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -37,6 +38,7 @@ public class RestClientModule {
 
     @Provides
     @Singleton
+    @Named("DoctorLoginApi")
     LoginAPI provideDoctorLoginApi(final OkClient okClient) {
         final RestAdapter.Builder doctorLoginAdapter = restAdapterBuilder(okClient);
         doctorLoginAdapter.setRequestInterceptor(
@@ -46,6 +48,7 @@ public class RestClientModule {
 
     @Provides
     @Singleton
+    @Named("PatientLoginApi")
     LoginAPI providePatientLoginApi(final OkClient okClient) {
         final RestAdapter.Builder patientLoginAdapter = restAdapterBuilder(okClient);
         patientLoginAdapter.setRequestInterceptor(

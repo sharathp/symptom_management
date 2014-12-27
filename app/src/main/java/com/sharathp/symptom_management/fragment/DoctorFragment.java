@@ -13,7 +13,7 @@ import com.sharathp.symptom_management.login.Session;
 /**
  * Doctor {@link android.app.Fragment}.
  */
-public class DoctorFragment extends Fragment {
+public class DoctorFragment extends BaseFragment {
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,

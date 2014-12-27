@@ -11,7 +11,7 @@ import com.sharathp.symptom_management.R;
 /**
  * Patient {@link Fragment}.
  */
-public class PatientFragment extends Fragment {
+public class PatientFragment extends BaseFragment {
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,

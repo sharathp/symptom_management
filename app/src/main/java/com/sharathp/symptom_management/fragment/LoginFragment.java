@@ -3,7 +3,6 @@ package com.sharathp.symptom_management.fragment;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
-import android.app.Fragment;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -15,7 +14,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.sharathp.symptom_management.R;
-import com.sharathp.symptom_management.app.RestClientModule;
+import com.sharathp.symptom_management.app.modules.RestClientModule;
 import com.sharathp.symptom_management.http.LoginAPI;
 import com.sharathp.symptom_management.loader.Callback;
 import com.sharathp.symptom_management.loader.RetrofitLoader;
@@ -23,10 +22,13 @@ import com.sharathp.symptom_management.loader.RetrofitLoaderUtil;
 import com.sharathp.symptom_management.login.Session;
 import com.sharathp.symptom_management.model.AccessTokenResponse;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 /**
  * Login Fragment.
  */
-public class LoginFragment extends Fragment {
+public class LoginFragment extends BaseFragment {
     private static final String TAG = LoginFragment.class.getSimpleName();
     private static final int LOGIN_LOADER_ID = 0;
 
@@ -36,6 +38,13 @@ public class LoginFragment extends Fragment {
     private View mProgressView;
     private View mLoginFormView;
 
+    @Named("DoctorLoginApi")
+    @Inject
+    LoginAPI doctorLoginApi;
+
+    @Named("PatientLoginApi")
+    @Inject
+    LoginAPI patientLoginApi;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
@@ -158,10 +167,10 @@ public class LoginFragment extends Fragment {
         LoginAPI loginAPI = null;
         switch(userType) {
             case Session.PATIENT:
-                loginAPI = RestClientModule.patientLoginApi();
+                loginAPI = patientLoginApi;
                 break;
             case Session.DOCTOR:
-                loginAPI = RestClientModule.doctorLoginApi();
+                loginAPI = doctorLoginApi;
                 break;
         }
         return loginAPI;
