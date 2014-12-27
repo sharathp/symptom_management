@@ -25,6 +25,9 @@ import com.sharathp.symptom_management.model.AccessTokenResponse;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import butterknife.InjectView;
+import butterknife.OnClick;
+
 /**
  * Login Fragment.
  */
@@ -33,10 +36,23 @@ public class LoginFragment extends BaseFragment {
     private static final int LOGIN_LOADER_ID = 0;
 
     // UI references
-    private EditText mUserNameView;
-    private EditText mPasswordView;
-    private View mProgressView;
-    private View mLoginFormView;
+    @InjectView(R.id.username)
+    EditText mUserNameView;
+
+    @InjectView(R.id.password)
+    EditText mPasswordView;
+
+    @InjectView(R.id.login_progress)
+    View mProgressView;
+
+    @InjectView(R.id.login_form)
+    View mLoginFormView;
+
+    @InjectView(R.id.doctor_sign_in_button)
+    Button mDoctorSignInButton;
+
+    @InjectView(R.id.patient_sign_in_button)
+    Button mPatientSignInButton;
 
     @Named("DoctorLoginApi")
     @Inject
@@ -50,38 +66,16 @@ public class LoginFragment extends BaseFragment {
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_login, container, false);
-
-        // Set up the login form.
-        mUserNameView = (EditText) rootView.findViewById(R.id.username);
-        mPasswordView = (EditText) rootView.findViewById(R.id.password);
-
-        final Button doctorSignInButton = (Button) rootView.findViewById(R.id.doctor_sign_in_button);
-        doctorSignInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                attemptDoctorLogin();
-            }
-        });
-
-        final Button patientSignInButton = (Button) rootView.findViewById(R.id.patient_sign_in_button);
-        patientSignInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                attemptPatientLogin();
-            }
-        });
-
-        mLoginFormView = rootView.findViewById(R.id.login_form);
-        mProgressView = rootView.findViewById(R.id.login_progress);
-
         return rootView;
     }
 
-    private void attemptPatientLogin() {
+    @OnClick(R.id.patient_sign_in_button)
+    void attemptPatientLogin() {
         attemptLogin(Session.PATIENT);
     }
 
-    private void attemptDoctorLogin() {
+    @OnClick(R.id.doctor_sign_in_button)
+    void attemptDoctorLogin() {
         attemptLogin(Session.DOCTOR);
     }
 
