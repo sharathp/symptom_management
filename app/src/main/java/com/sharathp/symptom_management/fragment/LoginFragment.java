@@ -5,11 +5,9 @@ import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -27,6 +25,7 @@ import javax.inject.Named;
 
 import butterknife.InjectView;
 import butterknife.OnClick;
+import timber.log.Timber;
 
 /**
  * Login Fragment.
@@ -47,12 +46,6 @@ public class LoginFragment extends BaseFragment {
 
     @InjectView(R.id.login_form)
     View mLoginFormView;
-
-    @InjectView(R.id.doctor_sign_in_button)
-    Button mDoctorSignInButton;
-
-    @InjectView(R.id.patient_sign_in_button)
-    Button mPatientSignInButton;
 
     @Named("DoctorLoginApi")
     @Inject
@@ -127,7 +120,7 @@ public class LoginFragment extends BaseFragment {
                 @Override
                 public void onSuccess(final AccessTokenResponse result) {
                     Toast.makeText(getActivity(), "Login successful", Toast.LENGTH_LONG).show();
-                    Log.d(TAG, "Login Successful");
+                    Timber.d(TAG, "Login Successful");
                     if (Session.saveSession(getActivity(), username, result.getAccessToken(), userType)) {
                         getActivity().setResult(Activity.RESULT_OK);
                         getActivity().finish();
@@ -139,7 +132,7 @@ public class LoginFragment extends BaseFragment {
 
                 @Override
                 public void onFailure(final Exception e) {
-                    Log.d(TAG, "Login failed: " + e.getMessage());
+                    Timber.d(TAG, "Login failed: " + e.getMessage());
                     showPasswordError();
                     showProgress(false);
                 }

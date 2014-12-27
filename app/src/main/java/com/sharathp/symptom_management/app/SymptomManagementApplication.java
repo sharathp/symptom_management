@@ -2,11 +2,13 @@ package com.sharathp.symptom_management.app;
 
 import android.app.Application;
 
+import com.sharathp.symptom_management.BuildConfig;
 import com.sharathp.symptom_management.app.modules.RootModule;
 
 import java.util.List;
 
 import dagger.ObjectGraph;
+import timber.log.Timber;
 
 /**
  * Main Application for the entire app.
@@ -42,6 +44,14 @@ public class SymptomManagementApplication extends Application {
                     "You can't plus a null module, review your getModules() implementation");
         }
         return objectGraph.plus(modules.toArray());
+    }
+
+    private void configureLogging() {
+        if (BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree());
+        } else {
+            Timber.plant(new CrashReportingTree());
+        }
     }
 
     private void initializeDependencyInjector() {

@@ -11,7 +11,6 @@ import com.sharathp.symptom_management.login.Session;
 
 
 public class PatientActivity extends SingleFragmentActivity {
-    private static final String TAG = PatientActivity.class.getSimpleName();
 
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {

@@ -3,9 +3,10 @@ package com.sharathp.symptom_management.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.sharathp.symptom_management.login.Session;
+
+import timber.log.Timber;
 
 /**
  * Entry point activity that "redirects" to login page if there is no session. or
@@ -19,7 +20,6 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         final Session session = Session.restore(this);
         if (null == session) {
             launchLoginActivity();
@@ -38,7 +38,7 @@ public class MainActivity extends Activity {
         } else if(session.isPatient()) {
             launchPatientActivity();
         } else {
-            Log.e(TAG, "Invalid session, user-type: " + session.getUserType());
+            Timber.e(TAG, "Invalid session, user-type: " + session.getUserType());
         }
         finish();
     }
@@ -59,7 +59,7 @@ public class MainActivity extends Activity {
                 if (resultCode == RESULT_OK && null != session) {
                     launchUserActivity(session);
                 } else {
-                    Log.e(TAG, "Unsuccessful login, result-code: " + resultCode);
+                    Timber.e(TAG, "Unsuccessful login, result-code: " + resultCode);
                 }
                 finish();
                 break;

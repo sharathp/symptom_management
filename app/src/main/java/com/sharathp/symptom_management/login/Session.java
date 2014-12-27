@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import timber.log.Timber;
+
 /**
  * Represents the session of this logged-in user.
  */
@@ -72,7 +74,7 @@ public class Session {
             final StringBuilder sb = new StringBuilder("Invalid session parameters: ");
             sb.append("user-name: ").append(userName).append("; user-type: ").append(userType)
             .append("; access-token: ").append(accessToken);
-            Log.e(TAG, sb.toString());
+            Timber.e(TAG, sb.toString());
             return false;
         }
         final SharedPreferences.Editor editor = context.getSharedPreferences(KEY, Context.MODE_PRIVATE).edit();

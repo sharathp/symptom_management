@@ -10,7 +10,6 @@ import com.sharathp.symptom_management.fragment.DoctorFragment;
 import com.sharathp.symptom_management.login.Session;
 
 public class DoctorActivity extends SingleFragmentActivity {
-    private static final String TAG = DoctorActivity.class.getSimpleName();
 
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
