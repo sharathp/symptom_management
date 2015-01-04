@@ -9,6 +9,7 @@ import com.sharathp.symptom_management.http.SymptomManagementAPI;
 import com.sharathp.symptom_management.login.Session;
 import com.squareup.okhttp.OkHttpClient;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
@@ -18,7 +19,8 @@ import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.client.OkClient;
 
-@Module(library = true)
+@Module(library = true,
+        complete = false)
 public class RestClientModule {
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String AUTHORIZATION_BASIC = "Basic";
@@ -33,12 +35,15 @@ public class RestClientModule {
 
     private static final String ROOT = "http://192.168.0.102:8080";
 
+    @Inject
+    @ForApplication
+    Context mContext;
+
     @Provides
     @Singleton
-    SymptomManagementAPI provideSymptomManagementAPI(final OkClient okClient,
-                                                     @ForApplication final Context context) {
+    SymptomManagementAPI provideSymptomManagementAPI(final OkClient okClient) {
         final RestAdapter.Builder commonAdapter = restAdapterBuilder(okClient);
-        commonAdapter.setRequestInterceptor(authorizationInterceptor(context));
+        commonAdapter.setRequestInterceptor(authorizationInterceptor());
         return commonAdapter.build().create(SymptomManagementAPI.class);
     }
 
@@ -78,12 +83,12 @@ public class RestClientModule {
         return commonBuilder;
     }
 
-    private RequestInterceptor authorizationInterceptor(@ForApplication final Context context) {
+    private RequestInterceptor authorizationInterceptor() {
         return new RequestInterceptor() {
             @Override
             public void intercept(final RequestFacade request) {
                 final String authorizationHeader = AUTHORIZATION_BEARER + " "
-                        + Session.restore(context).getAccessToken();
+                        + Session.restore(mContext).getAccessToken();
                 request.addHeader(AUTHORIZATION_HEADER, authorizationHeader);
             }
         };

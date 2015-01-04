@@ -18,6 +18,9 @@ public class AccessTokenResponse {
     @SerializedName("scope")
     private String scope;
 
+    @SerializedName("user_id")
+    private String userId;
+
     public String getAccessToken() {
         return accessToken;
     }
@@ -56,5 +59,13 @@ public class AccessTokenResponse {
 
     public void setScope(final String scope) {
         this.scope = scope;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

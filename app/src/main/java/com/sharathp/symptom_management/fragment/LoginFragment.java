@@ -121,7 +121,8 @@ public class LoginFragment extends BaseFragment {
                 public void onSuccess(final AccessTokenResponse result) {
                     Toast.makeText(getActivity(), "Login successful", Toast.LENGTH_LONG).show();
                     Timber.d(TAG, "Login Successful");
-                    if (Session.saveSession(getActivity(), username, result.getAccessToken(), userType)) {
+                    if (Session.saveSession(getActivity(), username, result.getAccessToken(),
+                            userType, result.getUserId())) {
                         getActivity().setResult(Activity.RESULT_OK);
                         getActivity().finish();
                     } else {
