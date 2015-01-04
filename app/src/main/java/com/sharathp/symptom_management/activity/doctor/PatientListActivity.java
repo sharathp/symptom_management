@@ -1,12 +1,12 @@
 package com.sharathp.symptom_management.activity.doctor;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 
 import com.sharathp.symptom_management.R;
+import com.sharathp.symptom_management.activity.BaseActivity;
 import com.sharathp.symptom_management.fragment.doctor.PatientDetailFragment;
 import com.sharathp.symptom_management.fragment.doctor.PatientListFragment;
 
@@ -26,7 +26,7 @@ import com.sharathp.symptom_management.fragment.doctor.PatientListFragment;
  * {@link com.sharathp.symptom_management.fragment.doctor.PatientListFragment.Callbacks} interface
  * to listen for item selections.
  */
-public class PatientListActivity extends Activity
+public class PatientListActivity extends BaseActivity
         implements PatientListFragment.Callbacks {
 
     /**

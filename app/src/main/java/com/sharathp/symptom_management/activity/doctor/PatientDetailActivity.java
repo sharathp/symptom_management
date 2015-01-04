@@ -1,12 +1,12 @@
 package com.sharathp.symptom_management.activity.doctor;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 
 import com.sharathp.symptom_management.R;
+import com.sharathp.symptom_management.activity.BaseActivity;
 import com.sharathp.symptom_management.fragment.doctor.PatientDetailFragment;
 
 /**
@@ -18,7 +18,7 @@ import com.sharathp.symptom_management.fragment.doctor.PatientDetailFragment;
  * This activity is mostly just a 'shell' activity containing nothing
  * more than a {@link com.sharathp.symptom_management.fragment.doctor.PatientDetailFragment}.
  */
-public class PatientDetailActivity extends Activity {
+public class PatientDetailActivity extends BaseActivity {
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -40,10 +40,10 @@ public class PatientDetailActivity extends Activity {
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
-            Bundle arguments = new Bundle();
+            final Bundle arguments = new Bundle();
             arguments.putString(PatientDetailFragment.ARG_PATIENT_ID,
                     getIntent().getStringExtra(PatientDetailFragment.ARG_PATIENT_ID));
-            PatientDetailFragment fragment = new PatientDetailFragment();
+            final PatientDetailFragment fragment = new PatientDetailFragment();
             fragment.setArguments(arguments);
             getFragmentManager().beginTransaction()
                     .add(R.id.patient_detail_container, fragment)

@@ -23,27 +23,27 @@ import retrofit.http.Query;
  */
 public interface SymptomManagementAPI {
 
-    @GET("/doctors/{id}")
+    @GET("/api/v1/doctors/{id}")
     Doctor getDoctorById(@Path("id") String id);
 
-    @GET("/doctors/{id}/patients")
+    @GET("/api/v1/doctors/{id}/patients")
     List<Patient> getPatientsForDoctor(@Path("id") String id);
 
-    @GET("/patients/{id}")
+    @GET("/api/v1/patients/{id}")
     Patient getPatientById(@Path("id") String id);
 
-    @GET("/patients/{id}/medications")
+    @GET("/api/v1/patients/{id}/medications")
     List<Medication> getPatientMedications(@Path("id") String id);
 
-    @PUT("/patients/{id}/medications")
+    @PUT("/api/v1/patients/{id}/medications")
     Response updatePatientMedications(@Path("id") String id, @Body List<Medication> medications);
 
-    @POST("/patients/{id}/check-ins")
+    @POST("/api/v1/patients/{id}/check-ins")
     Response addPatientCheckin(@Body PatientCheckIn checkIn);
 
-    @GET("/patients/{id}/check-ins")
+    @GET("/api/v1/patients/{id}/check-ins")
     List<PatientCheckIn> getPatientCheckins(@Query("from") Date from);
 
-    @GET("/patients")
+    @GET("/api/v1/patients")
     List<Patient> getPatientsByName(@Query("name") String name);
 }

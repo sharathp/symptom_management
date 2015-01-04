@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.sharathp.symptom_management.R;
+import com.sharathp.symptom_management.fragment.BaseFragment;
 import com.sharathp.symptom_management.http.SymptomManagementAPI;
 import com.sharathp.symptom_management.loader.Callback;
 import com.sharathp.symptom_management.loader.RetrofitLoader;
@@ -25,7 +26,7 @@ import timber.log.Timber;
  * in two-pane mode (on tablets) or a {@link com.sharathp.symptom_management.activity.doctor.PatientDetailActivity}
  * on handsets.
  */
-public class PatientDetailFragment extends Fragment {
+public class PatientDetailFragment extends BaseFragment {
     private static final String TAG = PatientDetailFragment.class.getSimpleName();
     /**
      * The fragment argument representing the item ID that this fragment
@@ -37,7 +38,7 @@ public class PatientDetailFragment extends Fragment {
     @Inject
     SymptomManagementAPI mSymptomManagementAPI;
 
-    @InjectView(R.id.patient_detail)
+    @InjectView(R.id.first_name_text_view)
     TextView mTextView;
 
     private Patient mPatient;
@@ -86,7 +87,7 @@ public class PatientDetailFragment extends Fragment {
             return;
         }
         mPatient = patient;
-        mTextView.setText(mPatient.getId());
+        mTextView.setText(mPatient.getFirstName());
     }
 
     @Override
