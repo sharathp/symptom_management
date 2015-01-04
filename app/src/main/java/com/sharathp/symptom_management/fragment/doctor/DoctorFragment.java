@@ -1,4 +1,4 @@
-package com.sharathp.symptom_management.fragment;
+package com.sharathp.symptom_management.fragment.doctor;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.sharathp.symptom_management.R;
+import com.sharathp.symptom_management.fragment.BaseFragment;
 import com.sharathp.symptom_management.login.Session;
 
 import butterknife.InjectView;
@@ -22,7 +23,7 @@ public class DoctorFragment extends BaseFragment {
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
-        final View rootView = inflater.inflate(R.layout.fragment_doctor, container, false);
+        final View rootView = inflater.inflate(R.layout.d_fragment_doctor, container, false);
         return rootView;
     }
 

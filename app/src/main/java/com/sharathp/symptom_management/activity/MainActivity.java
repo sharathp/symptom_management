@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.sharathp.symptom_management.activity.doctor.DoctorActivity;
+import com.sharathp.symptom_management.activity.patient.PatientActivity;
 import com.sharathp.symptom_management.login.Session;
 
 import timber.log.Timber;

@@ -1,9 +1,12 @@
 package com.sharathp.symptom_management.app.modules;
 
+import android.content.Context;
 import android.util.Base64;
 
+import com.sharathp.symptom_management.app.ForApplication;
 import com.sharathp.symptom_management.http.LoginAPI;
 import com.sharathp.symptom_management.http.SymptomManagementAPI;
+import com.sharathp.symptom_management.login.Session;
 import com.squareup.okhttp.OkHttpClient;
 
 import javax.inject.Named;
@@ -19,6 +22,7 @@ import retrofit.client.OkClient;
 public class RestClientModule {
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String AUTHORIZATION_BASIC = "Basic";
+    private static final String AUTHORIZATION_BEARER = "BEARER";
     public static final String GRANT_TYPE_PASSWORD = "password";
 
     private static final String DOCTOR_CLIENT_ID = "mobile_doctor";
@@ -31,9 +35,11 @@ public class RestClientModule {
 
     @Provides
     @Singleton
-    SymptomManagementAPI provideSymptomManagementAPI(final OkClient okClient) {
-        final RestAdapter commonAdapter = restAdapterBuilder(okClient).build();
-        return commonAdapter.create(SymptomManagementAPI.class);
+    SymptomManagementAPI provideSymptomManagementAPI(final OkClient okClient,
+                                                     @ForApplication final Context context) {
+        final RestAdapter.Builder commonAdapter = restAdapterBuilder(okClient);
+        commonAdapter.setRequestInterceptor(authorizationInterceptor(context));
+        return commonAdapter.build().create(SymptomManagementAPI.class);
     }
 
     @Provides
@@ -53,7 +59,6 @@ public class RestClientModule {
         final RestAdapter.Builder patientLoginAdapter = restAdapterBuilder(okClient);
         patientLoginAdapter.setRequestInterceptor(
                 loginInterceptor(PATIENT_CLIENT_ID, PATIENT_CLIENT_SECRET));
-
         return patientLoginAdapter.build().create(LoginAPI.class);
     }
 
@@ -71,6 +76,17 @@ public class RestClientModule {
                 .setClient(okClient)
                 .setLogLevel(RestAdapter.LogLevel.FULL);
         return commonBuilder;
+    }
+
+    private RequestInterceptor authorizationInterceptor(@ForApplication final Context context) {
+        return new RequestInterceptor() {
+            @Override
+            public void intercept(final RequestFacade request) {
+                final String authorizationHeader = AUTHORIZATION_BEARER + " "
+                        + Session.restore(context).getAccessToken();
+                request.addHeader(AUTHORIZATION_HEADER, authorizationHeader);
+            }
+        };
     }
 
     private RequestInterceptor loginInterceptor(final String clientId,

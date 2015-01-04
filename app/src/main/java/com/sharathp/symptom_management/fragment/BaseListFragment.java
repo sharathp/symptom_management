@@ -1,7 +1,7 @@
 package com.sharathp.symptom_management.fragment;
 
 import android.app.Activity;
-import android.app.Fragment;
+import android.app.ListFragment;
 import android.os.Bundle;
 import android.view.View;
 
@@ -10,9 +10,9 @@ import com.sharathp.symptom_management.activity.BaseActivity;
 import butterknife.ButterKnife;
 
 /**
- * Base fragment which performs injection using the activity object graph of its parent.
+ * Base ListFragment which performs injection using the activity object graph of its parent.
  */
-public abstract class BaseFragment extends Fragment {
+public abstract class BaseListFragment extends ListFragment {
 
     @Override
     public void onAttach(final Activity activity) {

@@ -68,4 +68,9 @@ public class Patient {
     public void setMedications(List<Medication> medications) {
         this.medications = medications;
     }
+
+    @Override
+    public String toString() {
+        return id;
+    }
 }

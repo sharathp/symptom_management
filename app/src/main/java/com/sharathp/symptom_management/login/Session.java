@@ -17,15 +17,17 @@ public class Session {
     private static final String ACCESS_TOKEN = "access_token";
     private static final String USER_TYPE = "user_type";
     private static final String USER_NAME = "user_name";
+    private static final String USER_ID = "user_id";
 
     // User-type constants
     public static final int DOCTOR = 1;
     public static final int PATIENT = 2;
 
     // Session fields
-    private String userName;
-    private String accessToken;
-    private int userType;
+    private String mUserName;
+    private String mAccessToken;
+    private int mUserType;
+    private String mUserId;
 
     private Session() {
         // singleton
@@ -48,15 +50,17 @@ public class Session {
         final String accessToken = prefs.getString(ACCESS_TOKEN, null);
         final String userName = prefs.getString(USER_NAME, null);
         final int userType = prefs.getInt(USER_TYPE, -1);
-        if(!isValid(userName, accessToken, userType)) {
+        final String userId = prefs.getString(USER_ID, null);
+        if(!isValid(userName, accessToken, userType, userId)) {
             clearSavedSession(context);
             return null;
         }
 
         instance = new Session();
-        instance.userName = userName;
-        instance.userType = userType;
-        instance.accessToken = accessToken;
+        instance.mUserName = userName;
+        instance.mUserType = userType;
+        instance.mAccessToken = accessToken;
+        instance.mUserId = userId;
         return instance;
     }
 
@@ -68,12 +72,13 @@ public class Session {
      * @param accessToken
      * @param userType
      */
-    public static synchronized boolean saveSession(final Context context,
-                                    final String userName, final String accessToken, int userType) {
-        if(!isValid(userName, accessToken, userType)) {
+    public static synchronized boolean saveSession(final Context context, final String userName,
+                               final String accessToken, final int userType, final String userId) {
+        if(!isValid(userName, accessToken, userType, userId)) {
             final StringBuilder sb = new StringBuilder("Invalid session parameters: ");
             sb.append("user-name: ").append(userName).append("; user-type: ").append(userType)
-            .append("; access-token: ").append(accessToken);
+            .append("; access-token: ").append(accessToken)
+            .append("; user-id: ").append(userId);
             Timber.e(TAG, sb.toString());
             return false;
         }
@@ -81,11 +86,14 @@ public class Session {
         return editor.putString(USER_NAME, userName)
                 .putString(ACCESS_TOKEN, accessToken)
                 .putInt(USER_TYPE, userType)
+                .putString(USER_ID, userId)
                 .commit();
     }
 
-    private static boolean isValid(final String userName, final String accessToken, int userType) {
-        return (userName != null && (userType == DOCTOR || userType == PATIENT) && accessToken != null);
+    private static boolean isValid(final String userName, final String accessToken,
+                                   final int userType, final String userId) {
+        return (userName != null && (userType == DOCTOR || userType == PATIENT)
+                && accessToken != null && userId != null);
     }
 
     /**
@@ -98,22 +106,26 @@ public class Session {
     }
 
     public String getUserName() {
-        return userName;
+        return mUserName;
     }
 
     public String getAccessToken() {
-        return accessToken;
+        return mAccessToken;
     }
 
     public int getUserType() {
-        return userType;
+        return mUserType;
+    }
+
+    public String getUserId() {
+        return mUserId;
     }
 
     public boolean isDoctor() {
-        return DOCTOR == userType;
+        return DOCTOR == mUserType;
     }
 
     public boolean isPatient() {
-        return PATIENT == userType;
+        return PATIENT == mUserType;
     }
 }

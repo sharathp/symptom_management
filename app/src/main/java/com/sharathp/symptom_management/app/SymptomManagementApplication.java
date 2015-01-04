@@ -14,7 +14,7 @@ import timber.log.Timber;
  * Main Application for the entire app.
  */
 public class SymptomManagementApplication extends Application {
-    private ObjectGraph objectGraph;
+    private ObjectGraph mObjectGraph;
 
     @Override
     public void onCreate() {
@@ -29,7 +29,7 @@ public class SymptomManagementApplication extends Application {
      * @param object to inject.
      */
     public void inject(Object object) {
-        objectGraph.inject(object);
+        mObjectGraph.inject(object);
     }
 
     /**
@@ -43,7 +43,7 @@ public class SymptomManagementApplication extends Application {
             throw new IllegalArgumentException(
                     "You can't plus a null module, review your getModules() implementation");
         }
-        return objectGraph.plus(modules.toArray());
+        return mObjectGraph.plus(modules.toArray());
     }
 
     private void configureLogging() {
@@ -55,8 +55,8 @@ public class SymptomManagementApplication extends Application {
     }
 
     private void initializeDependencyInjector() {
-        objectGraph = ObjectGraph.create(new RootModule(this));
-        objectGraph.inject(this);
-        objectGraph.injectStatics();
+        mObjectGraph = ObjectGraph.create(new RootModule(this));
+        mObjectGraph.inject(this);
+        mObjectGraph.injectStatics();
     }
 }

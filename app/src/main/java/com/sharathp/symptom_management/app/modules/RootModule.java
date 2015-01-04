@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import com.sharathp.symptom_management.app.ForApplication;
 import com.sharathp.symptom_management.app.SymptomManagementApplication;
 
-import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -22,20 +21,20 @@ import dagger.Provides;
         },
         library = true)
 public class RootModule {
-    private final SymptomManagementApplication application;
+    private final SymptomManagementApplication mApplication;
 
     /**
      * @param application - SymptomManagementApplication
      */
     public RootModule(final SymptomManagementApplication application) {
-        this.application = application;
+        this.mApplication = application;
     }
 
     @Provides
     @ForApplication
     @Singleton
     Context provideApplicationContext() {
-        return application;
+        return mApplication;
     }
 
     @Provides

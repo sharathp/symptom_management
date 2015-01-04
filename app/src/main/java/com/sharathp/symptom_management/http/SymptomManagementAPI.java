@@ -26,6 +26,9 @@ public interface SymptomManagementAPI {
     @GET("/doctors/{id}")
     Doctor getDoctorById(@Path("id") String id);
 
+    @GET("/doctors/{id}/patients")
+    List<Patient> getPatientsForDoctor(@Path("id") String id);
+
     @GET("/patients/{id}")
     Patient getPatientById(@Path("id") String id);
 

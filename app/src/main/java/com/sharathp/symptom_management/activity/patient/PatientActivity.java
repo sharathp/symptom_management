@@ -1,12 +1,12 @@
-package com.sharathp.symptom_management.activity;
+package com.sharathp.symptom_management.activity.patient;
 
 import android.app.Fragment;
-import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.sharathp.symptom_management.R;
-import com.sharathp.symptom_management.fragment.PatientFragment;
+import com.sharathp.symptom_management.activity.SingleFragmentActivity;
+import com.sharathp.symptom_management.fragment.patient.PatientFragment;
 import com.sharathp.symptom_management.login.Session;
 
 
@@ -35,15 +35,6 @@ public class PatientActivity extends SingleFragmentActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    private void logout() {
-        final Intent intent = new Intent(this,
-                MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                Intent.FLAG_ACTIVITY_CLEAR_TASK |
-                Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
     }
 
     @Override

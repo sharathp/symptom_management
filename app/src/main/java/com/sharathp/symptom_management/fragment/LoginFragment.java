@@ -49,11 +49,11 @@ public class LoginFragment extends BaseFragment {
 
     @Named("DoctorLoginApi")
     @Inject
-    LoginAPI doctorLoginApi;
+    LoginAPI mDoctorLoginApi;
 
     @Named("PatientLoginApi")
     @Inject
-    LoginAPI patientLoginApi;
+    LoginAPI mPatientLoginApi;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
@@ -154,10 +154,10 @@ public class LoginFragment extends BaseFragment {
         LoginAPI loginAPI = null;
         switch(userType) {
             case Session.PATIENT:
-                loginAPI = patientLoginApi;
+                loginAPI = mPatientLoginApi;
                 break;
             case Session.DOCTOR:
-                loginAPI = doctorLoginApi;
+                loginAPI = mDoctorLoginApi;
                 break;
         }
         return loginAPI;

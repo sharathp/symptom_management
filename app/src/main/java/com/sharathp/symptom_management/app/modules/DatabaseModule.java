@@ -7,7 +7,6 @@ import com.sharathp.symptom_management.app.ForApplication;
 import com.sharathp.symptom_management.data.SymptomManagementProvider;
 import com.sharathp.symptom_management.data.SymptomManagementSQLiteHelper;
 
-import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
