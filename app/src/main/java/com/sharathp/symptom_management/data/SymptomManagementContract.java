@@ -71,7 +71,7 @@ public class SymptomManagementContract {
                 + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_REMINDER_TIME
                 + " text not null);";
 
-        public static Uri buildLocationUri(long id) {
+        public static Uri buildLocationUri(final long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
     }
