@@ -5,13 +5,29 @@ import java.util.Date;
 import java.util.List;
 
 public class Patient {
+    private long _id;
     private String id;
     private String firstName;
     private String lastName;
-    private Date dateOfBirth;
-    private String medicalRecordNumber;
+    private String patientId;
     private Doctor doctor;
     private List<Medication> medications;
+
+    public long get_id() {
+        return _id;
+    }
+
+    public void set_id(long _id) {
+        this._id = _id;
+    }
+
+    public String getPatientId() {
+        return patientId;
+    }
+
+    public void setPatientId(String patientId) {
+        this.patientId = patientId;
+    }
 
     public String getId() {
         return id;
@@ -35,22 +51,6 @@ public class Patient {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public Date getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    public void setDateOfBirth(Date dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
-
-    public String getMedicalRecordNumber() {
-        return medicalRecordNumber;
-    }
-
-    public void setMedicalRecordNumber(String medicalRecordNumber) {
-        this.medicalRecordNumber = medicalRecordNumber;
     }
 
     public Doctor getDoctor() {

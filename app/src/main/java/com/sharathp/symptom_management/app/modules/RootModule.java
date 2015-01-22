@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 
 import com.sharathp.symptom_management.app.ForApplication;
 import com.sharathp.symptom_management.app.SymptomManagementApplication;
+import com.sharathp.symptom_management.service.PatientService;
 
 import javax.inject.Singleton;
 
@@ -17,7 +18,8 @@ import dagger.Provides;
             RestClientModule.class
         },
         injects = {
-            SymptomManagementApplication.class
+            SymptomManagementApplication.class,
+            PatientService.class
         },
         library = true)
 public class RootModule {

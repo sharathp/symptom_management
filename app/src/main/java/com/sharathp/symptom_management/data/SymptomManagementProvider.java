@@ -65,7 +65,6 @@ public class SymptomManagementProvider extends ContentProvider {
                 );
                 break;
             }
-
             case REMINDER: {
                 retCursor = database.get().query(
                         SymptomManagementContract.ReminderEntry.TABLE_NAME,
@@ -78,7 +77,6 @@ public class SymptomManagementProvider extends ContentProvider {
                 );
                 break;
             }
-
             case PATIENT_ID: {
                 retCursor = database.get().query(
                         PatientContract.PatientEntry.TABLE_NAME,
@@ -91,7 +89,6 @@ public class SymptomManagementProvider extends ContentProvider {
                 );
                 break;
             }
-
             case PATIENT: {
                 retCursor = database.get().query(
                         PatientContract.PatientEntry.TABLE_NAME,
@@ -104,7 +101,6 @@ public class SymptomManagementProvider extends ContentProvider {
                 );
                 break;
             }
-
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -152,11 +148,44 @@ public class SymptomManagementProvider extends ContentProvider {
 
     @Override
     public int delete(final Uri uri, final String selection, final String[] selectionArgs) {
-        return 0;
+        final int match = sUriMatcher.match(uri);
+        int rowsDeleted;
+        switch (match) {
+            case PATIENT:
+                rowsDeleted = database.get().delete(
+                        PatientContract.PatientEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+        // Because a null deletes all rows
+        if (selection == null || rowsDeleted != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+        return rowsDeleted;
     }
 
     @Override
     public int update(final Uri uri, final ContentValues values, final String selection, final String[] selectionArgs) {
-        return 0;
+        final int match = sUriMatcher.match(uri);
+        int rowsUpdated;
+
+        switch (match) {
+            case PATIENT:
+                rowsUpdated = database.get().update(PatientContract.PatientEntry.TABLE_NAME, values, selection,
+                        selectionArgs);
+                break;
+            case PATIENT_ID:
+                final long _id = ContentUris.parseId(uri);
+                rowsUpdated = database.get().update(PatientContract.PatientEntry.TABLE_NAME, values,
+                        PatientContract.PatientEntry._ID + " = ?", new String[]{Long.toString(_id)});
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+        if (rowsUpdated != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+        return rowsUpdated;
     }
 }

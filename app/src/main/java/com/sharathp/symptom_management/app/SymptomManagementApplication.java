@@ -1,6 +1,7 @@
 package com.sharathp.symptom_management.app;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.sharathp.symptom_management.BuildConfig;
 import com.sharathp.symptom_management.app.modules.RootModule;
@@ -17,9 +18,14 @@ public class SymptomManagementApplication extends Application {
     private ObjectGraph mObjectGraph;
 
     @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        initializeDependencyInjector();
+    }
+
+    @Override
     public void onCreate() {
         super.onCreate();
-        initializeDependencyInjector();
     }
 
     /**

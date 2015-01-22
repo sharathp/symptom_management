@@ -25,7 +25,6 @@ public class PatientContract extends SymptomManagementContract {
         public static final String TABLE_NAME = "patient";
 
         // Column names
-        public static final String COLUMN_USER_NAME = "user_name";
         public static final String COLUMN_FIRST_NAME = "first_name";
         public static final String COLUMN_LAST_NAME = "last_name";
         public static final String COLUMN_PATIENT_ID = "patient_id";
@@ -34,11 +33,10 @@ public class PatientContract extends SymptomManagementContract {
         public static final String SQL_CREATE = "CREATE TABLE "
                 + TABLE_NAME + "("
                 + _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + COLUMN_USER_NAME + " text not null, "
                 + COLUMN_FIRST_NAME + " text not null, "
                 + COLUMN_LAST_NAME + " text not null, "
                 + COLUMN_PATIENT_ID + " text not null, "
-                + COLUMN_USER_ID + " text not null, "
+                + COLUMN_USER_ID + " text not null"
                 + ");";
 
         public static Uri buildPatientUri(final long id) {

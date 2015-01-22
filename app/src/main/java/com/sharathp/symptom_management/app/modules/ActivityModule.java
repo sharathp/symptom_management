@@ -15,6 +15,7 @@ import com.sharathp.symptom_management.fragment.doctor.DoctorFragment;
 import com.sharathp.symptom_management.fragment.doctor.PatientDetailFragment;
 import com.sharathp.symptom_management.fragment.doctor.PatientListFragment;
 import com.sharathp.symptom_management.fragment.patient.PatientFragment;
+import com.sharathp.symptom_management.service.PatientService;
 
 import javax.inject.Singleton;
 
