@@ -96,24 +96,15 @@ public class PatientService extends IntentService {
 
 
     private void updateExistingPatient(final long existing_Id, final Patient patient) {
-        final ContentValues contentValues = getContentValues(patient);
+        final ContentValues contentValues = PatientContract.getContentValues(patient);
         final Uri patientUri = PatientContract.PatientEntry.buildPatientUri(existing_Id);
         this.getContentResolver().update(patientUri, contentValues, null, null);
     }
 
     private long createNewPatient(final Patient patient) {
-        final ContentValues contentValues = getContentValues(patient);
+        final ContentValues contentValues = PatientContract.getContentValues(patient);
         final Uri insertedUri = this.getContentResolver()
                 .insert(PatientContract.PatientEntry.CONTENT_URI, contentValues);
         return ContentUris.parseId(insertedUri);
-    }
-
-    private ContentValues getContentValues(final Patient patient) {
-        final ContentValues contentValues = new ContentValues();
-        contentValues.put(PatientContract.PatientEntry.COLUMN_USER_ID, patient.getId());
-        contentValues.put(PatientContract.PatientEntry.COLUMN_FIRST_NAME, patient.getFirstName());
-        contentValues.put(PatientContract.PatientEntry.COLUMN_LAST_NAME, patient.getLastName());
-        contentValues.put(PatientContract.PatientEntry.COLUMN_PATIENT_ID, patient.getPatientId());
-        return contentValues;
     }
 }

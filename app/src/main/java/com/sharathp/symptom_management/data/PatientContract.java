@@ -1,8 +1,12 @@
 package com.sharathp.symptom_management.data;
 
 import android.content.ContentUris;
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
+
+import com.sharathp.symptom_management.model.Patient;
 
 /**
  *
@@ -10,6 +14,34 @@ import android.provider.BaseColumns;
 public class PatientContract extends SymptomManagementContract {
     public static final String PATH_PATIENT = "patient";
 
+    public static Patient readPatient(final Cursor cursor) {
+        if(cursor == null || cursor.isAfterLast()) {
+            return null;
+        }
+
+        final long _id = cursor.getLong(cursor.getColumnIndex(PatientContract.PatientEntry._ID));
+        final String firstName = cursor.getString(cursor.getColumnIndex(PatientEntry.COLUMN_FIRST_NAME));
+        final String lastName = cursor.getString(cursor.getColumnIndex(PatientEntry.COLUMN_LAST_NAME));
+        final String patientId = cursor.getString(cursor.getColumnIndex(PatientEntry.COLUMN_PATIENT_ID));
+        final String userId = cursor.getString(cursor.getColumnIndex(PatientEntry.COLUMN_USER_ID));
+
+        final Patient patient = new Patient();
+        patient.set_id(_id);
+        patient.setFirstName(firstName);
+        patient.setLastName(lastName);
+        patient.setPatientId(patientId);
+        patient.setId(userId);
+        return patient;
+    }
+
+    public static ContentValues getContentValues(final Patient patient) {
+        final ContentValues contentValues = new ContentValues();
+        contentValues.put(PatientEntry.COLUMN_USER_ID, patient.getId());
+        contentValues.put(PatientEntry.COLUMN_FIRST_NAME, patient.getFirstName());
+        contentValues.put(PatientEntry.COLUMN_LAST_NAME, patient.getLastName());
+        contentValues.put(PatientEntry.COLUMN_PATIENT_ID, patient.getPatientId());
+        return contentValues;
+    }
 
     public static final class PatientEntry implements BaseColumns {
 
@@ -29,6 +61,9 @@ public class PatientContract extends SymptomManagementContract {
         public static final String COLUMN_LAST_NAME = "last_name";
         public static final String COLUMN_PATIENT_ID = "patient_id";
         public static final String COLUMN_USER_ID = "user_id";
+
+        public static final String[] ALL_COLUMNS = new String[]{_ID, COLUMN_FIRST_NAME,
+                COLUMN_LAST_NAME, COLUMN_PATIENT_ID, COLUMN_USER_ID};
 
         public static final String SQL_CREATE = "CREATE TABLE "
                 + TABLE_NAME + "("

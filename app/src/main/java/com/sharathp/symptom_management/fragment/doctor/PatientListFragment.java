@@ -1,25 +1,27 @@
 package com.sharathp.symptom_management.fragment.doctor;
 
 import android.app.Activity;
+import android.app.LoaderManager;
+import android.content.Context;
+import android.content.CursorLoader;
+import android.content.Loader;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.CursorAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import com.sharathp.symptom_management.R;
+import com.sharathp.symptom_management.data.PatientContract;
 import com.sharathp.symptom_management.fragment.BaseListFragment;
-import com.sharathp.symptom_management.http.SymptomManagementAPI;
-import com.sharathp.symptom_management.loader.Callback;
-import com.sharathp.symptom_management.loader.RetrofitLoader;
-import com.sharathp.symptom_management.loader.RetrofitLoaderUtil;
-import com.sharathp.symptom_management.login.Session;
 import com.sharathp.symptom_management.model.Patient;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.inject.Inject;
-
-import timber.log.Timber;
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 /**
  * A list fragment representing a list of Patients. This fragment
@@ -30,19 +32,11 @@ import timber.log.Timber;
  * Activities containing this fragment MUST implement the {@link Callbacks}
  * interface.
  */
-public class PatientListFragment extends BaseListFragment {
+public class PatientListFragment extends BaseListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String TAG = PatientListFragment.class.getSimpleName();
     private static final int PATIENTS_LOADER_ID = 0;
-    /**
-     * The serialization (saved instance state) Bundle key representing the
-     * activated item position. Only used on tablets.
-     */
-    private static final String STATE_ACTIVATED_POSITION = "activated_position";
-
-    @Inject
-    SymptomManagementAPI mSymptomManagementAPI;
-
-    private List<Patient> mPatients;
+    private ListView mListView;
+    private PatientListAdapter mPatientListAdapter;
 
     /**
      * The fragment's current callback object, which is notified of list item
@@ -56,68 +50,44 @@ public class PatientListFragment extends BaseListFragment {
     private int mActivatedPosition = ListView.INVALID_POSITION;
 
     /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
+     * The serialization (saved instance state) Bundle key representing the
+     * activated item position. Only used on tablets.
      */
-    public PatientListFragment() {
-        // no-op
-    }
-
-    @Override
-    public void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setListAdapater(new ArrayList<Patient>());
-    }
+    private static final String STATE_ACTIVATED_POSITION = "activated_position";
 
     @Override
     public void onViewCreated(final View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        mPatientListAdapter = new PatientListAdapter(getActivity(), null, 0);
+        mListView = getListView();
+        mListView.setAdapter(mPatientListAdapter);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(final AdapterView<?> adapterView, final View view, final int position, final long l) {
+                final Cursor cursor = mPatientListAdapter.getCursor();
+                if (cursor != null && cursor.moveToPosition(position)) {
+                    final Patient patient = PatientContract.readPatient(cursor);
+                    mCallbacks.onItemSelected(patient.getId());
+                }
+            }
+        });
         // Restore the previously serialized activated item position.
         if (savedInstanceState != null
                 && savedInstanceState.containsKey(STATE_ACTIVATED_POSITION)) {
             setActivatedPosition(savedInstanceState.getInt(STATE_ACTIVATED_POSITION));
         }
-        loadPatients();
     }
 
-    private void loadPatients() {
-        RetrofitLoaderUtil.init(getLoaderManager(), PATIENTS_LOADER_ID,
-            new RetrofitLoader<List<Patient>, SymptomManagementAPI>(getActivity(), mSymptomManagementAPI) {
-                @Override
-                public List<Patient> call(final SymptomManagementAPI symptomManagementAPI) {
-                    final String doctorId = Session.restore(getActivity()).getUserId();
-                    return symptomManagementAPI.getPatientsForDoctor(doctorId);
-                }
-            },
-            new Callback<List<Patient>>() {
-                @Override
-                public void onSuccess(final List<Patient> result) {
-                    setListAdapater(result);
-                }
-
-                @Override
-                public void onFailure(final Exception e) {
-                    Timber.d(TAG, "Unable to retrieve mPatients list: " + e.getMessage());
-                    //TODO - find a way to logout
-                }
-            });
-    }
-
-    private void setListAdapater(final List<Patient> patients) {
-        this.mPatients = patients;
-        setListAdapter(new ArrayAdapter<Patient>(
-                getActivity(),
-                android.R.layout.simple_list_item_activated_1,
-                android.R.id.text1,
-                patients));
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        getLoaderManager().initLoader(PATIENTS_LOADER_ID, null, this);
+        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
     public void onAttach(final Activity activity) {
         super.onAttach(activity);
 
-        // Activities containing this fragment must implement its callbacks.
         if (!(activity instanceof Callbacks)) {
             throw new IllegalStateException("Activity must implement fragment's callbacks.");
         }
@@ -131,16 +101,6 @@ public class PatientListFragment extends BaseListFragment {
 
         // Reset the active callbacks interface to the dummy implementation.
         mCallbacks = sDummyCallbacks;
-    }
-
-    @Override
-    public void onListItemClick(final ListView listView, final View view, final int position,
-                                final long id) {
-        super.onListItemClick(listView, view, position, id);
-
-        // Notify the active callbacks interface (the activity, if the
-        // fragment is attached to one) that an item has been selected.
-        mCallbacks.onItemSelected(mPatients.get(position).getId());
     }
 
     @Override
@@ -174,6 +134,36 @@ public class PatientListFragment extends BaseListFragment {
         mActivatedPosition = position;
     }
 
+    @Override
+    public Loader<Cursor> onCreateLoader(final int id, final Bundle args) {
+        switch (id) {
+            case PATIENTS_LOADER_ID:
+                final String sortOrder = PatientContract.PatientEntry.COLUMN_FIRST_NAME + " ASC";
+                return new CursorLoader(getActivity(), PatientContract.PatientEntry.CONTENT_URI,
+                        PatientContract.PatientEntry.ALL_COLUMNS, null, null, sortOrder);
+            default:
+                return null;
+        }
+    }
+
+    @Override
+    public void onLoadFinished(final Loader<Cursor> loader, final Cursor cursor) {
+        final int count = cursor.getCount();
+        mPatientListAdapter.swapCursor(cursor);
+        if (mActivatedPosition != ListView.INVALID_POSITION) {
+            // If we don't need to restart the loader, and there's a desired position to restore
+            // to, do so now.
+            mListView.smoothScrollToPosition(mActivatedPosition);
+        }
+    }
+
+    @Override
+    public void onLoaderReset(final Loader<Cursor> loader) {
+        mPatientListAdapter.swapCursor(null);
+    }
+
+    // nested classes and interfaces..
+
     /**
      * A callback interface that all activities containing this fragment must
      * implement. This mechanism allows activities to be notified of item
@@ -196,4 +186,39 @@ public class PatientListFragment extends BaseListFragment {
             // no-op
         }
     };
+
+    static class PatientListAdapter extends CursorAdapter {
+
+        PatientListAdapter(final Context context, final Cursor c, final int flags) {
+            super(context, c, flags);
+        }
+
+        @Override
+        public View newView(final Context context, final Cursor cursor, final ViewGroup parent) {
+            final View view = LayoutInflater.from(context).inflate(R.layout.d_list_item_patient, parent, false);
+            final ViewHolder viewHolder = new ViewHolder(view);
+            view.setTag(viewHolder);
+            return view;
+        }
+
+        @Override
+        public void bindView(final View view, final Context context, final Cursor cursor) {
+            final ViewHolder viewHolder = (ViewHolder) view.getTag();
+            final Patient patient = PatientContract.readPatient(cursor);
+            viewHolder.mNameView.setText(patient.getFirstName() + " " + patient.getLastName());
+            viewHolder.mPatientIdView.setText(patient.getPatientId());
+        }
+    }
+
+    static class ViewHolder {
+        @InjectView(R.id.nameView)
+        TextView mNameView;
+
+        @InjectView(R.id.patientIdView)
+        TextView mPatientIdView;
+
+        ViewHolder(final View view) {
+            ButterKnife.inject(this, view);
+        }
+    }
 }
