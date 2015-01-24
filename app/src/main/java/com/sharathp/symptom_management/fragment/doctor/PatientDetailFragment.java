@@ -28,10 +28,6 @@ import timber.log.Timber;
  */
 public class PatientDetailFragment extends BaseFragment {
     private static final String TAG = PatientDetailFragment.class.getSimpleName();
-    /**
-     * The fragment argument representing the item ID that this fragment
-     * represents.
-     */
     public static final String ARG_PATIENT_ID = "patient_id";
     private static final int PATIENT_LOADER_ID = 0;
 
@@ -43,17 +39,9 @@ public class PatientDetailFragment extends BaseFragment {
 
     private Patient mPatient;
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
-    public PatientDetailFragment() {
-        // no-op
-    }
-
     @Override
-    public void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onActivityCreated(final Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         if (getArguments().containsKey(ARG_PATIENT_ID)) {
             loadPatient(getArguments().getString(ARG_PATIENT_ID));
