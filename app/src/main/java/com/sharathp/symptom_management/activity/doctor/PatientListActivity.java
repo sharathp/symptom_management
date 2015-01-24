@@ -106,13 +106,13 @@ public class PatientListActivity extends BaseActivity
      * indicating that the item with the given ID was selected.
      */
     @Override
-    public void onItemSelected(final String id) {
+    public void onItemSelected(final long id) {
         if (mTwoPane) {
             // In two-pane mode, show the detail view in this activity by
             // adding or replacing the detail fragment using a
             // fragment transaction.
             final Bundle arguments = new Bundle();
-            arguments.putString(PatientDetailFragment.ARG_PATIENT_ID, id);
+            arguments.putLong(PatientDetailFragment.ARG_PATIENT_ID, id);
             final PatientDetailFragment fragment = new PatientDetailFragment();
             fragment.setArguments(arguments);
             getFragmentManager().beginTransaction()

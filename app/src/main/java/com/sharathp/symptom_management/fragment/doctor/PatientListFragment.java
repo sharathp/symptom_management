@@ -138,7 +138,7 @@ public class PatientListFragment extends BaseListFragment implements LoaderManag
                 final Cursor cursor = mPatientListAdapter.getCursor();
                 if (cursor != null && cursor.moveToPosition(position)) {
                     final Patient patient = PatientContract.readPatient(cursor);
-                    mCallbacks.onItemSelected(patient.getId());
+                    mCallbacks.onItemSelected(patient.get_id());
                     mActivatedPosition = position;
                 }
             }
@@ -194,7 +194,7 @@ public class PatientListFragment extends BaseListFragment implements LoaderManag
         /**
          * Callback for when an item has been selected.
          */
-        public void onItemSelected(String id);
+        void onItemSelected(long id);
     }
 
     /**
@@ -203,7 +203,7 @@ public class PatientListFragment extends BaseListFragment implements LoaderManag
      */
     private static Callbacks sDummyCallbacks = new Callbacks() {
         @Override
-        public void onItemSelected(String id) {
+        public void onItemSelected(final long id) {
             // no-op
         }
     };

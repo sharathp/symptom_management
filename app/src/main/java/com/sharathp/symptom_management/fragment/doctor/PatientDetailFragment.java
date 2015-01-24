@@ -1,6 +1,10 @@
 package com.sharathp.symptom_management.fragment.doctor;
 
-import android.app.Fragment;
+import android.app.LoaderManager;
+import android.content.CursorLoader;
+import android.content.Loader;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,17 +12,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.sharathp.symptom_management.R;
+import com.sharathp.symptom_management.data.PatientContract;
 import com.sharathp.symptom_management.fragment.BaseFragment;
 import com.sharathp.symptom_management.http.SymptomManagementAPI;
-import com.sharathp.symptom_management.loader.Callback;
-import com.sharathp.symptom_management.loader.RetrofitLoader;
-import com.sharathp.symptom_management.loader.RetrofitLoaderUtil;
 import com.sharathp.symptom_management.model.Patient;
 
 import javax.inject.Inject;
 
 import butterknife.InjectView;
-import timber.log.Timber;
 
 /**
  * A fragment representing a single Patient detail screen.
@@ -26,7 +27,7 @@ import timber.log.Timber;
  * in two-pane mode (on tablets) or a {@link com.sharathp.symptom_management.activity.doctor.PatientDetailActivity}
  * on handsets.
  */
-public class PatientDetailFragment extends BaseFragment {
+public class PatientDetailFragment extends BaseFragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String TAG = PatientDetailFragment.class.getSimpleName();
     public static final String ARG_PATIENT_ID = "patient_id";
     private static final int PATIENT_LOADER_ID = 0;
@@ -37,6 +38,7 @@ public class PatientDetailFragment extends BaseFragment {
     @InjectView(R.id.first_name_text_view)
     TextView mTextView;
 
+    private long mPatient_id;
     private Patient mPatient;
 
     @Override
@@ -44,30 +46,44 @@ public class PatientDetailFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
 
         if (getArguments().containsKey(ARG_PATIENT_ID)) {
-            loadPatient(getArguments().getString(ARG_PATIENT_ID));
+            mPatient_id = getArguments().getLong(ARG_PATIENT_ID);
+            loadPatient();
         }
     }
 
-    private void loadPatient(final String patientId) {
-        RetrofitLoaderUtil.init(getLoaderManager(), PATIENT_LOADER_ID,
-                new RetrofitLoader<Patient, SymptomManagementAPI>(getActivity(), mSymptomManagementAPI) {
-                    @Override
-                    public Patient call(final SymptomManagementAPI symptomManagementAPI) {
-                        return symptomManagementAPI.getPatientById(patientId);
-                    }
-                },
-                new Callback<Patient>() {
-                    @Override
-                    public void onSuccess(final Patient result) {
-                        displayPatient(result);
-                    }
+    private void loadPatient() {
+        getLoaderManager().initLoader(PATIENT_LOADER_ID, null, this);
+    }
 
-                    @Override
-                    public void onFailure(final Exception e) {
-                        Timber.d(TAG, "Unable to retrieve patient: " + e.getMessage());
-                        //TODO - find a way to logout
-                    }
-                });
+    @Override
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
+                             final Bundle savedInstanceState) {
+        final View rootView = inflater.inflate(R.layout.d_fragment_patient_detail, container, false);
+        return rootView;
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(final int id, final Bundle args) {
+        switch (id) {
+            case PATIENT_LOADER_ID:
+                final Uri patientUri = PatientContract.PatientEntry.buildPatientUri(mPatient_id);
+                final CursorLoader cursorLoader = new CursorLoader(getActivity(), patientUri,
+                        PatientContract.PatientEntry.ALL_COLUMNS, null, null, null);
+                return cursorLoader;
+            default:
+                return null;
+        }
+    }
+
+    @Override
+    public void onLoadFinished(final Loader<Cursor> loader, final Cursor cursor) {
+        final Uri patientUri = PatientContract.PatientEntry.buildPatientUri(mPatient_id);
+        cursor.setNotificationUri(getActivity().getContentResolver(), patientUri);
+        if (!cursor.moveToFirst()) {
+            return;
+        }
+        final Patient patient = PatientContract.readPatient(cursor);
+        displayPatient(patient);
     }
 
     private void displayPatient(final Patient patient) {
@@ -79,9 +95,7 @@ public class PatientDetailFragment extends BaseFragment {
     }
 
     @Override
-    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
-                             final Bundle savedInstanceState) {
-        final View rootView = inflater.inflate(R.layout.d_fragment_patient_detail, container, false);
-        return rootView;
+    public void onLoaderReset(final Loader<Cursor> loader) {
+        // no-op
     }
 }
