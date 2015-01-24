@@ -15,11 +15,11 @@ import dagger.Provides;
 @Module(
         includes = {
             DatabaseModule.class,
-            RestClientModule.class
+            RestClientModule.class,
+            ServiceModule.class
         },
         injects = {
-            SymptomManagementApplication.class,
-            PatientService.class
+            SymptomManagementApplication.class
         },
         library = true)
 public class RootModule {
