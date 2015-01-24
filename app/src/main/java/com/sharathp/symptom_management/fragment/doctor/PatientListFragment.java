@@ -56,30 +56,24 @@ public class PatientListFragment extends BaseListFragment implements LoaderManag
     private static final String STATE_ACTIVATED_POSITION = "activated_position";
 
     @Override
-    public void onViewCreated(final View view, final Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        mPatientListAdapter = new PatientListAdapter(getActivity(), null, 0);
-        mListView = getListView();
-        mListView.setAdapter(mPatientListAdapter);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(final AdapterView<?> adapterView, final View view, final int position, final long l) {
-                final Cursor cursor = mPatientListAdapter.getCursor();
-                if (cursor != null && cursor.moveToPosition(position)) {
-                    final Patient patient = PatientContract.readPatient(cursor);
-                    mCallbacks.onItemSelected(patient.getId());
-                }
-            }
-        });
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
+        final View view = super.onCreateView(inflater, container, savedInstanceState);
         // Restore the previously serialized activated item position.
         if (savedInstanceState != null
                 && savedInstanceState.containsKey(STATE_ACTIVATED_POSITION)) {
-            setActivatedPosition(savedInstanceState.getInt(STATE_ACTIVATED_POSITION));
+            mActivatedPosition = savedInstanceState.getInt(STATE_ACTIVATED_POSITION);
         }
+        return view;
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
+    public void onViewCreated(final View view, final Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initializeListViewAndAdapter();
+    }
+
+    @Override
+    public void onActivityCreated(final Bundle savedInstanceState) {
         getLoaderManager().initLoader(PATIENTS_LOADER_ID, null, this);
         super.onActivityCreated(savedInstanceState);
     }
@@ -106,8 +100,15 @@ public class PatientListFragment extends BaseListFragment implements LoaderManag
     @Override
     public void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
+
+        // If there's instance state, mine it for useful information.
+        // The end-goal here is that the user never knows that turning their device sideways
+        // does crazy lifecycle related things.  It should feel like some stuff stretched out,
+        // or magically appeared to take advantage of room, but data or place in the app was never
+        // actually *lost*.
         if (mActivatedPosition != ListView.INVALID_POSITION) {
-            // Serialize and persist the activated item position.
+            // The listview probably hasn't even been populated yet.  Actually perform the
+            // swapout in onLoadFinished.
             outState.putInt(STATE_ACTIVATED_POSITION, mActivatedPosition);
         }
     }
@@ -119,19 +120,40 @@ public class PatientListFragment extends BaseListFragment implements LoaderManag
     public void setActivateOnItemClick(final boolean activateOnItemClick) {
         // When setting CHOICE_MODE_SINGLE, ListView will automatically
         // give items the 'activated' state when touched.
-        getListView().setChoiceMode(activateOnItemClick
+        mListView.setChoiceMode(activateOnItemClick
                 ? ListView.CHOICE_MODE_SINGLE
                 : ListView.CHOICE_MODE_NONE);
     }
 
-    private void setActivatedPosition(final int position) {
-        if (position == ListView.INVALID_POSITION) {
-            getListView().setItemChecked(mActivatedPosition, false);
-        } else {
-            getListView().setItemChecked(position, true);
-        }
+    private void initializeListViewAndAdapter() {
+        mPatientListAdapter = new PatientListAdapter(getActivity(), null, 0);
+        setListAdapter(mPatientListAdapter);
+        // this is required as setting list adapter above, shows the list view
+        setListShown(false);
 
-        mActivatedPosition = position;
+        mListView = getListView();
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(final AdapterView<?> adapterView, final View view, final int position, final long l) {
+                final Cursor cursor = mPatientListAdapter.getCursor();
+                if (cursor != null && cursor.moveToPosition(position)) {
+                    final Patient patient = PatientContract.readPatient(cursor);
+                    mCallbacks.onItemSelected(patient.getId());
+                    mActivatedPosition = position;
+                }
+            }
+        });
+    }
+
+    private void setActivatedPosition() {
+        if (mActivatedPosition == ListView.INVALID_POSITION) {
+            mListView.setItemChecked(mActivatedPosition, false);
+        } else {
+            mListView.setItemChecked(mActivatedPosition, true);
+            // If we don't need to restart the loader, and there's a desired position to restore
+            // to, do so now.
+            mListView.smoothScrollToPosition(mActivatedPosition);
+        }
     }
 
     @Override
@@ -139,8 +161,9 @@ public class PatientListFragment extends BaseListFragment implements LoaderManag
         switch (id) {
             case PATIENTS_LOADER_ID:
                 final String sortOrder = PatientContract.PatientEntry.COLUMN_FIRST_NAME + " ASC";
-                return new CursorLoader(getActivity(), PatientContract.PatientEntry.CONTENT_URI,
+                final CursorLoader cursorLoader = new CursorLoader(getActivity(), PatientContract.PatientEntry.CONTENT_URI,
                         PatientContract.PatientEntry.ALL_COLUMNS, null, null, sortOrder);
+                return cursorLoader;
             default:
                 return null;
         }
@@ -148,13 +171,11 @@ public class PatientListFragment extends BaseListFragment implements LoaderManag
 
     @Override
     public void onLoadFinished(final Loader<Cursor> loader, final Cursor cursor) {
-        final int count = cursor.getCount();
         mPatientListAdapter.swapCursor(cursor);
-        if (mActivatedPosition != ListView.INVALID_POSITION) {
-            // If we don't need to restart the loader, and there's a desired position to restore
-            // to, do so now.
-            mListView.smoothScrollToPosition(mActivatedPosition);
-        }
+        // show list view - list view will be initially hidden..
+        setListShown(true);
+        cursor.setNotificationUri(getActivity().getContentResolver(), PatientContract.PatientEntry.CONTENT_URI);
+        setActivatedPosition();
     }
 
     @Override
