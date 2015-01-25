@@ -18,6 +18,7 @@ public class Session {
     private static final String USER_TYPE = "user_type";
     private static final String USER_NAME = "user_name";
     private static final String USER_ID = "user_id";
+    private static final String _ID = "_id";
 
     // User-type constants
     public static final int DOCTOR = 1;
@@ -28,6 +29,7 @@ public class Session {
     private String mAccessToken;
     private int mUserType;
     private String mUserId;
+    private long m_id;
 
     private Session() {
         // singleton
@@ -46,11 +48,13 @@ public class Session {
             return instance;
         }
 
-        final SharedPreferences prefs = context.getSharedPreferences(KEY, Context.MODE_PRIVATE);
+        final SharedPreferences prefs = getSharedPreferences(context);
         final String accessToken = prefs.getString(ACCESS_TOKEN, null);
         final String userName = prefs.getString(USER_NAME, null);
         final int userType = prefs.getInt(USER_TYPE, -1);
         final String userId = prefs.getString(USER_ID, null);
+        final long _id = prefs.getLong(_ID, -1);
+
         if(!isValid(userName, accessToken, userType, userId)) {
             clearSavedSession(context);
             return null;
@@ -61,6 +65,7 @@ public class Session {
         instance.mUserType = userType;
         instance.mAccessToken = accessToken;
         instance.mUserId = userId;
+        instance.m_id = _id;
         return instance;
     }
 
@@ -82,7 +87,7 @@ public class Session {
             Timber.e(TAG, sb.toString());
             return false;
         }
-        final SharedPreferences.Editor editor = context.getSharedPreferences(KEY, Context.MODE_PRIVATE).edit();
+        final SharedPreferences.Editor editor = getSharedPreferences(context).edit();
         return editor.putString(USER_NAME, userName)
                 .putString(ACCESS_TOKEN, accessToken)
                 .putInt(USER_TYPE, userType)
@@ -96,13 +101,27 @@ public class Session {
                 && accessToken != null && userId != null);
     }
 
+    public void set_id(final Context context, final Long _id) {
+        if(_id == null) {
+            return;
+        }
+
+        final SharedPreferences.Editor editor = getSharedPreferences(context).edit();
+        editor.putLong(_ID, _id).commit();
+        m_id = _id;
+    }
+
     /**
      * Clears the saved session data.
      */
-    public static synchronized void clearSavedSession(Context context) {
-        final SharedPreferences.Editor editor = context.getSharedPreferences(KEY, Context.MODE_PRIVATE).edit();
+    public static synchronized void clearSavedSession(final Context context) {
+        final SharedPreferences.Editor editor = getSharedPreferences(context).edit();
         editor.clear().commit();
         instance = null;
+    }
+
+    private static SharedPreferences getSharedPreferences(final Context context) {
+        return context.getApplicationContext().getSharedPreferences(KEY, Context.MODE_PRIVATE);
     }
 
     public String getUserName() {
@@ -119,6 +138,10 @@ public class Session {
 
     public String getUserId() {
         return mUserId;
+    }
+
+    public long get_id() {
+        return m_id;
     }
 
     public boolean isDoctor() {

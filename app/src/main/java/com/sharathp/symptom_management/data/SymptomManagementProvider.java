@@ -10,13 +10,12 @@ import android.net.Uri;
 
 import com.sharathp.symptom_management.app.SymptomManagementApplication;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import dagger.Lazy;
 
-/**
- *
- */
 public class SymptomManagementProvider extends ContentProvider {
     private static final UriMatcher sUriMatcher = buildUriMatcher();
 
@@ -25,6 +24,10 @@ public class SymptomManagementProvider extends ContentProvider {
 
     private static final int PATIENT = 200;
     private static final int PATIENT_ID = 201;
+
+    private static final int DOCTOR = 300;
+    private static final int DOCTOR_ID = 301;
+    private static final int DOCTOR_PATIENTS = 302;
 
     @Inject
     Lazy<SQLiteDatabase> database;
@@ -38,6 +41,10 @@ public class SymptomManagementProvider extends ContentProvider {
 
         matcher.addURI(authority, PatientContract.PATH_PATIENT, PATIENT);
         matcher.addURI(authority, PatientContract.PATH_PATIENT + "/#", PATIENT_ID);
+
+        matcher.addURI(authority, DoctorContract.PATH_DOCTOR, DOCTOR);
+        matcher.addURI(authority, DoctorContract.PATH_DOCTOR + "/#", DOCTOR_ID);
+        matcher.addURI(authority, DoctorContract.PATH_DOCTOR + "/#/patients", DOCTOR_PATIENTS);
 
         return matcher;
     }
@@ -101,6 +108,43 @@ public class SymptomManagementProvider extends ContentProvider {
                 );
                 break;
             }
+            case DOCTOR_ID: {
+                retCursor = database.get().query(
+                        DoctorContract.DoctorEntry.TABLE_NAME,
+                        projection,
+                        DoctorContract.DoctorEntry._ID + " = '" + ContentUris.parseId(uri) + "'",
+                        null,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            }
+            case DOCTOR: {
+                retCursor = database.get().query(
+                        DoctorContract.DoctorEntry.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            }
+            case DOCTOR_PATIENTS: {
+                final String doctor_id = getDoctor_id(uri);
+                retCursor = database.get().query(
+                        PatientContract.PatientEntry.TABLE_NAME,
+                        projection,
+                        PatientContract.PatientEntry.COLUMN_DOCTOR_ID + " = ?",
+                        new String[] {doctor_id},
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            }
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -109,9 +153,7 @@ public class SymptomManagementProvider extends ContentProvider {
 
     @Override
     public String getType(final Uri uri) {
-        final int match = sUriMatcher.match(uri);
-
-        switch (match) {
+        switch (sUriMatcher.match(uri)) {
             case REMINDER:
                 return SymptomManagementContract.ReminderEntry.CONTENT_TYPE;
             case REMINDER_ID:
@@ -120,6 +162,12 @@ public class SymptomManagementProvider extends ContentProvider {
                 return PatientContract.PatientEntry.CONTENT_TYPE;
             case PATIENT_ID:
                 return PatientContract.PatientEntry.CONTENT_ITEM_TYPE;
+            case DOCTOR:
+                return DoctorContract.DoctorEntry.CONTENT_TYPE;
+            case DOCTOR_ID:
+                return DoctorContract.DoctorEntry.CONTENT_ITEM_TYPE;
+            case DOCTOR_PATIENTS:
+                return PatientContract.PatientEntry.CONTENT_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -127,14 +175,25 @@ public class SymptomManagementProvider extends ContentProvider {
 
     @Override
     public Uri insert(final Uri uri, final ContentValues values) {
-        final int match = sUriMatcher.match(uri);
         Uri returnUri;
-
-        switch(match) {
+        switch(sUriMatcher.match(uri)) {
             case PATIENT: {
                 final long _id = database.get().insert(PatientContract.PatientEntry.TABLE_NAME, null, values);
                 if ( _id > 0 )
                     returnUri = PatientContract.PatientEntry.buildPatientUri(_id);
+                else
+                    throw new android.database.SQLException("Failed to insert row into " + uri);
+
+                final Uri doctorPatientsUri =  DoctorContract.DoctorEntry.buildPatientsUri(
+                        values.getAsLong(PatientContract.PatientEntry.COLUMN_DOCTOR_ID));
+                // notify patients changed for doctor..
+                getContext().getContentResolver().notifyChange(doctorPatientsUri, null);
+                break;
+            }
+            case DOCTOR: {
+                final long _id = database.get().insert(DoctorContract.DoctorEntry.TABLE_NAME, null, values);
+                if ( _id > 0 )
+                    returnUri = DoctorContract.DoctorEntry.buildDoctorUri(_id);
                 else
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 break;
@@ -155,6 +214,10 @@ public class SymptomManagementProvider extends ContentProvider {
                 rowsDeleted = database.get().delete(
                         PatientContract.PatientEntry.TABLE_NAME, selection, selectionArgs);
                 break;
+            case DOCTOR:
+                rowsDeleted = database.get().delete(
+                        DoctorContract.DoctorEntry.TABLE_NAME, selection, selectionArgs);
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -167,18 +230,26 @@ public class SymptomManagementProvider extends ContentProvider {
 
     @Override
     public int update(final Uri uri, final ContentValues values, final String selection, final String[] selectionArgs) {
-        final int match = sUriMatcher.match(uri);
         int rowsUpdated;
 
-        switch (match) {
+        switch (sUriMatcher.match(uri)) {
             case PATIENT:
                 rowsUpdated = database.get().update(PatientContract.PatientEntry.TABLE_NAME, values, selection,
                         selectionArgs);
                 break;
             case PATIENT_ID:
-                final long _id = ContentUris.parseId(uri);
+                final long patient_id = ContentUris.parseId(uri);
                 rowsUpdated = database.get().update(PatientContract.PatientEntry.TABLE_NAME, values,
-                        PatientContract.PatientEntry._ID + " = ?", new String[]{Long.toString(_id)});
+                        PatientContract.PatientEntry._ID + " = ?", new String[]{Long.toString(patient_id)});
+                break;
+            case DOCTOR:
+                rowsUpdated = database.get().update(DoctorContract.DoctorEntry.TABLE_NAME, values, selection,
+                        selectionArgs);
+                break;
+            case DOCTOR_ID:
+                final long doctor_id = ContentUris.parseId(uri);
+                rowsUpdated = database.get().update(DoctorContract.DoctorEntry.TABLE_NAME, values,
+                        DoctorContract.DoctorEntry._ID + " = ?", new String[]{Long.toString(doctor_id)});
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -187,5 +258,37 @@ public class SymptomManagementProvider extends ContentProvider {
             getContext().getContentResolver().notifyChange(uri, null);
         }
         return rowsUpdated;
+    }
+
+    // try best to notify changes..
+    private void notifyPatientsChanged(final Uri uri, final ContentValues values) {
+        Long doctor_id = null;
+
+        switch (sUriMatcher.match(uri)) {
+            case PATIENT:
+            case PATIENT_ID:
+                doctor_id = values.getAsLong(PatientContract.PatientEntry.COLUMN_DOCTOR_ID);
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+
+        if(doctor_id == null) {
+            return;
+        }
+
+        final Uri doctorPatientsUri =  DoctorContract.DoctorEntry.buildPatientsUri(doctor_id);
+        // notify patients changed for doctor..
+        getContext().getContentResolver().notifyChange(doctorPatientsUri, null);
+    }
+
+    private String getDoctor_id(final Uri uri) {
+        switch (sUriMatcher.match(uri)) {
+            case DOCTOR_PATIENTS:
+                final List<String> pathSegments = uri.getPathSegments();
+                return pathSegments.get(pathSegments.size() - 2);
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
     }
 }

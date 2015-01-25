@@ -8,9 +8,6 @@ import android.provider.BaseColumns;
 
 import com.sharathp.symptom_management.model.Patient;
 
-/**
- *
- */
 public class PatientContract extends SymptomManagementContract {
     public static final String PATH_PATIENT = "patient";
 
@@ -19,11 +16,11 @@ public class PatientContract extends SymptomManagementContract {
             return null;
         }
 
-        final long _id = cursor.getLong(cursor.getColumnIndex(PatientContract.PatientEntry._ID));
-        final String firstName = cursor.getString(cursor.getColumnIndex(PatientEntry.COLUMN_FIRST_NAME));
-        final String lastName = cursor.getString(cursor.getColumnIndex(PatientEntry.COLUMN_LAST_NAME));
-        final String patientId = cursor.getString(cursor.getColumnIndex(PatientEntry.COLUMN_PATIENT_ID));
-        final String userId = cursor.getString(cursor.getColumnIndex(PatientEntry.COLUMN_USER_ID));
+        final long _id = cursor.getLong(PatientEntry._ID_INDEX);
+        final String firstName = cursor.getString(PatientEntry.FIRST_NAME_INDEX);
+        final String lastName = cursor.getString(PatientEntry.LAST_NAME_INDEX);
+        final String patientId = cursor.getString(PatientEntry.PATIENT_ID_INDEX);
+        final String userId = cursor.getString(PatientEntry.USER_ID_INDEX);
 
         final Patient patient = new Patient();
         patient.set_id(_id);
@@ -61,9 +58,20 @@ public class PatientContract extends SymptomManagementContract {
         public static final String COLUMN_LAST_NAME = "last_name";
         public static final String COLUMN_PATIENT_ID = "patient_id";
         public static final String COLUMN_USER_ID = "user_id";
+        public static final String COLUMN_DOCTOR_ID = "doctor_id";
 
-        public static final String[] ALL_COLUMNS = new String[]{_ID, COLUMN_FIRST_NAME,
-                COLUMN_LAST_NAME, COLUMN_PATIENT_ID, COLUMN_USER_ID};
+        public static final String[] ALL_COLUMNS = new String[]{
+                _ID,
+                COLUMN_FIRST_NAME,
+                COLUMN_LAST_NAME,
+                COLUMN_PATIENT_ID,
+                COLUMN_USER_ID};
+
+        public static final int _ID_INDEX = 0;
+        public static final int FIRST_NAME_INDEX = 1;
+        public static final int LAST_NAME_INDEX = 2;
+        public static final int PATIENT_ID_INDEX = 3;
+        public static final int USER_ID_INDEX = 4;
 
         public static final String SQL_CREATE = "CREATE TABLE "
                 + TABLE_NAME + "("
@@ -71,7 +79,8 @@ public class PatientContract extends SymptomManagementContract {
                 + COLUMN_FIRST_NAME + " text not null, "
                 + COLUMN_LAST_NAME + " text not null, "
                 + COLUMN_PATIENT_ID + " text not null, "
-                + COLUMN_USER_ID + " text not null"
+                + COLUMN_USER_ID + " text not null, "
+                + COLUMN_DOCTOR_ID + " text not null"
                 + ");";
 
         public static Uri buildPatientUri(final long id) {

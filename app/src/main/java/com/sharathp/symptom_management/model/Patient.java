@@ -10,7 +10,6 @@ public class Patient {
     private String firstName;
     private String lastName;
     private String patientId;
-    private Doctor doctor;
     private List<Medication> medications;
 
     public long get_id() {
@@ -51,14 +50,6 @@ public class Patient {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public Doctor getDoctor() {
-        return doctor;
-    }
-
-    public void setDoctor(Doctor doctor) {
-        this.doctor = doctor;
     }
 
     public List<Medication> getMedications() {

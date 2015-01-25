@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,8 +17,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.sharathp.symptom_management.R;
+import com.sharathp.symptom_management.data.DoctorContract;
 import com.sharathp.symptom_management.data.PatientContract;
 import com.sharathp.symptom_management.fragment.BaseListFragment;
+import com.sharathp.symptom_management.login.Session;
 import com.sharathp.symptom_management.model.Patient;
 
 import butterknife.ButterKnife;
@@ -161,7 +164,7 @@ public class PatientListFragment extends BaseListFragment implements LoaderManag
         switch (id) {
             case PATIENTS_LOADER_ID:
                 final String sortOrder = PatientContract.PatientEntry.COLUMN_FIRST_NAME + " ASC";
-                final CursorLoader cursorLoader = new CursorLoader(getActivity(), PatientContract.PatientEntry.CONTENT_URI,
+                final CursorLoader cursorLoader = new CursorLoader(getActivity(), getPatientsUri(),
                         PatientContract.PatientEntry.ALL_COLUMNS, null, null, sortOrder);
                 return cursorLoader;
             default:
@@ -174,7 +177,8 @@ public class PatientListFragment extends BaseListFragment implements LoaderManag
         mPatientListAdapter.swapCursor(cursor);
         // show list view - list view will be initially hidden..
         setListShown(true);
-        cursor.setNotificationUri(getActivity().getContentResolver(), PatientContract.PatientEntry.CONTENT_URI);
+
+        cursor.setNotificationUri(getActivity().getContentResolver(), getPatientsUri());
         setActivatedPosition();
     }
 
@@ -195,6 +199,11 @@ public class PatientListFragment extends BaseListFragment implements LoaderManag
          * Callback for when an item has been selected.
          */
         void onItemSelected(long id);
+    }
+
+    private Uri getPatientsUri() {
+        final long doctor_id = Session.restore(getActivity()).get_id();
+        return DoctorContract.DoctorEntry.buildPatientsUri(doctor_id);
     }
 
     /**

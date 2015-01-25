@@ -20,6 +20,7 @@ public class SymptomManagementSQLiteHelper extends SQLiteOpenHelper {
     public void onCreate(final SQLiteDatabase db) {
         db.execSQL(SymptomManagementContract.ReminderEntry.SQL_CREATE);
         db.execSQL(PatientContract.PatientEntry.SQL_CREATE);
+        db.execSQL(DoctorContract.DoctorEntry.SQL_CREATE);
     }
 
     @Override
@@ -35,6 +36,7 @@ public class SymptomManagementSQLiteHelper extends SQLiteOpenHelper {
         // should be your top priority before modifying this method.
         db.execSQL("DROP TABLE IF EXISTS " + SymptomManagementContract.ReminderEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + PatientContract.PatientEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + DoctorContract.DoctorEntry.TABLE_NAME);
         onCreate(db);
     }
 }
