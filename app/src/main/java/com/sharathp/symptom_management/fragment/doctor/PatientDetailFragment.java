@@ -77,8 +77,6 @@ public class PatientDetailFragment extends BaseFragment implements LoaderManager
 
     @Override
     public void onLoadFinished(final Loader<Cursor> loader, final Cursor cursor) {
-        final Uri patientUri = PatientContract.PatientEntry.buildPatientUri(mPatient_id);
-        cursor.setNotificationUri(getActivity().getContentResolver(), patientUri);
         if (!cursor.moveToFirst()) {
             return;
         }

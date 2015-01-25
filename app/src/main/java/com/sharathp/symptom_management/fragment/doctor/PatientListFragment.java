@@ -177,8 +177,6 @@ public class PatientListFragment extends BaseListFragment implements LoaderManag
         mPatientListAdapter.swapCursor(cursor);
         // show list view - list view will be initially hidden..
         setListShown(true);
-
-        cursor.setNotificationUri(getActivity().getContentResolver(), getPatientsUri());
         setActivatedPosition();
     }
 
