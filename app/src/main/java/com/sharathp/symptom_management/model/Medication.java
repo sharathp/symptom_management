@@ -4,14 +4,23 @@ package com.sharathp.symptom_management.model;
  *
  */
 public class Medication {
-    private int id;
+    private long _id;
+    private String id;
     private String name;
 
-    public int getId() {
+    public long get_id() {
+        return _id;
+    }
+
+    public void set_id(long _id) {
+        this._id = _id;
+    }
+
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

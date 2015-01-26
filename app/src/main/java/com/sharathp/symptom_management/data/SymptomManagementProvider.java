@@ -29,6 +29,9 @@ public class SymptomManagementProvider extends ContentProvider {
     private static final int DOCTOR_ID = 301;
     private static final int DOCTOR_PATIENTS = 302;
 
+    private static final int MEDICATION = 400;
+    private static final int MEDICATION_ID = 401;
+
     @Inject
     Lazy<SQLiteDatabase> database;
 
@@ -45,6 +48,9 @@ public class SymptomManagementProvider extends ContentProvider {
         matcher.addURI(authority, DoctorContract.PATH_DOCTOR, DOCTOR);
         matcher.addURI(authority, DoctorContract.PATH_DOCTOR + "/#", DOCTOR_ID);
         matcher.addURI(authority, DoctorContract.PATH_DOCTOR + "/#/patients", DOCTOR_PATIENTS);
+
+        matcher.addURI(authority, MedicationContract.PATH_MEDICATION, MEDICATION);
+        matcher.addURI(authority, MedicationContract.PATH_MEDICATION + "/#", MEDICATION_ID);
 
         return matcher;
     }
