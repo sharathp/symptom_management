@@ -101,34 +101,27 @@ public class SymptomManagementProvider extends ContentProvider {
                         final String[] selectionArgs, final String sortOrder) {
         Cursor retCursor = null;
         switch (sUriMatcher.match(uri)) {
-            case REMINDER_ID: {
+            case REMINDER_ID:
                 retCursor = mReminderDao.queryById(ContentUris.parseId(uri), projection);
                 break;
-            }
-            case REMINDER: {
+            case REMINDER:
                 retCursor = mReminderDao.query(projection, selection, selectionArgs, sortOrder);
                 break;
-            }
-            case PATIENT_ID: {
+            case PATIENT_ID:
                 retCursor = mPatientDao.queryById(ContentUris.parseId(uri), projection);
                 break;
-            }
-            case PATIENT: {
+            case PATIENT:
                 retCursor = mPatientDao.query(projection, selection, selectionArgs, sortOrder);
                 break;
-            }
-            case DOCTOR_ID: {
+            case DOCTOR_ID:
                 retCursor = mDoctorDao.queryById(ContentUris.parseId(uri), projection);
                 break;
-            }
-            case DOCTOR: {
+            case DOCTOR:
                 retCursor = mDoctorDao.query(projection, selection, selectionArgs, sortOrder);
                 break;
-            }
-            case DOCTOR_PATIENTS: {
+            case DOCTOR_PATIENTS:
                 retCursor = mPatientDao.getPatientsForDoctor(getDoctor_id(uri), projection, sortOrder);
                 break;
-            }
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -140,21 +133,19 @@ public class SymptomManagementProvider extends ContentProvider {
     public Uri insert(final Uri uri, final ContentValues values) {
         Uri returnUri = null;
         switch(sUriMatcher.match(uri)) {
-            case PATIENT: {
-                final long _id = mPatientDao.insert(values);
-                if ( _id > 0 ) {
-                    returnUri = PatientContract.PatientEntry.buildPatientUri(_id);
+            case PATIENT:
+                final long patient_id = mPatientDao.insert(values);
+                if ( patient_id > 0 ) {
+                    returnUri = PatientContract.PatientEntry.buildPatientUri(patient_id);
                     notifyPatientsChanged(uri, values);
                 }
                 break;
-            }
-            case DOCTOR: {
-                final long _id = mDoctorDao.insert(values);
-                if ( _id > 0 ) {
-                    returnUri = DoctorContract.DoctorEntry.buildDoctorUri(_id);
+            case DOCTOR:
+                final long doctor_id = mDoctorDao.insert(values);
+                if ( doctor_id > 0 ) {
+                    returnUri = DoctorContract.DoctorEntry.buildDoctorUri(doctor_id);
                 }
                 break;
-            }
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
