@@ -6,13 +6,9 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.sharathp.symptom_management.dao.Dao;
 
-import javax.inject.Inject;
+public abstract class DefaultDao<T> implements Dao<T> {
 
-public class DefaultDao<T> implements Dao<T> {
-
-    @Inject
-    SQLiteDatabase mDatabase;
-
+    protected SQLiteDatabase mDatabase;
     protected String mTable;
     protected String m_idColumn = "_id";
 
@@ -63,6 +59,10 @@ public class DefaultDao<T> implements Dao<T> {
     @Override
     public int delete(final String selection, final String[] selectionArgs) {
         return mDatabase.delete(mTable, selection, selectionArgs);
+    }
+
+    public void setDatabase(final SQLiteDatabase database) {
+        this.mDatabase = database;
     }
 
     public void setTable(final String table) {

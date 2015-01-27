@@ -4,22 +4,18 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.sharathp.symptom_management.app.ForApplication;
-import com.sharathp.symptom_management.dao.Dao;
+import com.sharathp.symptom_management.dao.DoctorDao;
+import com.sharathp.symptom_management.dao.MedicationDao;
 import com.sharathp.symptom_management.dao.PatientDao;
+import com.sharathp.symptom_management.dao.ReminderDao;
 import com.sharathp.symptom_management.dao.impl.DefaultDao;
+import com.sharathp.symptom_management.dao.impl.DefaultDoctorDao;
+import com.sharathp.symptom_management.dao.impl.DefaultMedicationDao;
 import com.sharathp.symptom_management.dao.impl.DefaultPatientDao;
-import com.sharathp.symptom_management.data.DoctorContract;
-import com.sharathp.symptom_management.data.MedicationContract;
-import com.sharathp.symptom_management.data.PatientContract;
-import com.sharathp.symptom_management.data.ReminderContract;
+import com.sharathp.symptom_management.dao.impl.DefaultReminderDao;
 import com.sharathp.symptom_management.data.SymptomManagementProvider;
 import com.sharathp.symptom_management.data.SymptomManagementSQLiteHelper;
-import com.sharathp.symptom_management.model.Doctor;
-import com.sharathp.symptom_management.model.Medication;
-import com.sharathp.symptom_management.model.Reminder;
 
-import javax.inject.Named;
-import javax.inject.Qualifier;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -40,35 +36,27 @@ public class DatabaseModule {
         return dbHelper.getWritableDatabase();
     }
 
-    @Named("doctor")
     @Provides
     @Singleton
-    Dao<Doctor> provideDoctorDao(final DefaultDao<Doctor> configured) {
-        configured.setTable(DoctorContract.DoctorEntry.TABLE_NAME);
-        return configured;
+    DoctorDao provideDoctorDao(final DefaultDoctorDao defaultDoctorDao) {
+        return defaultDoctorDao;
     }
 
-    @Named("patient")
     @Provides
     @Singleton
-    PatientDao providePatientDao(final DefaultPatientDao configured) {
-        configured.setTable(PatientContract.PatientEntry.TABLE_NAME);
-        return configured;
+    PatientDao providePatientDao(final DefaultPatientDao defaultPatientDao) {
+        return defaultPatientDao;
     }
 
-    @Named("medication")
     @Provides
     @Singleton
-    Dao<Medication> provideMedicationDao(final DefaultDao<Medication> configured) {
-        configured.setTable(MedicationContract.MedicationEntry.TABLE_NAME);
-        return configured;
+    MedicationDao provideMedicationDao(final DefaultMedicationDao defaultMedicationDao) {
+        return defaultMedicationDao;
     }
 
-    @Named("reminder")
     @Provides
     @Singleton
-    Dao<Reminder> provideReminderDao(final DefaultDao<Reminder> configured) {
-        configured.setTable(ReminderContract.ReminderEntry.TABLE_NAME);
-        return configured;
+    ReminderDao provideReminderDao(final DefaultReminderDao defaultReminderDao) {
+        return defaultReminderDao;
     }
 }

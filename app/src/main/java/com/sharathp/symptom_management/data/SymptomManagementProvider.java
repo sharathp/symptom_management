@@ -7,8 +7,17 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.util.Log;
 
 import com.sharathp.symptom_management.app.SymptomManagementApplication;
+import com.sharathp.symptom_management.dao.Dao;
+import com.sharathp.symptom_management.dao.DoctorDao;
+import com.sharathp.symptom_management.dao.MedicationDao;
+import com.sharathp.symptom_management.dao.PatientDao;
+import com.sharathp.symptom_management.dao.ReminderDao;
+import com.sharathp.symptom_management.model.Doctor;
+import com.sharathp.symptom_management.model.Medication;
+import com.sharathp.symptom_management.model.Reminder;
 
 import java.util.List;
 
@@ -17,6 +26,8 @@ import javax.inject.Inject;
 import dagger.Lazy;
 
 public class SymptomManagementProvider extends ContentProvider {
+    private static final String TAG = SymptomManagementProvider.class.getSimpleName();
+
     private static final UriMatcher sUriMatcher = buildUriMatcher();
 
     private static final int REMINDER = 100;
@@ -33,7 +44,16 @@ public class SymptomManagementProvider extends ContentProvider {
     private static final int MEDICATION_ID = 401;
 
     @Inject
-    Lazy<SQLiteDatabase> database;
+    DoctorDao mDoctorDao;
+
+    @Inject
+    PatientDao mPatientDao;
+
+    @Inject
+    MedicationDao mMedicationDao;
+
+    @Inject
+    ReminderDao mReminderDao;
 
     private static UriMatcher buildUriMatcher() {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -62,103 +82,6 @@ public class SymptomManagementProvider extends ContentProvider {
     }
 
     @Override
-    public Cursor query(final Uri uri, final String[] projection, final String selection,
-                        final String[] selectionArgs, final String sortOrder) {
-        Cursor retCursor = null;
-        switch (sUriMatcher.match(uri)) {
-            case REMINDER_ID: {
-                retCursor = database.get().query(
-                        SymptomManagementContract.ReminderEntry.TABLE_NAME,
-                        projection,
-                        SymptomManagementContract.ReminderEntry._ID + " = '" + ContentUris.parseId(uri) + "'",
-                        null,
-                        null,
-                        null,
-                        sortOrder
-                );
-                break;
-            }
-            case REMINDER: {
-                retCursor = database.get().query(
-                        SymptomManagementContract.ReminderEntry.TABLE_NAME,
-                        projection,
-                        selection,
-                        selectionArgs,
-                        null,
-                        null,
-                        sortOrder
-                );
-                break;
-            }
-            case PATIENT_ID: {
-                retCursor = database.get().query(
-                        PatientContract.PatientEntry.TABLE_NAME,
-                        projection,
-                        PatientContract.PatientEntry._ID + " = '" + ContentUris.parseId(uri) + "'",
-                        null,
-                        null,
-                        null,
-                        sortOrder
-                );
-                break;
-            }
-            case PATIENT: {
-                retCursor = database.get().query(
-                        PatientContract.PatientEntry.TABLE_NAME,
-                        projection,
-                        selection,
-                        selectionArgs,
-                        null,
-                        null,
-                        sortOrder
-                );
-                break;
-            }
-            case DOCTOR_ID: {
-                retCursor = database.get().query(
-                        DoctorContract.DoctorEntry.TABLE_NAME,
-                        projection,
-                        DoctorContract.DoctorEntry._ID + " = '" + ContentUris.parseId(uri) + "'",
-                        null,
-                        null,
-                        null,
-                        sortOrder
-                );
-                break;
-            }
-            case DOCTOR: {
-                retCursor = database.get().query(
-                        DoctorContract.DoctorEntry.TABLE_NAME,
-                        projection,
-                        selection,
-                        selectionArgs,
-                        null,
-                        null,
-                        sortOrder
-                );
-                break;
-            }
-            case DOCTOR_PATIENTS: {
-                final String doctor_id = getDoctor_id(uri);
-                retCursor = database.get().query(
-                        PatientContract.PatientEntry.TABLE_NAME,
-                        projection,
-                        PatientContract.PatientEntry.COLUMN_DOCTOR_ID + " = ?",
-                        new String[] {doctor_id},
-                        null,
-                        null,
-                        sortOrder
-                );
-                break;
-            }
-            default:
-                throw new UnsupportedOperationException("Unknown uri: " + uri);
-        }
-        retCursor.setNotificationUri(getContext().getContentResolver(), uri);
-        return retCursor;
-    }
-
-    @Override
     public String getType(final Uri uri) {
         switch (sUriMatcher.match(uri)) {
             case REMINDER:
@@ -181,34 +104,73 @@ public class SymptomManagementProvider extends ContentProvider {
     }
 
     @Override
-    public Uri insert(final Uri uri, final ContentValues values) {
-        Uri returnUri;
-        switch(sUriMatcher.match(uri)) {
+    public Cursor query(final Uri uri, final String[] projection, final String selection,
+                        final String[] selectionArgs, final String sortOrder) {
+        Cursor retCursor = null;
+        switch (sUriMatcher.match(uri)) {
+            case REMINDER_ID: {
+                retCursor = mReminderDao.queryById(ContentUris.parseId(uri), projection);
+                break;
+            }
+            case REMINDER: {
+                retCursor = mReminderDao.query(projection, selection, selectionArgs, sortOrder);
+                break;
+            }
+            case PATIENT_ID: {
+                retCursor = mPatientDao.queryById(ContentUris.parseId(uri), projection);
+                break;
+            }
             case PATIENT: {
-                final long _id = database.get().insert(PatientContract.PatientEntry.TABLE_NAME, null, values);
-                if ( _id > 0 )
-                    returnUri = PatientContract.PatientEntry.buildPatientUri(_id);
-                else
-                    throw new android.database.SQLException("Failed to insert row into " + uri);
-
-                final Uri doctorPatientsUri =  DoctorContract.DoctorEntry.buildPatientsUri(
-                        values.getAsLong(PatientContract.PatientEntry.COLUMN_DOCTOR_ID));
-                // notify patients changed for doctor..
-                getContext().getContentResolver().notifyChange(doctorPatientsUri, null);
+                retCursor = mPatientDao.query(projection, selection, selectionArgs, sortOrder);
+                break;
+            }
+            case DOCTOR_ID: {
+                retCursor = mDoctorDao.queryById(ContentUris.parseId(uri), projection);
                 break;
             }
             case DOCTOR: {
-                final long _id = database.get().insert(DoctorContract.DoctorEntry.TABLE_NAME, null, values);
-                if ( _id > 0 )
-                    returnUri = DoctorContract.DoctorEntry.buildDoctorUri(_id);
-                else
-                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                retCursor = mDoctorDao.query(projection, selection, selectionArgs, sortOrder);
+                break;
+            }
+            case DOCTOR_PATIENTS: {
+                retCursor = mPatientDao.getPatientsForDoctor(getDoctor_id(uri), projection, sortOrder);
                 break;
             }
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-        getContext().getContentResolver().notifyChange(uri, null);
+        retCursor.setNotificationUri(getContext().getContentResolver(), uri);
+        return retCursor;
+    }
+
+    @Override
+    public Uri insert(final Uri uri, final ContentValues values) {
+        Uri returnUri = null;
+        switch(sUriMatcher.match(uri)) {
+            case PATIENT: {
+                final long _id = mPatientDao.insert(values);
+                if ( _id > 0 ) {
+                    returnUri = PatientContract.PatientEntry.buildPatientUri(_id);
+                    notifyPatientsChanged(uri, values);
+                }
+                break;
+            }
+            case DOCTOR: {
+                final long _id = mDoctorDao.insert(values);
+                if ( _id > 0 ) {
+                    returnUri = DoctorContract.DoctorEntry.buildDoctorUri(_id);
+                }
+                break;
+            }
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+
+        if(returnUri != null) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        } else {
+            Log.e(TAG, "Failed to insert row into " + uri);
+        }
         return returnUri;
     }
 
@@ -218,12 +180,16 @@ public class SymptomManagementProvider extends ContentProvider {
         int rowsDeleted;
         switch (match) {
             case PATIENT:
-                rowsDeleted = database.get().delete(
-                        PatientContract.PatientEntry.TABLE_NAME, selection, selectionArgs);
+                rowsDeleted = mPatientDao.delete(selection, selectionArgs);
                 break;
             case DOCTOR:
-                rowsDeleted = database.get().delete(
-                        DoctorContract.DoctorEntry.TABLE_NAME, selection, selectionArgs);
+                rowsDeleted = mDoctorDao.delete(selection, selectionArgs);
+                break;
+            case REMINDER:
+                rowsDeleted = mReminderDao.delete(selection, selectionArgs);
+                break;
+            case MEDICATION:
+                rowsDeleted = mMedicationDao.delete(selection, selectionArgs);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -237,26 +203,20 @@ public class SymptomManagementProvider extends ContentProvider {
 
     @Override
     public int update(final Uri uri, final ContentValues values, final String selection, final String[] selectionArgs) {
-        int rowsUpdated;
+        int rowsUpdated = 0;
 
         switch (sUriMatcher.match(uri)) {
             case PATIENT:
-                rowsUpdated = database.get().update(PatientContract.PatientEntry.TABLE_NAME, values, selection,
-                        selectionArgs);
+                rowsUpdated = mPatientDao.update(values, selection, selectionArgs);
                 break;
             case PATIENT_ID:
-                final long patient_id = ContentUris.parseId(uri);
-                rowsUpdated = database.get().update(PatientContract.PatientEntry.TABLE_NAME, values,
-                        PatientContract.PatientEntry._ID + " = ?", new String[]{Long.toString(patient_id)});
+                rowsUpdated = mPatientDao.updateEntry(ContentUris.parseId(uri), values);
                 break;
             case DOCTOR:
-                rowsUpdated = database.get().update(DoctorContract.DoctorEntry.TABLE_NAME, values, selection,
-                        selectionArgs);
+                rowsUpdated = mDoctorDao.update(values, selection, selectionArgs);
                 break;
             case DOCTOR_ID:
-                final long doctor_id = ContentUris.parseId(uri);
-                rowsUpdated = database.get().update(DoctorContract.DoctorEntry.TABLE_NAME, values,
-                        DoctorContract.DoctorEntry._ID + " = ?", new String[]{Long.toString(doctor_id)});
+                rowsUpdated = mDoctorDao.updateEntry(ContentUris.parseId(uri), values);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -289,11 +249,11 @@ public class SymptomManagementProvider extends ContentProvider {
         getContext().getContentResolver().notifyChange(doctorPatientsUri, null);
     }
 
-    private String getDoctor_id(final Uri uri) {
+    private long getDoctor_id(final Uri uri) {
         switch (sUriMatcher.match(uri)) {
             case DOCTOR_PATIENTS:
                 final List<String> pathSegments = uri.getPathSegments();
-                return pathSegments.get(pathSegments.size() - 2);
+                return Long.parseLong(pathSegments.get(pathSegments.size() - 2));
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }

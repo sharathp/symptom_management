@@ -1,12 +1,21 @@
 package com.sharathp.symptom_management.dao.impl;
 
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.sharathp.symptom_management.dao.PatientDao;
 import com.sharathp.symptom_management.data.PatientContract;
 import com.sharathp.symptom_management.model.Patient;
 
+import javax.inject.Inject;
+
 public class DefaultPatientDao extends DefaultDao<Patient> implements PatientDao {
+
+    @Inject
+    public DefaultPatientDao(final SQLiteDatabase database) {
+        mDatabase = database;
+        mTable = PatientContract.PatientEntry.TABLE_NAME;
+    }
 
     @Override
     public Cursor getPatientsForDoctor(final long doctor_id,
