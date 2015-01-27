@@ -6,8 +6,11 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.sharathp.symptom_management.dao.Dao;
 
+import javax.inject.Inject;
+
 public abstract class DefaultDao<T> implements Dao<T> {
 
+    @Inject
     protected SQLiteDatabase mDatabase;
     protected String mTable;
     protected String m_idColumn = "_id";

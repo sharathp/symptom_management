@@ -24,7 +24,10 @@ import dagger.Provides;
 @Module(library = true,
         injects = {
             SymptomManagementProvider.class,
-            DefaultDao.class
+            DefaultDoctorDao.class,
+            DefaultPatientDao.class,
+            DefaultMedicationDao.class,
+            DefaultReminderDao.class
         },
         complete = false)
 public class DatabaseModule {
