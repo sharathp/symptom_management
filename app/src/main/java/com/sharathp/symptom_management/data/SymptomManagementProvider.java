@@ -5,25 +5,18 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.util.Log;
 
 import com.sharathp.symptom_management.app.SymptomManagementApplication;
-import com.sharathp.symptom_management.dao.Dao;
 import com.sharathp.symptom_management.dao.DoctorDao;
 import com.sharathp.symptom_management.dao.MedicationDao;
 import com.sharathp.symptom_management.dao.PatientDao;
 import com.sharathp.symptom_management.dao.ReminderDao;
-import com.sharathp.symptom_management.model.Doctor;
-import com.sharathp.symptom_management.model.Medication;
-import com.sharathp.symptom_management.model.Reminder;
 
 import java.util.List;
 
 import javax.inject.Inject;
-
-import dagger.Lazy;
 
 public class SymptomManagementProvider extends ContentProvider {
     private static final String TAG = SymptomManagementProvider.class.getSimpleName();
@@ -59,8 +52,8 @@ public class SymptomManagementProvider extends ContentProvider {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = SymptomManagementContract.CONTENT_AUTHORITY;
 
-        matcher.addURI(authority, SymptomManagementContract.PATH_REMINDER, REMINDER);
-        matcher.addURI(authority, SymptomManagementContract.PATH_REMINDER + "/#", REMINDER_ID);
+        matcher.addURI(authority, ReminderContract.PATH_REMINDER, REMINDER);
+        matcher.addURI(authority, ReminderContract.PATH_REMINDER + "/#", REMINDER_ID);
 
         matcher.addURI(authority, PatientContract.PATH_PATIENT, PATIENT);
         matcher.addURI(authority, PatientContract.PATH_PATIENT + "/#", PATIENT_ID);
@@ -85,9 +78,9 @@ public class SymptomManagementProvider extends ContentProvider {
     public String getType(final Uri uri) {
         switch (sUriMatcher.match(uri)) {
             case REMINDER:
-                return SymptomManagementContract.ReminderEntry.CONTENT_TYPE;
+                return ReminderContract.ReminderEntry.CONTENT_TYPE;
             case REMINDER_ID:
-                return SymptomManagementContract.ReminderEntry.CONTENT_ITEM_TYPE;
+                return ReminderContract.ReminderEntry.CONTENT_ITEM_TYPE;
             case PATIENT:
                 return PatientContract.PatientEntry.CONTENT_TYPE;
             case PATIENT_ID:

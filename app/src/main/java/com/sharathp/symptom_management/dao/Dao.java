@@ -2,7 +2,6 @@ package com.sharathp.symptom_management.dao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.net.Uri;
 
 public interface Dao<T> {
     long insert(ContentValues values);

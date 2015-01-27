@@ -18,7 +18,7 @@ public class SymptomManagementSQLiteHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(final SQLiteDatabase db) {
-        db.execSQL(SymptomManagementContract.ReminderEntry.SQL_CREATE);
+        db.execSQL(ReminderContract.ReminderEntry.SQL_CREATE);
         db.execSQL(PatientContract.PatientEntry.SQL_CREATE);
         db.execSQL(DoctorContract.DoctorEntry.SQL_CREATE);
         db.execSQL(MedicationContract.MedicationEntry.SQL_CREATE);
@@ -35,7 +35,7 @@ public class SymptomManagementSQLiteHelper extends SQLiteOpenHelper {
         // It does NOT depend on the version number for your application.
         // If you want to update the schema without wiping data, commenting out the next 2 lines
         // should be your top priority before modifying this method.
-        db.execSQL("DROP TABLE IF EXISTS " + SymptomManagementContract.ReminderEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + ReminderContract.ReminderEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + PatientContract.PatientEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + DoctorContract.DoctorEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + MedicationContract.MedicationEntry.TABLE_NAME);
