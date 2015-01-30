@@ -5,6 +5,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.sharathp.symptom_management.data.contract.DoctorContract;
+import com.sharathp.symptom_management.data.contract.MedicationContract;
+import com.sharathp.symptom_management.data.contract.PatientContract;
+import com.sharathp.symptom_management.data.contract.ReminderContract;
+
 /**
  * SQLiteHelper for Symptom Management application.
  */

@@ -1,4 +1,4 @@
-package com.sharathp.symptom_management.data;
+package com.sharathp.symptom_management.data.contract;
 
 import android.content.ContentUris;
 import android.content.ContentValues;

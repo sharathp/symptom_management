@@ -1,7 +1,7 @@
 package com.sharathp.symptom_management.dao.impl;
 
 import com.sharathp.symptom_management.dao.MedicationDao;
-import com.sharathp.symptom_management.data.MedicationContract;
+import com.sharathp.symptom_management.data.contract.MedicationContract;
 import com.sharathp.symptom_management.model.Medication;
 
 import javax.inject.Inject;

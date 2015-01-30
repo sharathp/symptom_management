@@ -3,7 +3,7 @@ package com.sharathp.symptom_management.dao.impl;
 import android.database.Cursor;
 
 import com.sharathp.symptom_management.dao.PatientDao;
-import com.sharathp.symptom_management.data.PatientContract;
+import com.sharathp.symptom_management.data.contract.PatientContract;
 import com.sharathp.symptom_management.model.Patient;
 
 import javax.inject.Inject;

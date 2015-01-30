@@ -10,10 +10,9 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.sharathp.symptom_management.app.SymptomManagementApplication;
-import com.sharathp.symptom_management.data.DoctorContract;
-import com.sharathp.symptom_management.data.PatientContract;
+import com.sharathp.symptom_management.data.contract.DoctorContract;
+import com.sharathp.symptom_management.data.contract.PatientContract;
 import com.sharathp.symptom_management.http.SymptomManagementAPI;
-import com.sharathp.symptom_management.model.Doctor;
 import com.sharathp.symptom_management.model.Patient;
 
 import java.util.List;
@@ -31,7 +30,7 @@ public class PatientService extends IntentService {
     public static final String ACTION_EXTRA = "action";
     public static final int UPDATE_PATIENTS_ACTION = 1;
 
-    public static final String DOCTOR_USER_ID_EXTRA = "userId";
+    public static final String DOCTOR_USER_ID_EXTRA = "doctorUserId";
 
     public static Intent createUpdatePatientsIntent(final Context context, final String doctorUserId) {
         final Intent intent = new Intent(context, PatientService.class);
