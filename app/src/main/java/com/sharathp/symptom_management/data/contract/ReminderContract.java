@@ -9,7 +9,7 @@ import android.provider.BaseColumns;
 import com.sharathp.symptom_management.model.Reminder;
 
 public class ReminderContract extends SymptomManagementContract {
-    public static final String PATH_REMINDER = "reminder";
+    public static final String PATH_REMINDER = "reminders";
 
     public static Reminder readReminder(final Cursor cursor) {
         if(cursor == null || cursor.isAfterLast()) {

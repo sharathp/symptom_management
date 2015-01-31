@@ -12,7 +12,7 @@ import com.sharathp.symptom_management.model.Doctor;
  *
  */
 public class DoctorContract extends SymptomManagementContract {
-    public static final String PATH_DOCTOR = "doctor";
+    public static final String PATH_DOCTOR = "doctors";
 
     public static Doctor readDoctor(final Cursor cursor) {
         if(cursor == null || cursor.isAfterLast()) {
@@ -86,7 +86,7 @@ public class DoctorContract extends SymptomManagementContract {
 
         public static Uri buildPatientsUri(final long id) {
             final Uri doctorUri = buildDoctorUri(id);
-            return Uri.withAppendedPath(doctorUri, "patients");
+            return Uri.withAppendedPath(doctorUri, PatientContract.PATH_PATIENT);
         }
     }
 }

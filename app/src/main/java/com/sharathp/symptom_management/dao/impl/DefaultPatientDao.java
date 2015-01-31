@@ -1,5 +1,6 @@
 package com.sharathp.symptom_management.dao.impl;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 
 import com.sharathp.symptom_management.dao.PatientDao;
@@ -27,5 +28,24 @@ public class DefaultPatientDao extends DefaultDao<Patient> implements PatientDao
                 null,
                 sortOrder
         );
+    }
+
+    @Override
+    public Cursor getMedicationsForPatient(final long patient_id, final String[] projection, final String sortOrder) {
+        // TODO - implement
+        return null;
+    }
+
+    @Override
+    public long addMedicationForPatient(final long patient_id, final long medication_id) {
+        final ContentValues values = PatientContract.PatientMedicationEntry.getContentValues(patient_id, medication_id);
+        return mDatabase.insert(mTable, null, values);
+    }
+
+    @Override
+    public int deleteMedicationForPatient(final long patient_id, final long medication_id) {
+        return mDatabase.delete(PatientContract.PatientMedicationEntry.TABLE_NAME,
+                PatientContract.PatientMedicationEntry.COLUMN_PATIENT_ID + " = ? AND " + PatientContract.PatientMedicationEntry.COLUMN_MEDICATION_ID + " = ?",
+                new String[] {Long.toString(patient_id), Long.toString(medication_id)});
     }
 }

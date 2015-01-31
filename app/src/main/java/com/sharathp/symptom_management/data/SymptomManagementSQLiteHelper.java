@@ -27,6 +27,7 @@ public class SymptomManagementSQLiteHelper extends SQLiteOpenHelper {
         db.execSQL(PatientContract.PatientEntry.SQL_CREATE);
         db.execSQL(DoctorContract.DoctorEntry.SQL_CREATE);
         db.execSQL(MedicationContract.MedicationEntry.SQL_CREATE);
+        db.execSQL(PatientContract.PatientMedicationEntry.SQL_CREATE);
     }
 
     @Override
@@ -44,6 +45,7 @@ public class SymptomManagementSQLiteHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + PatientContract.PatientEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + DoctorContract.DoctorEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + MedicationContract.MedicationEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + PatientContract.PatientMedicationEntry.TABLE_NAME);
         onCreate(db);
     }
 }

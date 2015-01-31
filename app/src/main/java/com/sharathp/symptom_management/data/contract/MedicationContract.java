@@ -9,7 +9,7 @@ import android.provider.BaseColumns;
 import com.sharathp.symptom_management.model.Medication;
 
 public class MedicationContract extends SymptomManagementContract {
-    public static final String PATH_MEDICATION = "medication";
+    public static final String PATH_MEDICATION = "medications";
 
     public static Medication readMedication(final Cursor cursor) {
         if(cursor == null || cursor.isAfterLast()) {

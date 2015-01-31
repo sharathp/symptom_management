@@ -9,7 +9,7 @@ import android.provider.BaseColumns;
 import com.sharathp.symptom_management.model.Patient;
 
 public class PatientContract extends SymptomManagementContract {
-    public static final String PATH_PATIENT = "patient";
+    public static final String PATH_PATIENT = "patients";
 
     public static Patient readPatient(final Cursor cursor) {
         if(cursor == null || cursor.isAfterLast()) {
@@ -85,6 +85,31 @@ public class PatientContract extends SymptomManagementContract {
 
         public static Uri buildPatientUri(final long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
+    }
+
+    public static final class PatientMedicationEntry {
+        // Table name
+        public static final String TABLE_NAME = "patient_medication";
+
+        public static final String COLUMN_PATIENT_ID = "patient_id";
+        public static final String COLUMN_MEDICATION_ID = "medication_id";
+
+        public static ContentValues getContentValues(final long patient_id, final long medication_id) {
+            final ContentValues contentValues = new ContentValues();
+            contentValues.put(COLUMN_PATIENT_ID, patient_id);
+            contentValues.put(COLUMN_MEDICATION_ID, medication_id);
+            return contentValues;
+        }
+
+        public static final String SQL_CREATE = "CREATE TABLE "
+                + TABLE_NAME + "("
+                + COLUMN_PATIENT_ID + " INTEGER not null, "
+                + COLUMN_MEDICATION_ID + " INTEGER not null"
+                + ");";
+
+        public static Uri buildPatientMedicationsUri(final long id) {
+            return Uri.withAppendedPath(buildPatientMedicationsUri(id), MedicationContract.PATH_MEDICATION);
         }
     }
 }

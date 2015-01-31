@@ -28,18 +28,21 @@ public class SymptomManagementProvider extends ContentProvider {
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();
 
-    private static final int REMINDER = 100;
+    private static final int REMINDERS = 100;
     private static final int REMINDER_ID = 101;
 
-    private static final int PATIENT = 200;
+    private static final int PATIENTS = 200;
     private static final int PATIENT_ID = 201;
 
-    private static final int DOCTOR = 300;
+    private static final int DOCTORS = 300;
     private static final int DOCTOR_ID = 301;
     private static final int DOCTOR_PATIENTS = 302;
 
-    private static final int MEDICATION = 400;
+    private static final int MEDICATIONS = 400;
     private static final int MEDICATION_ID = 401;
+
+    private static final int PATIENT_MEDICATIONS = 500;
+    private static final int PATIENT_MEDICATION_ID = 501;
 
     @Inject
     DoctorDao mDoctorDao;
@@ -57,18 +60,21 @@ public class SymptomManagementProvider extends ContentProvider {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = SymptomManagementContract.CONTENT_AUTHORITY;
 
-        matcher.addURI(authority, ReminderContract.PATH_REMINDER, REMINDER);
+        matcher.addURI(authority, ReminderContract.PATH_REMINDER, REMINDERS);
         matcher.addURI(authority, ReminderContract.PATH_REMINDER + "/#", REMINDER_ID);
 
-        matcher.addURI(authority, PatientContract.PATH_PATIENT, PATIENT);
+        matcher.addURI(authority, PatientContract.PATH_PATIENT, PATIENTS);
         matcher.addURI(authority, PatientContract.PATH_PATIENT + "/#", PATIENT_ID);
 
-        matcher.addURI(authority, DoctorContract.PATH_DOCTOR, DOCTOR);
+        matcher.addURI(authority, DoctorContract.PATH_DOCTOR, DOCTORS);
         matcher.addURI(authority, DoctorContract.PATH_DOCTOR + "/#", DOCTOR_ID);
-        matcher.addURI(authority, DoctorContract.PATH_DOCTOR + "/#/patients", DOCTOR_PATIENTS);
+        matcher.addURI(authority, DoctorContract.PATH_DOCTOR + "/#/" + PatientContract.PATH_PATIENT, DOCTOR_PATIENTS);
 
-        matcher.addURI(authority, MedicationContract.PATH_MEDICATION, MEDICATION);
+        matcher.addURI(authority, MedicationContract.PATH_MEDICATION, MEDICATIONS);
         matcher.addURI(authority, MedicationContract.PATH_MEDICATION + "/#", MEDICATION_ID);
+
+        matcher.addURI(authority, PatientContract.PATH_PATIENT + "/#/" + MedicationContract.PATH_MEDICATION, PATIENT_MEDICATIONS);
+        matcher.addURI(authority, PatientContract.PATH_PATIENT + "/#/" + MedicationContract.PATH_MEDICATION + "/#", PATIENT_MEDICATION_ID);
 
         return matcher;
     }
@@ -82,20 +88,28 @@ public class SymptomManagementProvider extends ContentProvider {
     @Override
     public String getType(final Uri uri) {
         switch (sUriMatcher.match(uri)) {
-            case REMINDER:
+            case REMINDERS:
                 return ReminderContract.ReminderEntry.CONTENT_TYPE;
             case REMINDER_ID:
                 return ReminderContract.ReminderEntry.CONTENT_ITEM_TYPE;
-            case PATIENT:
+            case PATIENTS:
                 return PatientContract.PatientEntry.CONTENT_TYPE;
             case PATIENT_ID:
                 return PatientContract.PatientEntry.CONTENT_ITEM_TYPE;
-            case DOCTOR:
+            case DOCTORS:
                 return DoctorContract.DoctorEntry.CONTENT_TYPE;
             case DOCTOR_ID:
                 return DoctorContract.DoctorEntry.CONTENT_ITEM_TYPE;
             case DOCTOR_PATIENTS:
                 return PatientContract.PatientEntry.CONTENT_TYPE;
+            case PATIENT_MEDICATIONS:
+                return MedicationContract.MedicationEntry.CONTENT_TYPE;
+            case PATIENT_MEDICATION_ID:
+                return MedicationContract.MedicationEntry.CONTENT_ITEM_TYPE;
+            case MEDICATIONS:
+                return MedicationContract.MedicationEntry.CONTENT_TYPE;
+            case MEDICATION_ID:
+                return MedicationContract.MedicationEntry.CONTENT_ITEM_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -107,25 +121,34 @@ public class SymptomManagementProvider extends ContentProvider {
         Cursor retCursor = null;
         switch (sUriMatcher.match(uri)) {
             case REMINDER_ID:
-                retCursor = mReminderDao.queryById(ContentUris.parseId(uri), projection);
+                retCursor = mReminderDao.queryById(getReminder_Id(uri), projection);
                 break;
-            case REMINDER:
+            case REMINDERS:
                 retCursor = mReminderDao.query(projection, selection, selectionArgs, sortOrder);
                 break;
             case PATIENT_ID:
-                retCursor = mPatientDao.queryById(ContentUris.parseId(uri), projection);
+                retCursor = mPatientDao.queryById(getPatient_Id(uri), projection);
                 break;
-            case PATIENT:
+            case PATIENTS:
                 retCursor = mPatientDao.query(projection, selection, selectionArgs, sortOrder);
                 break;
             case DOCTOR_ID:
-                retCursor = mDoctorDao.queryById(ContentUris.parseId(uri), projection);
+                retCursor = mDoctorDao.queryById(getDoctor_id(uri), projection);
                 break;
-            case DOCTOR:
+            case DOCTORS:
                 retCursor = mDoctorDao.query(projection, selection, selectionArgs, sortOrder);
                 break;
             case DOCTOR_PATIENTS:
                 retCursor = mPatientDao.getPatientsForDoctor(getDoctor_id(uri), projection, sortOrder);
+                break;
+            case MEDICATIONS:
+                retCursor = mMedicationDao.query(projection, selection, selectionArgs, sortOrder);
+                break;
+            case MEDICATION_ID:
+                retCursor = mMedicationDao.queryById(getMedication_Id(uri), projection);
+                break;
+            case PATIENT_MEDICATIONS:
+                retCursor = mPatientDao.getMedicationsForPatient(getPatient_Id(uri), projection, sortOrder);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -137,19 +160,35 @@ public class SymptomManagementProvider extends ContentProvider {
     @Override
     public Uri insert(final Uri uri, final ContentValues values) {
         Uri returnUri = null;
+        long patient_id = 0;
+        long medication_id = 0;
+        long doctor_id = 0;
+
         switch(sUriMatcher.match(uri)) {
-            case PATIENT:
-                final long patient_id = mPatientDao.insert(values);
+            case PATIENTS:
+                patient_id = mPatientDao.insert(values);
                 if ( patient_id > 0 ) {
                     returnUri = PatientContract.PatientEntry.buildPatientUri(patient_id);
                     notifyPatientsChanged(uri, values);
                 }
                 break;
-            case DOCTOR:
-                final long doctor_id = mDoctorDao.insert(values);
+            case DOCTORS:
+                doctor_id = mDoctorDao.insert(values);
                 if ( doctor_id > 0 ) {
                     returnUri = DoctorContract.DoctorEntry.buildDoctorUri(doctor_id);
                 }
+                break;
+            case MEDICATIONS:
+                medication_id = mMedicationDao.insert(values);
+                if ( medication_id > 0 ) {
+                    returnUri = MedicationContract.MedicationEntry.buildMedicationUri(medication_id);
+                }
+                break;
+            case PATIENT_MEDICATION_ID:
+                patient_id = getPatient_Id(uri);
+                medication_id = getMedication_Id(uri);
+                mPatientDao.addMedicationForPatient(patient_id, medication_id);
+                returnUri = uri;
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -166,19 +205,26 @@ public class SymptomManagementProvider extends ContentProvider {
     @Override
     public int delete(final Uri uri, final String selection, final String[] selectionArgs) {
         final int match = sUriMatcher.match(uri);
-        int rowsDeleted;
+        long patient_id = 0;
+        long medication_id = 0;
+        int rowsDeleted = 0;
         switch (match) {
-            case PATIENT:
+            case PATIENTS:
                 rowsDeleted = mPatientDao.delete(selection, selectionArgs);
                 break;
-            case DOCTOR:
+            case DOCTORS:
                 rowsDeleted = mDoctorDao.delete(selection, selectionArgs);
                 break;
-            case REMINDER:
+            case REMINDERS:
                 rowsDeleted = mReminderDao.delete(selection, selectionArgs);
                 break;
-            case MEDICATION:
+            case MEDICATIONS:
                 rowsDeleted = mMedicationDao.delete(selection, selectionArgs);
+                break;
+            case PATIENT_MEDICATION_ID:
+                patient_id = getPatient_Id(uri);
+                medication_id = getMedication_Id(uri);
+                rowsDeleted = mPatientDao.deleteMedicationForPatient(patient_id, medication_id);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -195,17 +241,23 @@ public class SymptomManagementProvider extends ContentProvider {
         int rowsUpdated = 0;
 
         switch (sUriMatcher.match(uri)) {
-            case PATIENT:
+            case PATIENTS:
                 rowsUpdated = mPatientDao.update(values, selection, selectionArgs);
                 break;
             case PATIENT_ID:
-                rowsUpdated = mPatientDao.updateEntry(ContentUris.parseId(uri), values);
+                rowsUpdated = mPatientDao.updateEntry(getPatient_Id(uri), values);
                 break;
-            case DOCTOR:
+            case DOCTORS:
                 rowsUpdated = mDoctorDao.update(values, selection, selectionArgs);
                 break;
             case DOCTOR_ID:
-                rowsUpdated = mDoctorDao.updateEntry(ContentUris.parseId(uri), values);
+                rowsUpdated = mDoctorDao.updateEntry(getDoctor_id(uri), values);
+                break;
+            case MEDICATIONS:
+                rowsUpdated = mMedicationDao.update(values, selection, selectionArgs);
+                break;
+            case MEDICATION_ID:
+                rowsUpdated = mMedicationDao.updateEntry(getMedication_Id(uri), values);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -221,7 +273,7 @@ public class SymptomManagementProvider extends ContentProvider {
         Long doctor_id = null;
 
         switch (sUriMatcher.match(uri)) {
-            case PATIENT:
+            case PATIENTS:
             case PATIENT_ID:
                 doctor_id = values.getAsLong(PatientContract.PatientEntry.COLUMN_DOCTOR_ID);
                 break;
@@ -239,10 +291,45 @@ public class SymptomManagementProvider extends ContentProvider {
     }
 
     private long getDoctor_id(final Uri uri) {
+        final List<String> pathSegments = uri.getPathSegments();
         switch (sUriMatcher.match(uri)) {
+            case DOCTOR_ID:
+                return ContentUris.parseId(uri);
             case DOCTOR_PATIENTS:
-                final List<String> pathSegments = uri.getPathSegments();
                 return Long.parseLong(pathSegments.get(pathSegments.size() - 2));
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+    }
+
+    private long getPatient_Id(final Uri uri) {
+        final List<String> pathSegments = uri.getPathSegments();
+        switch (sUriMatcher.match(uri)) {
+            case PATIENT_ID:
+                return ContentUris.parseId(uri);
+            case PATIENT_MEDICATIONS:
+                return Long.parseLong(pathSegments.get(pathSegments.size() - 2));
+            case PATIENT_MEDICATION_ID:
+                return Long.parseLong(pathSegments.get(pathSegments.size() - 3));
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+    }
+
+    private long getMedication_Id(final Uri uri) {
+        switch (sUriMatcher.match(uri)) {
+            case MEDICATION_ID:
+            case PATIENT_MEDICATION_ID:
+                return ContentUris.parseId(uri);
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+    }
+
+    private long getReminder_Id(final Uri uri) {
+        switch (sUriMatcher.match(uri)) {
+            case REMINDER_ID:
+                return ContentUris.parseId(uri);
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
