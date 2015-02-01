@@ -1,67 +1,66 @@
 package com.sharathp.symptom_management.model;
 
 
-import java.util.Date;
 import java.util.List;
 
 public class Patient {
-    private long _id;
-    private String id;
-    private String firstName;
-    private String lastName;
-    private String patientId;
-    private List<Medication> medications;
+    private long mId;
+    private String mServerId;
+    private String mFirstName;
+    private String mLastName;
+    private String mRecordNumber;
+    private List<Medication> mMedications;
 
-    public long get_id() {
-        return _id;
+    public long getId() {
+        return mId;
     }
 
-    public void set_id(long _id) {
-        this._id = _id;
+    public void setId(long id) {
+        this.mId = id;
     }
 
-    public String getPatientId() {
-        return patientId;
+    public String getRecordNumber() {
+        return mRecordNumber;
     }
 
-    public void setPatientId(String patientId) {
-        this.patientId = patientId;
+    public void setRecordNumber(String recordNumber) {
+        this.mRecordNumber = recordNumber;
     }
 
-    public String getId() {
-        return id;
+    public String getServerId() {
+        return mServerId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setServerId(String serverId) {
+        this.mServerId = serverId;
     }
 
     public String getFirstName() {
-        return firstName;
+        return mFirstName;
     }
 
     public void setFirstName(String firstName) {
-        this.firstName = firstName;
+        this.mFirstName = firstName;
     }
 
     public String getLastName() {
-        return lastName;
+        return mLastName;
     }
 
     public void setLastName(String lastName) {
-        this.lastName = lastName;
+        this.mLastName = lastName;
     }
 
     public List<Medication> getMedications() {
-        return medications;
+        return mMedications;
     }
 
     public void setMedications(List<Medication> medications) {
-        this.medications = medications;
+        this.mMedications = medications;
     }
 
     @Override
     public String toString() {
-        return id;
+        return mServerId;
     }
 }

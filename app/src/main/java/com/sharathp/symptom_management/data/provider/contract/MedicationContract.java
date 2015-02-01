@@ -21,8 +21,8 @@ public class MedicationContract extends SymptomManagementContract {
         final String name = cursor.getString(MedicationEntry.NAME_INDEX);
 
         final Medication medication = new Medication();
-        medication.set_id(_id);
-        medication.setMedicationId(id);
+        medication.setId(_id);
+        medication.setServerId(id);
         medication.setName(name);
 
         return medication;
@@ -30,7 +30,7 @@ public class MedicationContract extends SymptomManagementContract {
 
     public static ContentValues getContentValues(final Medication medication) {
         final ContentValues contentValues = new ContentValues();
-        contentValues.put(MedicationEntry.COLUMN_ID, medication.getMedicationId());
+        contentValues.put(MedicationEntry.COLUMN_ID, medication.getServerId());
         contentValues.put(MedicationEntry.COLUMN_NAME, medication.getName());
         return contentValues;
     }
@@ -45,12 +45,9 @@ public class MedicationContract extends SymptomManagementContract {
         public static final String CONTENT_ITEM_TYPE =
                 "vnd.android.cursor.item/" + CONTENT_AUTHORITY + "/" + PATH_MEDICATION;
 
-        // Table name
-        public static final String TABLE_NAME = "medication";
-
         // Column names
-        public static final String COLUMN_NAME = "name";
-        public static final String COLUMN_ID = "id";
+        public static final String COLUMN_NAME = "medication_name";
+        public static final String COLUMN_ID = "medication_id";
 
         public static final String[] ALL_COLUMNS = new String[]{
                 _ID,

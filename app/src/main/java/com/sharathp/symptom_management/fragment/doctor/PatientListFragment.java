@@ -141,7 +141,7 @@ public class PatientListFragment extends BaseListFragment implements LoaderManag
                 final Cursor cursor = mPatientListAdapter.getCursor();
                 if (cursor != null && cursor.moveToPosition(position)) {
                     final Patient patient = PatientContract.readPatient(cursor);
-                    mCallbacks.onItemSelected(patient.get_id());
+                    mCallbacks.onItemSelected(patient.getId());
                     mActivatedPosition = position;
                 }
             }
@@ -234,7 +234,7 @@ public class PatientListFragment extends BaseListFragment implements LoaderManag
             final ViewHolder viewHolder = (ViewHolder) view.getTag();
             final Patient patient = PatientContract.readPatient(cursor);
             viewHolder.mNameView.setText(patient.getFirstName() + " " + patient.getLastName());
-            viewHolder.mPatientIdView.setText(patient.getPatientId());
+            viewHolder.mPatientIdView.setText(patient.getRecordNumber());
         }
     }
 

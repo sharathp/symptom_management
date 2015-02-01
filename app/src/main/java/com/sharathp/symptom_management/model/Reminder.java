@@ -6,31 +6,31 @@ import java.util.Date;
  *
  */
 public class Reminder {
-    private long _id;
-    private String id;
-    private Date reminderTime;
+    private long mId;
+    private String mServerId;
+    private Date mReminderTime;
 
-    public long get_id() {
-        return _id;
+    public long getId() {
+        return mId;
     }
 
-    public void set_id(long _id) {
-        this._id = _id;
+    public void setId(long id) {
+        this.mId = id;
     }
 
-    public String getId() {
-        return id;
+    public String getServerId() {
+        return mServerId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setServerId(String serverId) {
+        this.mServerId = serverId;
     }
 
     public Date getReminderTime() {
-        return reminderTime;
+        return mReminderTime;
     }
 
     public void setReminderTime(Date reminderTime) {
-        this.reminderTime = reminderTime;
+        this.mReminderTime = reminderTime;
     }
 }

@@ -4,58 +4,58 @@ package com.sharathp.symptom_management.model;
 import java.util.List;
 
 public class Doctor {
-    private long _id;
-    private String id;
-    private String doctorId;
-    private String firstName;
-    private String lastName;
-    private List<Patient> patients;
+    private long mId;
+    private String mServerId;
+    private String mDoctorCode;
+    private String mFirstName;
+    private String mLastName;
+    private List<Patient> mPatients;
 
-    public long get_id() {
-        return _id;
+    public long getId() {
+        return mId;
     }
 
-    public void set_id(long _id) {
-        this._id = _id;
+    public void setId(long id) {
+        this.mId = id;
     }
 
-    public String getId() {
-        return id;
+    public String getServerId() {
+        return mServerId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setServerId(String serverId) {
+        this.mServerId = serverId;
     }
 
-    public String getDoctorId() {
-        return doctorId;
+    public String getDoctorCode() {
+        return mDoctorCode;
     }
 
-    public void setDoctorId(String doctorId) {
-        this.doctorId = doctorId;
+    public void setDoctorCode(String doctorCode) {
+        this.mDoctorCode = doctorCode;
     }
 
     public String getFirstName() {
-        return firstName;
+        return mFirstName;
     }
 
     public void setFirstName(String firstName) {
-        this.firstName = firstName;
+        this.mFirstName = firstName;
     }
 
     public String getLastName() {
-        return lastName;
+        return mLastName;
     }
 
     public void setLastName(String lastName) {
-        this.lastName = lastName;
+        this.mLastName = lastName;
     }
 
     public List<Patient> getPatients() {
-        return patients;
+        return mPatients;
     }
 
     public void setPatients(List<Patient> patients) {
-        this.patients = patients;
+        this.mPatients = patients;
     }
 }

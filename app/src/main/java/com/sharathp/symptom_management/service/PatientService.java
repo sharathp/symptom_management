@@ -77,7 +77,7 @@ public class PatientService extends IntentService {
         // TODO - remove existing patients who are no longer associated to doctor..
         final List<Patient> patients = symptomManagementAPI.get().getPatientsForDoctor(doctorUserId);
         for (final Patient patient : patients) {
-            final long existing_patient_id = getExistingPatient_Id(patient.getId());
+            final long existing_patient_id = getExistingPatient_Id(patient.getServerId());
             if (existing_patient_id == -1L) {
                 final long newId = createNewPatient(patient, doctor_id);
                 Log.d(TAG, "Created new patient: " + newId);

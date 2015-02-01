@@ -6,22 +6,22 @@ import java.util.Date;
  *
  */
 public class MedicationIntake {
-    private Medication medication;
-    private Date time;
+    private Medication mMedication;
+    private Date mTime;
 
     public Medication getMedication() {
-        return medication;
+        return mMedication;
     }
 
     public void setMedication(Medication medication) {
-        this.medication = medication;
+        this.mMedication = medication;
     }
 
     public Date getTime() {
-        return time;
+        return mTime;
     }
 
     public void setTime(Date time) {
-        this.time = time;
+        this.mTime = time;
     }
 }

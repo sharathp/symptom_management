@@ -23,20 +23,20 @@ public class PatientContract extends SymptomManagementContract {
         final String userId = cursor.getString(PatientEntry.USER_ID_INDEX);
 
         final Patient patient = new Patient();
-        patient.set_id(_id);
+        patient.setId(_id);
         patient.setFirstName(firstName);
         patient.setLastName(lastName);
-        patient.setPatientId(patientId);
-        patient.setId(userId);
+        patient.setRecordNumber(patientId);
+        patient.setServerId(userId);
         return patient;
     }
 
     public static ContentValues getContentValues(final Patient patient) {
         final ContentValues contentValues = new ContentValues();
-        contentValues.put(PatientEntry.COLUMN_USER_ID, patient.getId());
+        contentValues.put(PatientEntry.COLUMN_USER_ID, patient.getServerId());
         contentValues.put(PatientEntry.COLUMN_FIRST_NAME, patient.getFirstName());
         contentValues.put(PatientEntry.COLUMN_LAST_NAME, patient.getLastName());
-        contentValues.put(PatientEntry.COLUMN_PATIENT_ID, patient.getPatientId());
+        contentValues.put(PatientEntry.COLUMN_PATIENT_ID, patient.getRecordNumber());
         return contentValues;
     }
 
@@ -49,9 +49,6 @@ public class PatientContract extends SymptomManagementContract {
                 "vnd.android.cursor.dir/" + CONTENT_AUTHORITY + "/" + PATH_PATIENT;
         public static final String CONTENT_ITEM_TYPE =
                 "vnd.android.cursor.item/" + CONTENT_AUTHORITY + "/" + PATH_PATIENT;
-
-        // Table name
-        public static final String TABLE_NAME = "patient";
 
         // Column names
         public static final String COLUMN_FIRST_NAME = "first_name";
@@ -79,18 +76,9 @@ public class PatientContract extends SymptomManagementContract {
     }
 
     public static final class PatientMedicationEntry {
-        // Table name
-        public static final String TABLE_NAME = "patient_medication";
-
-        public static final String COLUMN_PATIENT_ID = "patient_id";
+        // Column names
+        public static final String COLUMN_NAME = "medication_name";
         public static final String COLUMN_MEDICATION_ID = "medication_id";
-
-        public static ContentValues getContentValues(final long patient_id, final long medication_id) {
-            final ContentValues contentValues = new ContentValues();
-            contentValues.put(COLUMN_PATIENT_ID, patient_id);
-            contentValues.put(COLUMN_MEDICATION_ID, medication_id);
-            return contentValues;
-        }
 
         public static Uri buildPatientMedicationsUri(final long id) {
             return Uri.withAppendedPath(buildPatientMedicationsUri(id), MedicationContract.PATH_MEDICATION);

@@ -72,11 +72,11 @@ public class DoctorService extends IntentService {
             return;
         }
 
-        long existing_id = getExisting_id(doctor.getId());
+        long existing_id = getExisting_id(doctor.getServerId());
         if (existing_id == -1L) {
             existing_id = createNewDoctor(doctor);
             Log.d(TAG, "Created new doctor: " + existing_id);
-            retrievePatients(doctor.getId());
+            retrievePatients(doctor.getServerId());
         } else {
             updateExistingDoctor(existing_id, doctor);
             Log.d(TAG, "Updated existing doctor: " + existing_id);

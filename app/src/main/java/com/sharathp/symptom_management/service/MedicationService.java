@@ -79,7 +79,7 @@ public class MedicationService extends IntentService {
         for(final Medication medication: medications) {
             long existingMedication_id = getMedication_id(medication);
             if(existingMedication_id == -1L) {
-                Log.e(TAG, "Medication not found: " + medication.getMedicationId());
+                Log.e(TAG, "Medication not found: " + medication.getServerId());
                 return;
             }
             associatePatientMedication(existingPatient_id, existingMedication_id);
@@ -91,7 +91,7 @@ public class MedicationService extends IntentService {
     }
 
     private long getMedication_id(final Medication medication) {
-        final long existingMedication_id = getExistingMedication_id(medication.getMedicationId());
+        final long existingMedication_id = getExistingMedication_id(medication.getServerId());
         if(existingMedication_id != -1L) {
             return existingMedication_id;
         }

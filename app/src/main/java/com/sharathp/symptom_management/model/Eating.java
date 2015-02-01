@@ -4,15 +4,15 @@ package com.sharathp.symptom_management.model;
  *
  */
 public class Eating {
-    private int id;
+    private int mServerId;
     private String level;
 
-    public int getId() {
-        return id;
+    public int getServerId() {
+        return mServerId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setServerId(int serverId) {
+        this.mServerId = serverId;
     }
 
     public String getLevel() {

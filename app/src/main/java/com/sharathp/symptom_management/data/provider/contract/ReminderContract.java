@@ -20,15 +20,15 @@ public class ReminderContract extends SymptomManagementContract {
         final String id = cursor.getString(ReminderEntry.ID_INDEX);
 
         final Reminder reminder = new Reminder();
-        reminder.set_id(_id);
-        reminder.setId(id);
+        reminder.setId(_id);
+        reminder.setServerId(id);
 
         return reminder;
     }
 
     public static ContentValues getContentValues(final Reminder reminder) {
         final ContentValues contentValues = new ContentValues();
-        contentValues.put(ReminderEntry.COLUMN_ID, reminder.getId());
+        contentValues.put(ReminderEntry.COLUMN_ID, reminder.getServerId());
         return contentValues;
     }
 
