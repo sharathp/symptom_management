@@ -16,19 +16,19 @@ public class ReminderContract extends SymptomManagementContract {
             return null;
         }
 
-        final long _id = cursor.getLong(ReminderEntry._ID_INDEX);
-        final String id = cursor.getString(ReminderEntry.ID_INDEX);
+        final long id = cursor.getLong(ReminderEntry._ID_INDEX);
+        final String serverId = cursor.getString(ReminderEntry.COLUMN_SERVER_ID_INDEX);
 
         final Reminder reminder = new Reminder();
-        reminder.setId(_id);
-        reminder.setServerId(id);
+        reminder.setId(id);
+        reminder.setServerId(serverId);
 
         return reminder;
     }
 
     public static ContentValues getContentValues(final Reminder reminder) {
         final ContentValues contentValues = new ContentValues();
-        contentValues.put(ReminderEntry.COLUMN_ID, reminder.getServerId());
+        contentValues.put(ReminderEntry.COLUMN_SERVER_ID, reminder.getServerId());
         return contentValues;
     }
 
@@ -46,15 +46,15 @@ public class ReminderContract extends SymptomManagementContract {
         public static final String TABLE_NAME = "reminder";
 
         // Column names
-        public static final String COLUMN_ID = "id";
+        public static final String COLUMN_SERVER_ID = "server_id";
 
         public static final String[] ALL_COLUMNS = new String[]{
                 _ID,
-                COLUMN_ID
+                COLUMN_SERVER_ID
         };
 
         public static final int _ID_INDEX = 0;
-        public static final int ID_INDEX = 1;
+        public static final int COLUMN_SERVER_ID_INDEX = 1;
 
         public static Uri buildReminderUri(final long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);

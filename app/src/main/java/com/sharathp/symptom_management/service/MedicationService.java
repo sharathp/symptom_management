@@ -102,7 +102,7 @@ public class MedicationService extends IntentService {
         final Cursor cursor = this.getContentResolver().query(
                 MedicationContract.MedicationEntry.CONTENT_URI,
                 new String[]{MedicationContract.MedicationEntry._ID},
-                MedicationContract.MedicationEntry.COLUMN_ID + " = ?",
+                MedicationContract.MedicationEntry.COLUMN_SERVER_ID + " = ?",
                 new String[]{medicationId}, null);
 
         if (cursor.moveToFirst()) {
@@ -115,7 +115,7 @@ public class MedicationService extends IntentService {
         final Cursor cursor = this.getContentResolver().query(
                 PatientContract.PatientEntry.CONTENT_URI,
                 new String[]{PatientContract.PatientEntry._ID},
-                PatientContract.PatientEntry.COLUMN_USER_ID + " = ?",
+                PatientContract.PatientEntry.COLUMN_SERVER_ID + " = ?",
                 new String[]{userId}, null);
 
         if (cursor.moveToFirst()) {

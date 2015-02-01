@@ -10,15 +10,15 @@ public interface ReminderTable extends BaseColumns {
     String TABLE_NAME = "reminder";
 
     // Column names
-    String COLUMN_REMINDER_ID = "reminder_id";
+    String COLUMN_SERVER_ID = "server_id";
 
     // Qualified Column names
-    String QUALIFIED_COLUMN_REMINDER_ID = fullyQualify(TABLE_NAME, COLUMN_REMINDER_ID);
+    String QUALIFIED_COLUMN_SERVER_ID = fullyQualify(TABLE_NAME, COLUMN_SERVER_ID);
     String QUALIFIED_COLUMN_ID = fullyQualify(TABLE_NAME, _ID);
 
     String SQL_CREATE = "CREATE TABLE "
             + TABLE_NAME + "("
             + _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + COLUMN_REMINDER_ID + " text not null"
+            + COLUMN_SERVER_ID + " text not null"
             + ");";
 }
