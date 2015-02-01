@@ -8,22 +8,22 @@
     tools:context="com.sharathp.symptom_management.activity.LoginActivity">
 
     <!-- Login progress -->
-    <ProgressBar android:medicationId="@+medicationId/login_progress" style="?android:attr/progressBarStyleLarge"
+    <ProgressBar android:id="@+id/login_progress" style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:layout_marginBottom="8dp" android:visibility="gone" />
 
-    <ScrollView android:medicationId="@+medicationId/login_form" android:layout_width="match_parent"
+    <ScrollView android:id="@+id/login_form" android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout android:medicationId="@+medicationId/email_login_form" android:layout_width="match_parent"
+        <LinearLayout android:id="@+id/email_login_form" android:layout_width="match_parent"
             android:layout_height="wrap_content" android:orientation="vertical">
 
-            <EditText android:medicationId="@+medicationId/username" android:layout_width="match_parent"
+            <EditText android:id="@+id/username" android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:hint="@string/prompt_username"
                 android:inputType="text" android:maxLines="1"
                 android:singleLine="true" />
 
-            <EditText android:medicationId="@+medicationId/password" android:layout_width="match_parent"
+            <EditText android:id="@+id/password" android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:hint="@string/prompt_password"
                 android:imeOptions="actionUnspecified" android:inputType="textPassword"
                 android:maxLines="1" android:singleLine="true" />
@@ -31,12 +31,12 @@
             <LinearLayout android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:orientation="horizontal">
 
-                <Button android:medicationId="@+medicationId/doctor_sign_in_button" style="?android:textAppearanceSmall"
+                <Button android:id="@+id/doctor_sign_in_button" style="?android:textAppearanceSmall"
                     android:layout_width="0dp" android:layout_height="wrap_content"
                     android:layout_marginTop="16dp" android:text="@string/action_doctor_sign_in"
                     android:textStyle="bold" android:layout_weight="1" />
 
-                <Button android:medicationId="@+medicationId/patient_sign_in_button" style="?android:textAppearanceSmall"
+                <Button android:id="@+id/patient_sign_in_button" style="?android:textAppearanceSmall"
                     android:layout_width="0dp" android:layout_height="wrap_content"
                     android:layout_marginTop="16dp" android:text="@string/action_patient_sign_in"
                     android:textStyle="bold" android:layout_weight="1" />

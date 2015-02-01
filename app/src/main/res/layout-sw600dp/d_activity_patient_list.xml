@@ -12,12 +12,12 @@
     
     -->
 
-    <fragment android:medicationId="@+medicationId/patient_list"
+    <fragment android:id="@+id/patient_list"
         android:name="com.sharathp.symptom_management.fragment.doctor.PatientListFragment"
         android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
         tools:layout="@android:layout/list_content" />
 
-    <FrameLayout android:medicationId="@+medicationId/patient_detail_container" android:layout_width="0dp"
+    <FrameLayout android:id="@+id/patient_detail_container" android:layout_width="0dp"
         android:layout_height="match_parent" android:layout_weight="3" />
 
 </LinearLayout>

@@ -11,11 +11,11 @@
         android:layout_marginTop="30dp"
         android:textSize="15sp"
         android:text="Hello anonymous"
-        android:medicationId="@+medicationId/doctor_welcome_text"
+        android:id="@+id/doctor_welcome_text"
         android:layout_gravity="center_horizontal" />
 
     <com.beardedhen.androidbootstrap.BootstrapButton
-        android:medicationId="@+medicationId/my_patients_button"
+        android:id="@+id/my_patients_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"

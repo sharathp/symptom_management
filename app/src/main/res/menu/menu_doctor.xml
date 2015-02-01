@@ -2,10 +2,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.sharathp.symptom_management.activity.doctor.DoctorActivity">
 
-    <item android:medicationId="@+medicationId/doctor_action_settings" android:title="@string/patient_action_settings"
+    <item android:id="@+id/doctor_action_settings" android:title="@string/patient_action_settings"
         android:orderInCategory="100" android:showAsAction="never" />
-    <item android:medicationId="@+medicationId/doctor_action_refresh_patients" android:title="@string/doctor_action_refresh_patients"
+    <item android:id="@+id/doctor_action_refresh_patients" android:title="@string/doctor_action_refresh_patients"
         android:orderInCategory="100" android:showAsAction="never" />
-    <item android:medicationId="@+medicationId/doctor_logout" android:title="@string/patient_logout"
+    <item android:id="@+id/doctor_logout" android:title="@string/patient_logout"
           android:orderInCategory="100" android:showAsAction="never" />
 </menu>
