@@ -1,4 +1,4 @@
-package com.sharathp.symptom_management.data;
+package com.sharathp.symptom_management.data.provider;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -13,11 +13,11 @@ import com.sharathp.symptom_management.dao.DoctorDao;
 import com.sharathp.symptom_management.dao.MedicationDao;
 import com.sharathp.symptom_management.dao.PatientDao;
 import com.sharathp.symptom_management.dao.ReminderDao;
-import com.sharathp.symptom_management.data.contract.DoctorContract;
-import com.sharathp.symptom_management.data.contract.MedicationContract;
-import com.sharathp.symptom_management.data.contract.PatientContract;
-import com.sharathp.symptom_management.data.contract.ReminderContract;
-import com.sharathp.symptom_management.data.contract.SymptomManagementContract;
+import com.sharathp.symptom_management.data.provider.contract.DoctorContract;
+import com.sharathp.symptom_management.data.provider.contract.MedicationContract;
+import com.sharathp.symptom_management.data.provider.contract.PatientContract;
+import com.sharathp.symptom_management.data.provider.contract.ReminderContract;
+import com.sharathp.symptom_management.data.provider.contract.SymptomManagementContract;
 
 import java.util.List;
 

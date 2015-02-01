@@ -1,4 +1,4 @@
-package com.sharathp.symptom_management.data.contract;
+package com.sharathp.symptom_management.data.provider.contract;
 
 import android.net.Uri;
 

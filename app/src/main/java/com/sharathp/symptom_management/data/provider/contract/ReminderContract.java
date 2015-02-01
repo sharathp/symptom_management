@@ -1,4 +1,4 @@
-package com.sharathp.symptom_management.data.contract;
+package com.sharathp.symptom_management.data.provider.contract;
 
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -55,12 +55,6 @@ public class ReminderContract extends SymptomManagementContract {
 
         public static final int _ID_INDEX = 0;
         public static final int ID_INDEX = 1;
-
-        public static final String SQL_CREATE = "CREATE TABLE "
-                + TABLE_NAME + "("
-                + _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + COLUMN_ID + " text not null"
-                + ");";
 
         public static Uri buildReminderUri(final long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);

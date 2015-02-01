@@ -8,13 +8,12 @@ import com.sharathp.symptom_management.dao.DoctorDao;
 import com.sharathp.symptom_management.dao.MedicationDao;
 import com.sharathp.symptom_management.dao.PatientDao;
 import com.sharathp.symptom_management.dao.ReminderDao;
-import com.sharathp.symptom_management.dao.impl.DefaultDao;
-import com.sharathp.symptom_management.dao.impl.DefaultDoctorDao;
-import com.sharathp.symptom_management.dao.impl.DefaultMedicationDao;
-import com.sharathp.symptom_management.dao.impl.DefaultPatientDao;
-import com.sharathp.symptom_management.dao.impl.DefaultReminderDao;
-import com.sharathp.symptom_management.data.SymptomManagementProvider;
-import com.sharathp.symptom_management.data.SymptomManagementSQLiteHelper;
+import com.sharathp.symptom_management.data.sqlite.dao.DefaultDoctorDao;
+import com.sharathp.symptom_management.data.sqlite.dao.DefaultMedicationDao;
+import com.sharathp.symptom_management.data.sqlite.dao.DefaultPatientDao;
+import com.sharathp.symptom_management.data.sqlite.dao.DefaultReminderDao;
+import com.sharathp.symptom_management.data.provider.SymptomManagementProvider;
+import com.sharathp.symptom_management.data.sqlite.SymptomManagementSQLiteHelper;
 
 import javax.inject.Singleton;
 

@@ -1,7 +1,7 @@
-package com.sharathp.symptom_management.dao.impl;
+package com.sharathp.symptom_management.data.sqlite.dao;
 
 import com.sharathp.symptom_management.dao.ReminderDao;
-import com.sharathp.symptom_management.data.contract.ReminderContract;
+import com.sharathp.symptom_management.data.provider.contract.ReminderContract;
 import com.sharathp.symptom_management.model.Reminder;
 
 import javax.inject.Inject;

@@ -1,4 +1,4 @@
-package com.sharathp.symptom_management.data.contract;
+package com.sharathp.symptom_management.data.provider.contract;
 
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -73,16 +73,6 @@ public class PatientContract extends SymptomManagementContract {
         public static final int PATIENT_ID_INDEX = 3;
         public static final int USER_ID_INDEX = 4;
 
-        public static final String SQL_CREATE = "CREATE TABLE "
-                + TABLE_NAME + "("
-                + _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + COLUMN_FIRST_NAME + " text not null, "
-                + COLUMN_LAST_NAME + " text not null, "
-                + COLUMN_PATIENT_ID + " text not null, "
-                + COLUMN_USER_ID + " text not null, "
-                + COLUMN_DOCTOR_ID + " text not null"
-                + ");";
-
         public static Uri buildPatientUri(final long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
@@ -101,12 +91,6 @@ public class PatientContract extends SymptomManagementContract {
             contentValues.put(COLUMN_MEDICATION_ID, medication_id);
             return contentValues;
         }
-
-        public static final String SQL_CREATE = "CREATE TABLE "
-                + TABLE_NAME + "("
-                + COLUMN_PATIENT_ID + " INTEGER not null, "
-                + COLUMN_MEDICATION_ID + " INTEGER not null"
-                + ");";
 
         public static Uri buildPatientMedicationsUri(final long id) {
             return Uri.withAppendedPath(buildPatientMedicationsUri(id), MedicationContract.PATH_MEDICATION);

@@ -1,4 +1,4 @@
-package com.sharathp.symptom_management.data.contract;
+package com.sharathp.symptom_management.data.provider.contract;
 
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -22,7 +22,7 @@ public class MedicationContract extends SymptomManagementContract {
 
         final Medication medication = new Medication();
         medication.set_id(_id);
-        medication.setId(id);
+        medication.setMedicationId(id);
         medication.setName(name);
 
         return medication;
@@ -30,7 +30,7 @@ public class MedicationContract extends SymptomManagementContract {
 
     public static ContentValues getContentValues(final Medication medication) {
         final ContentValues contentValues = new ContentValues();
-        contentValues.put(MedicationEntry.COLUMN_ID, medication.getId());
+        contentValues.put(MedicationEntry.COLUMN_ID, medication.getMedicationId());
         contentValues.put(MedicationEntry.COLUMN_NAME, medication.getName());
         return contentValues;
     }
@@ -61,13 +61,6 @@ public class MedicationContract extends SymptomManagementContract {
         public static final int _ID_INDEX = 0;
         public static final int ID_INDEX = 1;
         public static final int NAME_INDEX = 2;
-
-        public static final String SQL_CREATE = "CREATE TABLE "
-                + TABLE_NAME + "("
-                + _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + COLUMN_ID + " text not null, "
-                + COLUMN_NAME + " text not null"
-                + ");";
 
         public static Uri buildMedicationUri(final long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);

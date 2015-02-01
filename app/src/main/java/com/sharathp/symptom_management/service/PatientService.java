@@ -10,8 +10,8 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.sharathp.symptom_management.app.SymptomManagementApplication;
-import com.sharathp.symptom_management.data.contract.DoctorContract;
-import com.sharathp.symptom_management.data.contract.PatientContract;
+import com.sharathp.symptom_management.data.provider.contract.DoctorContract;
+import com.sharathp.symptom_management.data.provider.contract.PatientContract;
 import com.sharathp.symptom_management.http.SymptomManagementAPI;
 import com.sharathp.symptom_management.model.Patient;
 

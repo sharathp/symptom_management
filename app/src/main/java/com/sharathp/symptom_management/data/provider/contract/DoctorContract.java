@@ -1,4 +1,4 @@
-package com.sharathp.symptom_management.data.contract;
+package com.sharathp.symptom_management.data.provider.contract;
 
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -8,9 +8,6 @@ import android.provider.BaseColumns;
 
 import com.sharathp.symptom_management.model.Doctor;
 
-/**
- *
- */
 public class DoctorContract extends SymptomManagementContract {
     public static final String PATH_DOCTOR = "doctors";
 
@@ -70,15 +67,6 @@ public class DoctorContract extends SymptomManagementContract {
 
         public static final String[] ALL_COLUMNS = new String[]{_ID, COLUMN_FIRST_NAME,
                 COLUMN_LAST_NAME, COLUMN_DOCTOR_ID, COLUMN_USER_ID};
-
-        public static final String SQL_CREATE = "CREATE TABLE "
-                + TABLE_NAME + "("
-                + _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + COLUMN_FIRST_NAME + " text not null, "
-                + COLUMN_LAST_NAME + " text not null, "
-                + COLUMN_DOCTOR_ID + " text not null, "
-                + COLUMN_USER_ID + " text not null"
-                + ");";
 
         public static Uri buildDoctorUri(final long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);

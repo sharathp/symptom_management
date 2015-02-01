@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.sharathp.symptom_management.R;
-import com.sharathp.symptom_management.data.contract.PatientContract;
+import com.sharathp.symptom_management.data.provider.contract.PatientContract;
 import com.sharathp.symptom_management.fragment.BaseFragment;
 import com.sharathp.symptom_management.http.SymptomManagementAPI;
 import com.sharathp.symptom_management.model.Patient;

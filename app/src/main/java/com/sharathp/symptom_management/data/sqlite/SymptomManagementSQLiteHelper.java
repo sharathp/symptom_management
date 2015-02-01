@@ -1,14 +1,15 @@
-package com.sharathp.symptom_management.data;
+package com.sharathp.symptom_management.data.sqlite;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.sharathp.symptom_management.data.contract.DoctorContract;
-import com.sharathp.symptom_management.data.contract.MedicationContract;
-import com.sharathp.symptom_management.data.contract.PatientContract;
-import com.sharathp.symptom_management.data.contract.ReminderContract;
+import com.sharathp.symptom_management.data.sqlite.table.DoctorTable;
+import com.sharathp.symptom_management.data.sqlite.table.MedicationTable;
+import com.sharathp.symptom_management.data.sqlite.table.PatientMedicationTable;
+import com.sharathp.symptom_management.data.sqlite.table.PatientTable;
+import com.sharathp.symptom_management.data.sqlite.table.ReminderTable;
 
 /**
  * SQLiteHelper for Symptom Management application.
@@ -23,11 +24,11 @@ public class SymptomManagementSQLiteHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(final SQLiteDatabase db) {
-        db.execSQL(ReminderContract.ReminderEntry.SQL_CREATE);
-        db.execSQL(PatientContract.PatientEntry.SQL_CREATE);
-        db.execSQL(DoctorContract.DoctorEntry.SQL_CREATE);
-        db.execSQL(MedicationContract.MedicationEntry.SQL_CREATE);
-        db.execSQL(PatientContract.PatientMedicationEntry.SQL_CREATE);
+        db.execSQL(ReminderTable.SQL_CREATE);
+        db.execSQL(PatientTable.SQL_CREATE);
+        db.execSQL(DoctorTable.SQL_CREATE);
+        db.execSQL(MedicationTable.SQL_CREATE);
+        db.execSQL(PatientMedicationTable.SQL_CREATE);
     }
 
     @Override
@@ -41,11 +42,11 @@ public class SymptomManagementSQLiteHelper extends SQLiteOpenHelper {
         // It does NOT depend on the version number for your application.
         // If you want to update the schema without wiping data, commenting out the next 2 lines
         // should be your top priority before modifying this method.
-        db.execSQL("DROP TABLE IF EXISTS " + ReminderContract.ReminderEntry.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + PatientContract.PatientEntry.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + DoctorContract.DoctorEntry.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + MedicationContract.MedicationEntry.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + PatientContract.PatientMedicationEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + ReminderTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + PatientTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + DoctorTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + MedicationTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + PatientMedicationTable.TABLE_NAME);
         onCreate(db);
     }
 }

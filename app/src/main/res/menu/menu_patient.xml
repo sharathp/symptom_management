@@ -2,8 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.sharathp.symptom_management.activity.patient.PatientActivity">
 
-    <item android:id="@+id/patient_action_settings" android:title="@string/patient_action_settings"
+    <item android:medicationId="@+medicationId/patient_action_settings" android:title="@string/patient_action_settings"
         android:orderInCategory="100" android:showAsAction="never" />
-    <item android:id="@+id/patient_logout" android:title="@string/patient_logout"
+    <item android:medicationId="@+medicationId/patient_logout" android:title="@string/patient_logout"
           android:orderInCategory="100" android:showAsAction="never" />
 </menu>

@@ -5,7 +5,7 @@ package com.sharathp.symptom_management.model;
  */
 public class Medication {
     private long _id;
-    private String id;
+    private String medicationId;
     private String name;
 
     public long get_id() {
@@ -16,12 +16,12 @@ public class Medication {
         this._id = _id;
     }
 
-    public String getId() {
-        return id;
+    public String getMedicationId() {
+        return medicationId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setMedicationId(String medicationId) {
+        this.medicationId = medicationId;
     }
 
     public String getName() {

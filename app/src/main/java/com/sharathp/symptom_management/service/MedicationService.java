@@ -10,8 +10,8 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.sharathp.symptom_management.app.SymptomManagementApplication;
-import com.sharathp.symptom_management.data.contract.MedicationContract;
-import com.sharathp.symptom_management.data.contract.PatientContract;
+import com.sharathp.symptom_management.data.provider.contract.MedicationContract;
+import com.sharathp.symptom_management.data.provider.contract.PatientContract;
 import com.sharathp.symptom_management.http.SymptomManagementAPI;
 import com.sharathp.symptom_management.model.Medication;
 
@@ -79,7 +79,7 @@ public class MedicationService extends IntentService {
         for(final Medication medication: medications) {
             long existingMedication_id = getMedication_id(medication);
             if(existingMedication_id == -1L) {
-                Log.e(TAG, "Medication not found: " + medication.getId());
+                Log.e(TAG, "Medication not found: " + medication.getMedicationId());
                 return;
             }
             associatePatientMedication(existingPatient_id, existingMedication_id);
@@ -91,7 +91,7 @@ public class MedicationService extends IntentService {
     }
 
     private long getMedication_id(final Medication medication) {
-        final long existingMedication_id = getExistingMedication_id(medication.getId());
+        final long existingMedication_id = getExistingMedication_id(medication.getMedicationId());
         if(existingMedication_id != -1L) {
             return existingMedication_id;
         }

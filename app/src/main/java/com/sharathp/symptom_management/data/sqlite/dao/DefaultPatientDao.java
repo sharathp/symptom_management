@@ -1,10 +1,10 @@
-package com.sharathp.symptom_management.dao.impl;
+package com.sharathp.symptom_management.data.sqlite.dao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
 
 import com.sharathp.symptom_management.dao.PatientDao;
-import com.sharathp.symptom_management.data.contract.PatientContract;
+import com.sharathp.symptom_management.data.provider.contract.PatientContract;
 import com.sharathp.symptom_management.model.Patient;
 
 import javax.inject.Inject;

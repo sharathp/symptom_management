@@ -62,7 +62,7 @@
         </service>
 
         <provider
-            android:name=".data.SymptomManagementProvider"
+            android:name=".data.provider.SymptomManagementProvider"
             android:authorities="com.sharathp.symptom_management.provider"
             android:exported="false"
             android:syncable="false"/>

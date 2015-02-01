@@ -1,4 +1,4 @@
-package com.sharathp.symptom_management.dao.impl;
+package com.sharathp.symptom_management.data.sqlite.dao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
