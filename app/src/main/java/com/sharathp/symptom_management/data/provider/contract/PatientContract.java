@@ -79,16 +79,18 @@ public class PatientContract extends SymptomManagementContract {
     public static final class PatientMedicationEntry {
 
         // Column names
-        public static final String _ID = "_id";
-        public static final String COLUMN_NAME = "name";
-        public static final String COLUMN_SERVER_ID = "server_id";
+        public static final String COLUMN_MEDICATION_ID = "medication_id";
+        public static final String COLUMN_NAME = "medication_name";
+        public static final String COLUMN_SERVER_ID = "medication_server_id";
+        public static final String COLUMN_PATIENT_ID = "patient_id";
 
-        public static final int _ID_INDEX = 0;
+        public static final int COLUMN_MEDICATION_ID_INDEX = 0;
         public static final int COLUMN_NAME_INDEX = 1;
         public static final int COLUMN_SERVER_ID_INDEX = 2;
+        public static final int COLUMN_PATIENT_ID_INDEX = 3;
 
         public static Medication readMedication(final Cursor cursor) {
-            final long id = cursor.getLong(_ID_INDEX);
+            final long id = cursor.getLong(COLUMN_MEDICATION_ID_INDEX);
             final String serverId = cursor.getString(COLUMN_SERVER_ID_INDEX);
             final String name = cursor.getString(COLUMN_NAME_INDEX);
 
