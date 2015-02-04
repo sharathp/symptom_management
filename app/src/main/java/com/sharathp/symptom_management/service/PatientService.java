@@ -30,12 +30,12 @@ public class PatientService extends IntentService {
     public static final String ACTION_EXTRA = "action";
     public static final int UPDATE_PATIENTS_ACTION = 1;
 
-    public static final String DOCTOR_USER_ID_EXTRA = "doctorUserId";
+    public static final String DOCTOR_SERVER_ID_EXTRA = "doctorServerId";
 
-    public static Intent createUpdatePatientsIntent(final Context context, final String doctorUserId) {
+    public static Intent createUpdatePatientsIntent(final Context context, final String doctorServerId) {
         final Intent intent = new Intent(context, PatientService.class);
         intent.putExtra(ACTION_EXTRA, UPDATE_PATIENTS_ACTION);
-        intent.putExtra(DOCTOR_USER_ID_EXTRA, doctorUserId);
+        intent.putExtra(DOCTOR_SERVER_ID_EXTRA, doctorServerId);
         return intent;
     }
 
@@ -55,8 +55,8 @@ public class PatientService extends IntentService {
         final int action = intent.getIntExtra(ACTION_EXTRA, -1);
         switch (action) {
             case 1: {
-                final String doctorUserId = intent.getStringExtra(DOCTOR_USER_ID_EXTRA);
-                updatePatients(doctorUserId);
+                final String doctorServerId = intent.getStringExtra(DOCTOR_SERVER_ID_EXTRA);
+                updatePatients(doctorServerId);
                 break;
             }
             default:
@@ -65,35 +65,35 @@ public class PatientService extends IntentService {
         }
     }
 
-    private void updatePatients(final String doctorUserId) {
-        if(doctorUserId == null) {
+    private void updatePatients(final String doctorServerId) {
+        if(doctorServerId == null) {
             return;
         }
-        final long doctor_id = getExistingDoctor_id(doctorUserId);
-        if(doctor_id == -1L) {
+        final long doctorId = getExistingDoctorId(doctorServerId);
+        if(doctorId == -1L) {
             return;
         }
 
         // TODO - remove existing patients who are no longer associated to doctor..
-        final List<Patient> patients = symptomManagementAPI.get().getPatientsForDoctor(doctorUserId);
+        final List<Patient> patients = symptomManagementAPI.get().getPatientsForDoctor(doctorServerId);
         for (final Patient patient : patients) {
-            final long existing_patient_id = getExistingPatient_Id(patient.getServerId());
-            if (existing_patient_id == -1L) {
-                final long newId = createNewPatient(patient, doctor_id);
-                Log.d(TAG, "Created new patient: " + newId);
+            final long existingPatientId = getExistingPatientId(patient.getServerId());
+            if (existingPatientId == -1L) {
+                final long newPatientId = createNewPatient(patient, doctorId);
+                Log.d(TAG, "Created new patient: " + newPatientId);
             } else {
-                updateExistingPatient(existing_patient_id, patient, doctor_id);
-                Log.d(TAG, "Updated existing patient: " + existing_patient_id);
+                updateExistingPatient(existingPatientId, patient, doctorId);
+                Log.d(TAG, "Updated existing patient: " + existingPatientId);
             }
         }
     }
 
-    private long getExistingPatient_Id(final String userId) {
+    private long getExistingPatientId(final String serverId) {
         final Cursor cursor = this.getContentResolver().query(
                 PatientContract.PatientEntry.CONTENT_URI,
                 new String[]{PatientContract.PatientEntry._ID},
                 PatientContract.PatientEntry.COLUMN_SERVER_ID + " = ?",
-                new String[]{userId}, null);
+                new String[]{serverId}, null);
 
         if (cursor.moveToFirst()) {
             return cursor.getLong(0);
@@ -101,12 +101,12 @@ public class PatientService extends IntentService {
         return -1L;
     }
 
-    private long getExistingDoctor_id(final String userId) {
+    private long getExistingDoctorId(final String serverId) {
         final Cursor cursor = this.getContentResolver().query(
                 DoctorContract.DoctorEntry.CONTENT_URI,
                 new String[]{DoctorContract.DoctorEntry._ID},
                 DoctorContract.DoctorEntry.COLUMN_SERVER_ID + " = ?",
-                new String[]{userId}, null);
+                new String[]{serverId}, null);
 
         if (cursor.moveToFirst()) {
             return cursor.getLong(0);
@@ -114,23 +114,23 @@ public class PatientService extends IntentService {
         return -1L;
     }
 
-    private void updateExistingPatient(final long existing_Id,
-                               final Patient patient, final long doctor_id) {
-        final ContentValues contentValues = getContentValues(patient, doctor_id);
-        final Uri uri = PatientContract.PatientEntry.buildPatientUri(existing_Id);
+    private void updateExistingPatient(final long patientId,
+                               final Patient patient, final long doctorId) {
+        final ContentValues contentValues = getContentValues(patient, doctorId);
+        final Uri uri = PatientContract.PatientEntry.buildPatientUri(patientId);
         this.getContentResolver().update(uri, contentValues, null, null);
     }
 
-    private long createNewPatient(final Patient patient, final long doctor_id) {
-        final ContentValues contentValues = getContentValues(patient, doctor_id);
+    private long createNewPatient(final Patient patient, final long doctorId) {
+        final ContentValues contentValues = getContentValues(patient, doctorId);
         final Uri insertedUri = this.getContentResolver()
                 .insert(PatientContract.PatientEntry.CONTENT_URI, contentValues);
         return ContentUris.parseId(insertedUri);
     }
 
-    private ContentValues getContentValues(final Patient patient, final long doctor_id) {
-        final ContentValues contentValues = PatientContract.getContentValues(patient);
-        contentValues.put(PatientContract.PatientEntry.COLUMN_DOCTOR_ID, doctor_id);
+    private ContentValues getContentValues(final Patient patient, final long doctorId) {
+        final ContentValues contentValues = PatientContract.PatientEntry.getContentValues(patient);
+        contentValues.put(PatientContract.PatientEntry.COLUMN_DOCTOR_ID, doctorId);
         return contentValues;
     }
 }

@@ -1,14 +1,25 @@
 package com.sharathp.symptom_management.model;
 
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 public class Patient {
     private long mId;
+
+    @SerializedName("id")
     private String mServerId;
+
+    @SerializedName("firstName")
     private String mFirstName;
+
+    @SerializedName("lastName")
     private String mLastName;
+
+    @SerializedName("patientId")
     private String mRecordNumber;
+
     private List<Medication> mMedications;
 
     public long getId() {

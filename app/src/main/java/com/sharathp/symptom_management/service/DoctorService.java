@@ -26,14 +26,14 @@ public class DoctorService extends IntentService {
     Lazy<SymptomManagementAPI> symptomManagementAPI;
 
     public static final String ACTION_EXTRA = "action";
-    public static final String DOCTOR_USER_ID_EXTRA = "userId";
+    public static final String DOCTOR_SERVER_ID_EXTRA = "doctorServerId";
 
     public static final int GET_DOCTOR_ACTION = 1;
 
-    public static Intent createGetDoctorIntent(final Context context, final String userId) {
+    public static Intent createGetDoctorIntent(final Context context, final String serverId) {
         final Intent intent = new Intent(context, DoctorService.class);
         intent.putExtra(ACTION_EXTRA, GET_DOCTOR_ACTION);
-        intent.putExtra(DOCTOR_USER_ID_EXTRA, userId);
+        intent.putExtra(DOCTOR_SERVER_ID_EXTRA, serverId);
         return intent;
     }
 
@@ -53,8 +53,8 @@ public class DoctorService extends IntentService {
         final int action = intent.getIntExtra(ACTION_EXTRA, -1);
         switch (action) {
             case 1: {
-                final String userId = intent.getStringExtra(DOCTOR_USER_ID_EXTRA);
-                getDoctor(userId);
+                final String serverId = intent.getStringExtra(DOCTOR_SERVER_ID_EXTRA);
+                getDoctor(serverId);
                 break;
             }
             default:
@@ -63,36 +63,36 @@ public class DoctorService extends IntentService {
         }
     }
 
-    private void getDoctor(final String userId) {
-        if(userId == null) {
+    private void getDoctor(final String serverId) {
+        if(serverId == null) {
             return;
         }
-        final Doctor doctor = symptomManagementAPI.get().getDoctorById(userId);
+        final Doctor doctor = symptomManagementAPI.get().getDoctorByServerId(serverId);
         if(doctor == null) {
             return;
         }
 
-        long existing_id = getExisting_id(doctor.getServerId());
-        if (existing_id == -1L) {
-            existing_id = createNewDoctor(doctor);
-            Log.d(TAG, "Created new doctor: " + existing_id);
+        long existingId = getExistingId(doctor.getServerId());
+        if (existingId == -1L) {
+            existingId = createNewDoctor(doctor);
+            Log.d(TAG, "Created new doctor: " + existingId);
             retrievePatients(doctor.getServerId());
         } else {
-            updateExistingDoctor(existing_id, doctor);
-            Log.d(TAG, "Updated existing doctor: " + existing_id);
+            updateExistingDoctor(existingId, doctor);
+            Log.d(TAG, "Updated existing doctor: " + existingId);
         }
         final Session session = Session.restore(this);
         if(session != null) {
-            session.set_id(this, existing_id);
+            session.setId(this, existingId);
         }
     }
 
-    private long getExisting_id(final String userId) {
+    private long getExistingId(final String serverId) {
         final Cursor cursor = this.getContentResolver().query(
                 DoctorContract.DoctorEntry.CONTENT_URI,
                 new String[]{DoctorContract.DoctorEntry._ID},
                 DoctorContract.DoctorEntry.COLUMN_SERVER_ID + " = ?",
-                new String[]{userId}, null);
+                new String[]{serverId}, null);
 
         if (cursor.moveToFirst()) {
             return cursor.getLong(0);
@@ -100,15 +100,14 @@ public class DoctorService extends IntentService {
         return -1L;
     }
 
-    private void retrievePatients(final String doctorUserId) {
-        // TODO - pass id as argument to patient service
-        final Intent intent = PatientService.createUpdatePatientsIntent(this, doctorUserId);
+    private void retrievePatients(final String serverId) {
+        final Intent intent = PatientService.createUpdatePatientsIntent(this, serverId);
         startService(intent);
     }
 
-    private void updateExistingDoctor(final long existing_doctor_id, final Doctor doctor) {
+    private void updateExistingDoctor(final long existingId, final Doctor doctor) {
         final ContentValues contentValues = DoctorContract.getContentValues(doctor);
-        final Uri uri = DoctorContract.DoctorEntry.buildDoctorUri(existing_doctor_id);
+        final Uri uri = DoctorContract.DoctorEntry.buildDoctorUri(existingId);
         this.getContentResolver().update(uri, contentValues, null, null);
     }
 

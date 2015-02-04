@@ -80,7 +80,7 @@ public class PatientDetailFragment extends BaseFragment implements LoaderManager
         if (!cursor.moveToFirst()) {
             return;
         }
-        final Patient patient = PatientContract.readPatient(cursor);
+        final Patient patient = PatientContract.PatientEntry.readPatient(cursor);
         displayPatient(patient);
     }
 

@@ -125,7 +125,7 @@ public class MedicationService extends IntentService {
     }
 
     private long createNewMedication(final Medication medication) {
-        final ContentValues contentValues = MedicationContract.getContentValues(medication);
+        final ContentValues contentValues = MedicationContract.MedicationEntry.getContentValues(medication);
         final Uri insertedUri = this.getContentResolver()
                 .insert(MedicationContract.MedicationEntry.CONTENT_URI, contentValues);
         return ContentUris.parseId(insertedUri);

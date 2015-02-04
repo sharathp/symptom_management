@@ -152,7 +152,7 @@ public class LoginFragment extends BaseFragment {
     private void retrieveLoggedInUserInformation() {
         final Session session = Session.restore(getActivity());
         if(session.isDoctor()) {
-            final Intent intent = DoctorService.createGetDoctorIntent(getActivity(), session.getUserId());
+            final Intent intent = DoctorService.createGetDoctorIntent(getActivity(), session.getServerId());
             getActivity().startService(intent);
         }
     }

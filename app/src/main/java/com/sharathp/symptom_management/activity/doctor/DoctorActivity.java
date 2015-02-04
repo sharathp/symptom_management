@@ -32,8 +32,8 @@ public class DoctorActivity extends SingleFragmentActivity {
                 logout();
                 return true;
             case R.id.doctor_action_refresh_patients:
-                final String doctorUserId = Session.restore(this).getUserId();
-                final Intent intent = PatientService.createUpdatePatientsIntent(this, doctorUserId);
+                final String doctorServerId = Session.restore(this).getServerId();
+                final Intent intent = PatientService.createUpdatePatientsIntent(this, doctorServerId);
                 startService(intent);
                 return true;
             case R.id.doctor_action_settings:

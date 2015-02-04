@@ -24,7 +24,7 @@ import retrofit.http.Query;
 public interface SymptomManagementAPI {
 
     @GET("/api/v1/doctors/{id}")
-    Doctor getDoctorById(@Path("id") String id);
+    Doctor getDoctorByServerId(@Path("id") String id);
 
     @GET("/api/v1/doctors/{id}/patients")
     List<Patient> getPatientsForDoctor(@Path("id") String id);

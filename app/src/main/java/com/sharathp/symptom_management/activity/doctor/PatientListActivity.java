@@ -91,7 +91,7 @@ public class PatientListActivity extends BaseActivity
                 logout();
                 return true;
             case R.id.doctor_action_refresh_patients:
-                final String doctorUserId = Session.restore(this).getUserId();
+                final String doctorUserId = Session.restore(this).getServerId();
                 final Intent intent = PatientService.createUpdatePatientsIntent(this, doctorUserId);
                 startService(intent);
                 return true;

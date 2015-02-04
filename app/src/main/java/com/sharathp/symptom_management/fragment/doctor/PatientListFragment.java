@@ -140,7 +140,7 @@ public class PatientListFragment extends BaseListFragment implements LoaderManag
             public void onItemClick(final AdapterView<?> adapterView, final View view, final int position, final long l) {
                 final Cursor cursor = mPatientListAdapter.getCursor();
                 if (cursor != null && cursor.moveToPosition(position)) {
-                    final Patient patient = PatientContract.readPatient(cursor);
+                    final Patient patient = PatientContract.PatientEntry.readPatient(cursor);
                     mCallbacks.onItemSelected(patient.getId());
                     mActivatedPosition = position;
                 }
@@ -200,8 +200,8 @@ public class PatientListFragment extends BaseListFragment implements LoaderManag
     }
 
     private Uri getPatientsUri() {
-        final long doctor_id = Session.restore(getActivity()).get_id();
-        return DoctorContract.DoctorEntry.buildPatientsUri(doctor_id);
+        final long doctorId = Session.restore(getActivity()).getId();
+        return DoctorContract.DoctorEntry.buildPatientsUri(doctorId);
     }
 
     /**
@@ -232,7 +232,7 @@ public class PatientListFragment extends BaseListFragment implements LoaderManag
         @Override
         public void bindView(final View view, final Context context, final Cursor cursor) {
             final ViewHolder viewHolder = (ViewHolder) view.getTag();
-            final Patient patient = PatientContract.readPatient(cursor);
+            final Patient patient = PatientContract.PatientEntry.readPatient(cursor);
             viewHolder.mNameView.setText(patient.getFirstName() + " " + patient.getLastName());
             viewHolder.mPatientIdView.setText(patient.getRecordNumber());
         }
