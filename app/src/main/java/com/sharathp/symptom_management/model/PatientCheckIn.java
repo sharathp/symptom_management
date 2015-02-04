@@ -4,67 +4,76 @@ import java.util.Date;
 import java.util.List;
 
 public class PatientCheckIn {
-    private String id;
-    private Patient patient;
-    private Date checkinTime;
-    private Pain pain;
-    private Eating eating;
-    private boolean medicated;
-    private List<MedicationIntake> medications;
+    private long mId;
+    private String mServerId;
+    private Patient mPatient;
+    private Date mCheckinTime;
+    private Pain mPain;
+    private Eating mEating;
+    private boolean mMedicated;
+    private List<MedicationIntake> mMedications;
 
-    public String getId() {
-        return id;
+    public long getId() {
+        return mId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setId(final long id) {
+        mId = id;
+    }
+
+    public String getServerId() {
+        return mServerId;
+    }
+
+    public void setServerId(String serverId) {
+        this.mServerId = serverId;
     }
 
     public Patient getPatient() {
-        return patient;
+        return mPatient;
     }
 
     public void setPatient(Patient patient) {
-        this.patient = patient;
+        this.mPatient = patient;
     }
 
     public Date getCheckinTime() {
-        return checkinTime;
+        return mCheckinTime;
     }
 
     public void setCheckinTime(Date checkinTime) {
-        this.checkinTime = checkinTime;
+        this.mCheckinTime = checkinTime;
     }
 
     public Pain getPain() {
-        return pain;
+        return mPain;
     }
 
     public void setPain(Pain pain) {
-        this.pain = pain;
+        this.mPain = pain;
     }
 
     public Eating getEating() {
-        return eating;
+        return mEating;
     }
 
     public void setEating(Eating eating) {
-        this.eating = eating;
+        this.mEating = eating;
     }
 
     public boolean isMedicated() {
-        return medicated;
+        return mMedicated;
     }
 
     public void setMedicated(boolean medicated) {
-        this.medicated = medicated;
+        this.mMedicated = medicated;
     }
 
     public List<MedicationIntake> getMedications() {
-        return medications;
+        return mMedications;
     }
 
     public void setMedications(List<MedicationIntake> medications) {
-        this.medications = medications;
+        this.mMedications = medications;
     }
 }

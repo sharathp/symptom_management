@@ -1,6 +1,7 @@
 package com.sharathp.symptom_management.activity.doctor;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -8,6 +9,7 @@ import com.sharathp.symptom_management.R;
 import com.sharathp.symptom_management.activity.SingleFragmentActivity;
 import com.sharathp.symptom_management.fragment.doctor.DoctorFragment;
 import com.sharathp.symptom_management.login.Session;
+import com.sharathp.symptom_management.service.PatientService;
 
 public class DoctorActivity extends SingleFragmentActivity {
 
@@ -28,6 +30,11 @@ public class DoctorActivity extends SingleFragmentActivity {
             case R.id.doctor_logout:
                 Session.clearSavedSession(this);
                 logout();
+                return true;
+            case R.id.doctor_action_refresh_patients:
+                final String doctorServerId = Session.restore(this).getServerId();
+                final Intent intent = PatientService.createUpdatePatientsIntent(this, doctorServerId);
+                startService(intent);
                 return true;
             case R.id.doctor_action_settings:
                 return true;

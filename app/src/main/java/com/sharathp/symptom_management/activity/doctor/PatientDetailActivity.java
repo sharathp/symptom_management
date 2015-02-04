@@ -41,8 +41,8 @@ public class PatientDetailActivity extends BaseActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             final Bundle arguments = new Bundle();
-            arguments.putString(PatientDetailFragment.ARG_PATIENT_ID,
-                    getIntent().getStringExtra(PatientDetailFragment.ARG_PATIENT_ID));
+            arguments.putLong(PatientDetailFragment.ARG_PATIENT_ID,
+                    getIntent().getLongExtra(PatientDetailFragment.ARG_PATIENT_ID, -1));
             final PatientDetailFragment fragment = new PatientDetailFragment();
             fragment.setArguments(arguments);
             getFragmentManager().beginTransaction()

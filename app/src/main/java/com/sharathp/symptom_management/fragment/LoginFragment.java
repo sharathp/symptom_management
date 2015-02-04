@@ -3,6 +3,7 @@ package com.sharathp.symptom_management.fragment;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import com.sharathp.symptom_management.loader.RetrofitLoader;
 import com.sharathp.symptom_management.loader.RetrofitLoaderUtil;
 import com.sharathp.symptom_management.login.Session;
 import com.sharathp.symptom_management.model.AccessTokenResponse;
+import com.sharathp.symptom_management.service.DoctorService;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -123,6 +125,7 @@ public class LoginFragment extends BaseFragment {
                     Timber.d(TAG, "Login Successful");
                     if (Session.saveSession(getActivity(), username, result.getAccessToken(),
                             userType, result.getUserId())) {
+                        retrieveLoggedInUserInformation();
                         getActivity().setResult(Activity.RESULT_OK);
                         getActivity().finish();
                     } else {
@@ -143,6 +146,14 @@ public class LoginFragment extends BaseFragment {
                     mPasswordView.requestFocus();
                 }
             });
+        }
+    }
+
+    private void retrieveLoggedInUserInformation() {
+        final Session session = Session.restore(getActivity());
+        if(session.isDoctor()) {
+            final Intent intent = DoctorService.createGetDoctorIntent(getActivity(), session.getServerId());
+            getActivity().startService(intent);
         }
     }
 

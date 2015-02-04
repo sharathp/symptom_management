@@ -11,6 +11,7 @@
     <string name="patient_checkin_text">Check In</string>
     <string name="action_doctor_sign_in">Login as Doctor</string>
     <string name="action_patient_sign_in">Login as Patient</string>
+    <string name="doctor_action_refresh_patients">Refresh Patients</string>
 
     <!-- Strings related to login -->
     <string name="prompt_username">Username</string>

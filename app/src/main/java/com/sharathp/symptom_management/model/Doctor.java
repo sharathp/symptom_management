@@ -1,52 +1,71 @@
 package com.sharathp.symptom_management.model;
 
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 public class Doctor {
-    private String id;
-    private String doctorId;
-    private String firstName;
-    private String lastName;
-    private List<Patient> patients;
+    private long mId;
 
-    public String getId() {
-        return id;
+    @SerializedName("id")
+    private String mServerId;
+
+    @SerializedName("doctorId")
+    private String mDoctorCode;
+
+    @SerializedName("firstName")
+    private String mFirstName;
+
+    @SerializedName("lastName")
+    private String mLastName;
+    private List<Patient> mPatients;
+
+    public long getId() {
+        return mId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setId(long id) {
+        this.mId = id;
     }
 
-    public String getDoctorId() {
-        return doctorId;
+    public String getServerId() {
+        return mServerId;
     }
 
-    public void setDoctorId(String doctorId) {
-        this.doctorId = doctorId;
+    public void setServerId(String serverId) {
+        this.mServerId = serverId;
+    }
+
+    public String getDoctorCode() {
+        return mDoctorCode;
+    }
+
+    public void setDoctorCode(String doctorCode) {
+        this.mDoctorCode = doctorCode;
     }
 
     public String getFirstName() {
-        return firstName;
+        return mFirstName;
     }
 
     public void setFirstName(String firstName) {
-        this.firstName = firstName;
+        this.mFirstName = firstName;
     }
 
     public String getLastName() {
-        return lastName;
+        return mLastName;
     }
 
     public void setLastName(String lastName) {
-        this.lastName = lastName;
+        this.mLastName = lastName;
     }
 
     public List<Patient> getPatients() {
-        return patients;
+        return mPatients;
     }
 
     public void setPatients(List<Patient> patients) {
-        this.patients = patients;
+        this.mPatients = patients;
     }
 }

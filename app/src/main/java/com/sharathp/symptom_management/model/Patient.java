@@ -1,76 +1,77 @@
 package com.sharathp.symptom_management.model;
 
 
-import java.util.Date;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 public class Patient {
-    private String id;
-    private String firstName;
-    private String lastName;
-    private Date dateOfBirth;
-    private String medicalRecordNumber;
-    private Doctor doctor;
-    private List<Medication> medications;
+    private long mId;
 
-    public String getId() {
-        return id;
+    @SerializedName("id")
+    private String mServerId;
+
+    @SerializedName("firstName")
+    private String mFirstName;
+
+    @SerializedName("lastName")
+    private String mLastName;
+
+    @SerializedName("patientId")
+    private String mRecordNumber;
+
+    private List<Medication> mMedications;
+
+    public long getId() {
+        return mId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setId(long id) {
+        this.mId = id;
+    }
+
+    public String getRecordNumber() {
+        return mRecordNumber;
+    }
+
+    public void setRecordNumber(String recordNumber) {
+        this.mRecordNumber = recordNumber;
+    }
+
+    public String getServerId() {
+        return mServerId;
+    }
+
+    public void setServerId(String serverId) {
+        this.mServerId = serverId;
     }
 
     public String getFirstName() {
-        return firstName;
+        return mFirstName;
     }
 
     public void setFirstName(String firstName) {
-        this.firstName = firstName;
+        this.mFirstName = firstName;
     }
 
     public String getLastName() {
-        return lastName;
+        return mLastName;
     }
 
     public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public Date getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    public void setDateOfBirth(Date dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
-
-    public String getMedicalRecordNumber() {
-        return medicalRecordNumber;
-    }
-
-    public void setMedicalRecordNumber(String medicalRecordNumber) {
-        this.medicalRecordNumber = medicalRecordNumber;
-    }
-
-    public Doctor getDoctor() {
-        return doctor;
-    }
-
-    public void setDoctor(Doctor doctor) {
-        this.doctor = doctor;
+        this.mLastName = lastName;
     }
 
     public List<Medication> getMedications() {
-        return medications;
+        return mMedications;
     }
 
     public void setMedications(List<Medication> medications) {
-        this.medications = medications;
+        this.mMedications = medications;
     }
 
     @Override
     public String toString() {
-        return id;
+        return mServerId;
     }
 }

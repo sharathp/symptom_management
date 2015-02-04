@@ -3,12 +3,15 @@ package com.sharathp.symptom_management.activity.doctor;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import com.sharathp.symptom_management.R;
 import com.sharathp.symptom_management.activity.BaseActivity;
 import com.sharathp.symptom_management.fragment.doctor.PatientDetailFragment;
 import com.sharathp.symptom_management.fragment.doctor.PatientListFragment;
+import com.sharathp.symptom_management.login.Session;
+import com.sharathp.symptom_management.service.PatientService;
 
 /**
  * An activity representing a list of Patients. This activity
@@ -60,20 +63,43 @@ public class PatientListActivity extends BaseActivity
     }
 
     @Override
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_doctor, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
         final int id = item.getItemId();
-        if (id == android.R.id.home) {
-            // This ID represents the Home or Up button. In the case of this
-            // activity, the Up button is shown. Use NavUtils to allow users
-            // to navigate up one level in the application structure. For
-            // more details, see the Navigation pattern on Android Design:
-            //
-            // http://developer.android.com/design/patterns/navigation.html#up-vs-back
-            //
-            NavUtils.navigateUpFromSameTask(this);
-            return true;
+        switch(id) {
+            case android.R.id.home:
+                // This ID represents the Home or Up button. In the case of this
+                // activity, the Up button is shown. Use NavUtils to allow users
+                // to navigate up one level in the application structure. For
+                // more details, see the Navigation pattern on Android Design:
+                //
+                // http://developer.android.com/design/patterns/navigation.html#up-vs-back
+                //
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+            case R.id.doctor_logout:
+                Session.clearSavedSession(this);
+                logout();
+                return true;
+            case R.id.doctor_action_refresh_patients:
+                final String doctorUserId = Session.restore(this).getServerId();
+                final Intent intent = PatientService.createUpdatePatientsIntent(this, doctorUserId);
+                startService(intent);
+                return true;
+            case R.id.doctor_action_settings:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -81,13 +107,13 @@ public class PatientListActivity extends BaseActivity
      * indicating that the item with the given ID was selected.
      */
     @Override
-    public void onItemSelected(final String id) {
+    public void onItemSelected(final long id) {
         if (mTwoPane) {
             // In two-pane mode, show the detail view in this activity by
             // adding or replacing the detail fragment using a
             // fragment transaction.
             final Bundle arguments = new Bundle();
-            arguments.putString(PatientDetailFragment.ARG_PATIENT_ID, id);
+            arguments.putLong(PatientDetailFragment.ARG_PATIENT_ID, id);
             final PatientDetailFragment fragment = new PatientDetailFragment();
             fragment.setArguments(arguments);
             getFragmentManager().beginTransaction()

@@ -32,8 +32,7 @@ public class DoctorFragment extends BaseFragment {
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
-        final View rootView = inflater.inflate(R.layout.d_fragment_doctor, container, false);
-        return rootView;
+        return inflater.inflate(R.layout.d_fragment_doctor, container, false);
     }
 
     @Override

@@ -4,22 +4,22 @@ package com.sharathp.symptom_management.model;
  *
  */
 public class Pain {
-    private int id;
-    private String level;
+    private int mId;
+    private String mLevel;
 
     public int getId() {
-        return id;
+        return mId;
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.mId = id;
     }
 
     public String getLevel() {
-        return level;
+        return mLevel;
     }
 
     public void setLevel(String level) {
-        this.level = level;
+        this.mLevel = level;
     }
 }

@@ -1,8 +1,6 @@
-package com.sharathp.symptom_management.data;
+package com.sharathp.symptom_management.data.provider.contract;
 
-import android.content.ContentUris;
 import android.net.Uri;
-import android.provider.BaseColumns;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -13,10 +11,8 @@ import java.util.Date;
  */
 public class SymptomManagementContract {
 
-    public static final String CONTENT_AUTHORITY = "com.sharathp.symptom_management";
+    public static final String CONTENT_AUTHORITY = "com.sharathp.symptom_management.provider";
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
-
-    public static final String PATH_REMINDER = "reminder";
 
     public static final String DATE_FORMAT = "YYYY-MM-DD HH:MM";
 
@@ -47,32 +43,6 @@ public class SymptomManagementContract {
         } catch ( ParseException e ) {
             e.printStackTrace();
             return null;
-        }
-    }
-
-    /* Inner class that defines the table contents of the location table */
-    public static final class ReminderEntry implements BaseColumns {
-
-        public static final Uri CONTENT_URI =
-                BASE_CONTENT_URI.buildUpon().appendPath(PATH_REMINDER).build();
-
-        public static final String CONTENT_TYPE =
-                "vnd.android.cursor.dir/" + CONTENT_AUTHORITY + "/" + PATH_REMINDER;
-        public static final String CONTENT_ITEM_TYPE =
-                "vnd.android.cursor.item/" + CONTENT_AUTHORITY + "/" + PATH_REMINDER;
-
-        // Table name
-        public static final String TABLE_NAME = "reminder";
-
-        public static final String COLUMN_REMINDER_TIME = "reminder_time";
-
-        public static final String SQL_CREATE = "CREATE TABLE "
-                + TABLE_NAME + "(" + _ID
-                + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_REMINDER_TIME
-                + " text not null);";
-
-        public static Uri buildLocationUri(long id) {
-            return ContentUris.withAppendedId(CONTENT_URI, id);
         }
     }
 }

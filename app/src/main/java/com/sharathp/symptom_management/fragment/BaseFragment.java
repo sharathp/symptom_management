@@ -15,15 +15,15 @@ import butterknife.ButterKnife;
 public abstract class BaseFragment extends Fragment {
 
     @Override
-    public void onAttach(final Activity activity) {
-        super.onAttach(activity);
-        injectDependencies();
-    }
-
-    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         injectViews(view);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        injectDependencies();
     }
 
     /**

@@ -4,68 +4,68 @@ import com.google.gson.annotations.SerializedName;
 
 public class AccessTokenResponse {
     @SerializedName("access_token")
-    private String accessToken;
+    private String mAccessToken;
 
     @SerializedName("token_type")
-    private String tokenType;
+    private String mTokenType;
 
     @SerializedName("refresh_token")
-    private String refreshToken;
+    private String mRrefreshToken;
 
     @SerializedName("expires_in")
-    private long expiresIn;
+    private long mExpiresIn;
 
     @SerializedName("scope")
-    private String scope;
+    private String mScope;
 
     @SerializedName("user_id")
-    private String userId;
+    private String mUserId;
 
     public String getAccessToken() {
-        return accessToken;
+        return mAccessToken;
     }
 
     public void setAccessToken(final String accessToken) {
-        this.accessToken = accessToken;
+        this.mAccessToken = accessToken;
     }
 
     public String getTokenType() {
-        return tokenType;
+        return mTokenType;
     }
 
     public void setTokenType(final String tokenType) {
-        this.tokenType = tokenType;
+        this.mTokenType = tokenType;
     }
 
-    public String getRefreshToken() {
-        return refreshToken;
+    public String getRrefreshToken() {
+        return mRrefreshToken;
     }
 
-    public void setRefreshToken(final String refreshToken) {
-        this.refreshToken = refreshToken;
+    public void setRrefreshToken(final String rrefreshToken) {
+        this.mRrefreshToken = rrefreshToken;
     }
 
     public long getExpiresIn() {
-        return expiresIn;
+        return mExpiresIn;
     }
 
     public void setExpiresIn(final long expiresIn) {
-        this.expiresIn = expiresIn;
+        this.mExpiresIn = expiresIn;
     }
 
     public String getScope() {
-        return scope;
+        return mScope;
     }
 
     public void setScope(final String scope) {
-        this.scope = scope;
+        this.mScope = scope;
     }
 
     public String getUserId() {
-        return userId;
+        return mUserId;
     }
 
     public void setUserId(String userId) {
-        this.userId = userId;
+        this.mUserId = userId;
     }
 }
