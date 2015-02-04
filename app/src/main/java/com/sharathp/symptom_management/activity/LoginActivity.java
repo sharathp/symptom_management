@@ -1,6 +1,6 @@
 package com.sharathp.symptom_management.activity;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 
 import com.sharathp.symptom_management.fragment.LoginFragment;
 

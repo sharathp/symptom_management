@@ -45,7 +45,7 @@ public class PatientDetailActivity extends BaseActivity {
                     getIntent().getLongExtra(PatientAllDetailsFragment.ARG_PATIENT_ID, -1));
             final PatientAllDetailsFragment fragment = new PatientAllDetailsFragment();
             fragment.setArguments(arguments);
-            getFragmentManager().beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                     .add(R.id.patient_detail_container, fragment)
                     .commit();
         }

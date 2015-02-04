@@ -54,7 +54,7 @@ public class PatientListActivity extends BaseActivity
 
             // In two-pane mode, list items should be given the
             // 'activated' state when touched.
-            ((PatientListFragment) getFragmentManager()
+            ((PatientListFragment) getSupportFragmentManager()
                     .findFragmentById(R.id.patient_list))
                     .setActivateOnItemClick(true);
         }
@@ -117,7 +117,7 @@ public class PatientListActivity extends BaseActivity
 
             final PatientAllDetailsFragment fragment = new PatientAllDetailsFragment();
             fragment.setArguments(arguments);
-            getFragmentManager().beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                     .replace(R.id.patient_detail_container, fragment)
                     .commit();
 

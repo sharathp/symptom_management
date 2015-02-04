@@ -1,8 +1,7 @@
 package com.sharathp.symptom_management.fragment;
 
-import android.app.Activity;
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.View;
 
 import com.sharathp.symptom_management.activity.BaseActivity;

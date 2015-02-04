@@ -1,8 +1,8 @@
 package com.sharathp.symptom_management.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 
 import com.sharathp.symptom_management.app.SymptomManagementApplication;
 import com.sharathp.symptom_management.app.modules.ActivityModule;
@@ -15,7 +15,7 @@ import dagger.ObjectGraph;
 /**
  * {@link android.app.Activity} base class for all activities.
  */
-public abstract class BaseActivity extends Activity {
+public abstract class BaseActivity extends FragmentActivity {
     private ObjectGraph mActivityScopeGraph;
 
     @Override

@@ -1,6 +1,6 @@
 package com.sharathp.symptom_management.activity.patient;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuItem;
 

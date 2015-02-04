@@ -1,7 +1,8 @@
 package com.sharathp.symptom_management.loader;
 
-import android.content.AsyncTaskLoader;
+
 import android.content.Context;
+import android.support.v4.content.AsyncTaskLoader;
 
 public abstract class RetrofitLoader<T, SVC> extends AsyncTaskLoader<Response<T>> {
     private SVC mService;
