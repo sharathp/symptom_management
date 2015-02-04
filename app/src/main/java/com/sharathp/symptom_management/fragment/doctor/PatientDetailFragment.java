@@ -14,46 +14,23 @@ import android.widget.TextView;
 import com.sharathp.symptom_management.R;
 import com.sharathp.symptom_management.data.provider.contract.PatientContract;
 import com.sharathp.symptom_management.fragment.BaseFragment;
-import com.sharathp.symptom_management.http.SymptomManagementAPI;
 import com.sharathp.symptom_management.model.Patient;
-
-import javax.inject.Inject;
 
 import butterknife.InjectView;
 
-/**
- * A fragment representing a single Patient detail screen.
- * This fragment is either contained in a {@link com.sharathp.symptom_management.activity.doctor.PatientListActivity}
- * in two-pane mode (on tablets) or a {@link com.sharathp.symptom_management.activity.doctor.PatientDetailActivity}
- * on handsets.
- */
 public class PatientDetailFragment extends BaseFragment implements LoaderManager.LoaderCallbacks<Cursor> {
-    private static final String TAG = PatientDetailFragment.class.getSimpleName();
-    public static final String ARG_PATIENT_ID = "patient_id";
-    private static final int PATIENT_LOADER_ID = 0;
 
-    @Inject
-    SymptomManagementAPI mSymptomManagementAPI;
+    private static final String TAG = PatientDetailFragment.class.getSimpleName();
+    private static final int PATIENT_LOADER_ID = 0;
 
     @InjectView(R.id.first_name_text_view)
     TextView mTextView;
 
-    private long mPatient_id;
+    private long mPatientId;
     private Patient mPatient;
 
-    @Override
-    public void onActivityCreated(final Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        if (getArguments().containsKey(ARG_PATIENT_ID)) {
-            mPatient_id = getArguments().getLong(ARG_PATIENT_ID);
-            loadPatient();
-        }
-    }
-
-    private void loadPatient() {
-        getLoaderManager().initLoader(PATIENT_LOADER_ID, null, this);
-    }
+    // TODO - remove this
+    private int mPage;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
@@ -63,10 +40,24 @@ public class PatientDetailFragment extends BaseFragment implements LoaderManager
     }
 
     @Override
+    public void onActivityCreated(final Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (getArguments().containsKey(PatientAllDetailsFragment.ARG_PATIENT_ID)) {
+            mPatientId = getArguments().getLong(PatientAllDetailsFragment.ARG_PATIENT_ID);
+            mPage = getArguments().getInt(PatientAllDetailsFragment.ARG_PAGE);
+            loadPatient();
+        }
+    }
+
+    private void loadPatient() {
+        getLoaderManager().initLoader(PATIENT_LOADER_ID, null, this);
+    }
+
+    @Override
     public Loader<Cursor> onCreateLoader(final int id, final Bundle args) {
         switch (id) {
             case PATIENT_LOADER_ID:
-                final Uri patientUri = PatientContract.PatientEntry.buildPatientUri(mPatient_id);
+                final Uri patientUri = PatientContract.PatientEntry.buildPatientUri(mPatientId);
                 final CursorLoader cursorLoader = new CursorLoader(getActivity(), patientUri,
                         PatientContract.PatientEntry.ALL_COLUMNS, null, null, null);
                 return cursorLoader;
@@ -89,7 +80,7 @@ public class PatientDetailFragment extends BaseFragment implements LoaderManager
             return;
         }
         mPatient = patient;
-        mTextView.setText(mPatient.getFirstName());
+        mTextView.setText(mPatient.getFirstName() + "; page: " + mPage);
     }
 
     @Override

@@ -7,7 +7,7 @@ import android.view.MenuItem;
 
 import com.sharathp.symptom_management.R;
 import com.sharathp.symptom_management.activity.BaseActivity;
-import com.sharathp.symptom_management.fragment.doctor.PatientDetailFragment;
+import com.sharathp.symptom_management.fragment.doctor.PatientAllDetailsFragment;
 
 /**
  * An activity representing a single Patient detail screen. This
@@ -16,7 +16,7 @@ import com.sharathp.symptom_management.fragment.doctor.PatientDetailFragment;
  * in a {@link PatientListActivity}.
  * <p/>
  * This activity is mostly just a 'shell' activity containing nothing
- * more than a {@link com.sharathp.symptom_management.fragment.doctor.PatientDetailFragment}.
+ * more than a {@link com.sharathp.symptom_management.fragment.doctor.PatientAllDetailsFragment}.
  */
 public class PatientDetailActivity extends BaseActivity {
 
@@ -41,9 +41,9 @@ public class PatientDetailActivity extends BaseActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             final Bundle arguments = new Bundle();
-            arguments.putLong(PatientDetailFragment.ARG_PATIENT_ID,
-                    getIntent().getLongExtra(PatientDetailFragment.ARG_PATIENT_ID, -1));
-            final PatientDetailFragment fragment = new PatientDetailFragment();
+            arguments.putLong(PatientAllDetailsFragment.ARG_PATIENT_ID,
+                    getIntent().getLongExtra(PatientAllDetailsFragment.ARG_PATIENT_ID, -1));
+            final PatientAllDetailsFragment fragment = new PatientAllDetailsFragment();
             fragment.setArguments(arguments);
             getFragmentManager().beginTransaction()
                     .add(R.id.patient_detail_container, fragment)

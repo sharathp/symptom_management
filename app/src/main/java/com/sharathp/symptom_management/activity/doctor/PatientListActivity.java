@@ -8,7 +8,7 @@ import android.view.MenuItem;
 
 import com.sharathp.symptom_management.R;
 import com.sharathp.symptom_management.activity.BaseActivity;
-import com.sharathp.symptom_management.fragment.doctor.PatientDetailFragment;
+import com.sharathp.symptom_management.fragment.doctor.PatientAllDetailsFragment;
 import com.sharathp.symptom_management.fragment.doctor.PatientListFragment;
 import com.sharathp.symptom_management.login.Session;
 import com.sharathp.symptom_management.service.PatientService;
@@ -23,7 +23,7 @@ import com.sharathp.symptom_management.service.PatientService;
  * <p/>
  * The activity makes heavy use of fragments. The list of items is a
  * {@link com.sharathp.symptom_management.fragment.doctor.PatientListFragment} and the item details
- * (if present) is a {@link com.sharathp.symptom_management.fragment.doctor.PatientDetailFragment}.
+ * (if present) is a {@link com.sharathp.symptom_management.fragment.doctor.PatientAllDetailsFragment}.
  * <p/>
  * This activity also implements the required
  * {@link com.sharathp.symptom_management.fragment.doctor.PatientListFragment.Callbacks} interface
@@ -113,8 +113,9 @@ public class PatientListActivity extends BaseActivity
             // adding or replacing the detail fragment using a
             // fragment transaction.
             final Bundle arguments = new Bundle();
-            arguments.putLong(PatientDetailFragment.ARG_PATIENT_ID, id);
-            final PatientDetailFragment fragment = new PatientDetailFragment();
+            arguments.putLong(PatientAllDetailsFragment.ARG_PATIENT_ID, id);
+
+            final PatientAllDetailsFragment fragment = new PatientAllDetailsFragment();
             fragment.setArguments(arguments);
             getFragmentManager().beginTransaction()
                     .replace(R.id.patient_detail_container, fragment)
@@ -124,7 +125,7 @@ public class PatientListActivity extends BaseActivity
             // In single-pane mode, simply start the detail activity
             // for the selected item ID.
             final Intent detailIntent = new Intent(this, PatientDetailActivity.class);
-            detailIntent.putExtra(PatientDetailFragment.ARG_PATIENT_ID, id);
+            detailIntent.putExtra(PatientAllDetailsFragment.ARG_PATIENT_ID, id);
             startActivity(detailIntent);
         }
     }

@@ -13,6 +13,10 @@
     <string name="action_patient_sign_in">Login as Patient</string>
     <string name="doctor_action_refresh_patients">Refresh Patients</string>
 
+    <string name="doctor_patient_details_tab_title">Details</string>
+    <string name="doctor_patient_medications_tab_title">Medications</string>
+    <string name="doctor_patient_checkins_tab_title">Check-ins</string>
+
     <!-- Strings related to login -->
     <string name="prompt_username">Username</string>
     <string name="prompt_password">Password</string>
