@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.astuetz.PagerSlidingTabStrip;
 import com.sharathp.symptom_management.R;
 import com.sharathp.symptom_management.fragment.BaseFragment;
 
@@ -25,12 +26,14 @@ import butterknife.InjectView;
  */
 public class PatientAllDetailsFragment extends BaseFragment {
     public static final String ARG_PATIENT_ID = "patient_id";
-    public static final String ARG_PAGE = "page";
 
     private long mPatientId;
 
     @InjectView(R.id.patient_detail_view_pager)
     ViewPager mViewPager;
+
+    @InjectView(R.id.patient_detail_view_tabs)
+    PagerSlidingTabStrip mTabsStrip;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -50,10 +53,10 @@ public class PatientAllDetailsFragment extends BaseFragment {
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        // FIXME - http://stackoverflow.com/questions/25595388/android-getchildfragmentmanager-level-api-17
         mViewPager.setAdapter(
                 new PatientDetailsFragmentPagerAdapter(getChildFragmentManager(),
                         getArguments(), getActivity()));
+        mTabsStrip.setViewPager(mViewPager);
     }
 
     private static class PatientDetailsFragmentPagerAdapter extends FragmentPagerAdapter {
@@ -83,7 +86,7 @@ public class PatientAllDetailsFragment extends BaseFragment {
                     fragment = new PatientDetailFragment();
                     break;
                 case 1:
-                    fragment = new PatientDetailFragment();
+                    fragment = new MedicationListFragment();
                     break;
                 case 2:
                     fragment = new PatientDetailFragment();
@@ -92,10 +95,9 @@ public class PatientAllDetailsFragment extends BaseFragment {
             if(fragment == null) {
                 throw new IllegalArgumentException("Invalid position: " + position);
             }
-            // TODO - remove this new arguments
+
             final Bundle arguments = new Bundle();
             arguments.putLong(ARG_PATIENT_ID, mArguments.getLong(ARG_PATIENT_ID));
-            arguments.putInt(ARG_PAGE, position);
             fragment.setArguments(arguments);
             return fragment;
         }

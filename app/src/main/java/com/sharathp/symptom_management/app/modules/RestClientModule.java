@@ -33,7 +33,7 @@ public class RestClientModule {
     private static final String PATIENT_CLIENT_ID = "mobile_patient";
     private static final String PATIENT_CLIENT_SECRET = "mobile_patient";
 
-    private static final String ROOT = "http://192.168.0.108:8080";
+    private static final String ROOT = "http://192.168.0.102:8080";
 
     @Inject
     @ForApplication

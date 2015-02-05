@@ -236,17 +236,17 @@ public class PatientListFragment extends BaseListFragment implements LoaderManag
         public void bindView(final View view, final Context context, final Cursor cursor) {
             final ViewHolder viewHolder = (ViewHolder) view.getTag();
             final Patient patient = PatientContract.PatientEntry.readPatient(cursor);
-            viewHolder.mNameView.setText(patient.getFirstName() + " " + patient.getLastName());
-            viewHolder.mPatientIdView.setText(patient.getRecordNumber());
+            viewHolder.mNameTextView.setText(patient.getFirstName() + " " + patient.getLastName());
+            viewHolder.mRecordNumberTextView.setText(patient.getRecordNumber());
         }
     }
 
     static class ViewHolder {
-        @InjectView(R.id.nameView)
-        TextView mNameView;
+        @InjectView(R.id.name_text_view)
+        TextView mNameTextView;
 
-        @InjectView(R.id.patientIdView)
-        TextView mPatientIdView;
+        @InjectView(R.id.medical_record_text_view)
+        TextView mRecordNumberTextView;
 
         ViewHolder(final View view) {
             ButterKnife.inject(this, view);

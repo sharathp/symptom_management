@@ -79,7 +79,7 @@ public class PatientContract extends SymptomManagementContract {
     public static final class PatientMedicationEntry {
 
         // Column names
-        public static final String COLUMN_MEDICATION_ID = "medication_id";
+        public static final String COLUMN_MEDICATION_ID = "_id";
         public static final String COLUMN_NAME = "medication_name";
         public static final String COLUMN_SERVER_ID = "medication_server_id";
         public static final String COLUMN_PATIENT_ID = "patient_id";
@@ -88,6 +88,12 @@ public class PatientContract extends SymptomManagementContract {
         public static final int COLUMN_NAME_INDEX = 1;
         public static final int COLUMN_SERVER_ID_INDEX = 2;
         public static final int COLUMN_PATIENT_ID_INDEX = 3;
+
+        public static final String[] ALL_COLUMNS = new String[]{
+                COLUMN_MEDICATION_ID,
+                COLUMN_NAME,
+                COLUMN_SERVER_ID
+        };
 
         public static Medication readMedication(final Cursor cursor) {
             final long id = cursor.getLong(COLUMN_MEDICATION_ID_INDEX);
@@ -100,7 +106,6 @@ public class PatientContract extends SymptomManagementContract {
             medication.setName(name);
 
             return medication;
-
         }
 
         public static Uri buildPatientMedicationsUri(final long patientId) {

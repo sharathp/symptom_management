@@ -23,14 +23,14 @@ public class PatientDetailFragment extends BaseFragment implements LoaderManager
     private static final String TAG = PatientDetailFragment.class.getSimpleName();
     private static final int PATIENT_LOADER_ID = 0;
 
-    @InjectView(R.id.first_name_text_view)
-    TextView mTextView;
+    @InjectView(R.id.name_text_view)
+    TextView mNameTextView;
+
+    @InjectView(R.id.medical_record_text_view)
+    TextView mMedicalRecordTextView;
 
     private long mPatientId;
     private Patient mPatient;
-
-    // TODO - remove this
-    private int mPage;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
@@ -44,7 +44,6 @@ public class PatientDetailFragment extends BaseFragment implements LoaderManager
         super.onActivityCreated(savedInstanceState);
         if (getArguments().containsKey(PatientAllDetailsFragment.ARG_PATIENT_ID)) {
             mPatientId = getArguments().getLong(PatientAllDetailsFragment.ARG_PATIENT_ID);
-            mPage = getArguments().getInt(PatientAllDetailsFragment.ARG_PAGE);
             loadPatient();
         }
     }
@@ -80,7 +79,8 @@ public class PatientDetailFragment extends BaseFragment implements LoaderManager
             return;
         }
         mPatient = patient;
-        mTextView.setText(mPatient.getFirstName() + "; page: " + mPage);
+        mNameTextView.setText(mPatient.getFirstName() + " " + mPatient.getLastName());
+        mMedicalRecordTextView.setText(mPatient.getRecordNumber());
     }
 
     @Override

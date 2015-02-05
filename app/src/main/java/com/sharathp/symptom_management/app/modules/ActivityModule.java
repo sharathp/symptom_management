@@ -12,6 +12,7 @@ import com.sharathp.symptom_management.activity.patient.PatientActivity;
 import com.sharathp.symptom_management.app.ForActivity;
 import com.sharathp.symptom_management.fragment.LoginFragment;
 import com.sharathp.symptom_management.fragment.doctor.DoctorFragment;
+import com.sharathp.symptom_management.fragment.doctor.MedicationListFragment;
 import com.sharathp.symptom_management.fragment.doctor.PatientAllDetailsFragment;
 import com.sharathp.symptom_management.fragment.doctor.PatientDetailFragment;
 import com.sharathp.symptom_management.fragment.doctor.PatientListFragment;
@@ -40,7 +41,8 @@ import dagger.Provides;
                 PatientListActivity.class,
                 PatientAllDetailsFragment.class,
                 PatientListFragment.class,
-                PatientDetailFragment.class
+                PatientDetailFragment.class,
+                MedicationListFragment.class
         },
         complete = false)
 public final class ActivityModule {
