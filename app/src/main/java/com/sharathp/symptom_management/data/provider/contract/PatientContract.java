@@ -111,5 +111,10 @@ public class PatientContract extends SymptomManagementContract {
         public static Uri buildPatientMedicationsUri(final long patientId) {
             return Uri.withAppendedPath(PatientEntry.buildPatientUri(patientId), MedicationContract.PATH_MEDICATION);
         }
+
+        public static Uri buildPatientMedicationUri(final long patientId, final long medicationId) {
+            final Uri patientMedicationsUri = buildPatientMedicationsUri(patientId);
+            return Uri.withAppendedPath(patientMedicationsUri, Long.toString(medicationId));
+        }
     }
 }

@@ -28,14 +28,14 @@ public class MedicationService extends IntentService {
     Lazy<SymptomManagementAPI> symptomManagementAPI;
 
     public static final String ACTION_EXTRA = "action";
-    public static final String PATIENT_USER_ID_EXTRA = "patientUserId";
+    public static final String PATIENT_SERVER_ID_EXTRA = "patientServerId";
 
     public static final int GET_PATIENT_MEDICATIONS_ACTION = 1;
 
-    public static Intent createGetPatientMedicationsIntent(final Context context, final String userId) {
+    public static Intent createGetPatientMedicationsIntent(final Context context, final String patientServerId) {
         final Intent intent = new Intent(context, MedicationService.class);
         intent.putExtra(ACTION_EXTRA, GET_PATIENT_MEDICATIONS_ACTION);
-        intent.putExtra(PATIENT_USER_ID_EXTRA, userId);
+        intent.putExtra(PATIENT_SERVER_ID_EXTRA, patientServerId);
         return intent;
     }
 
@@ -54,9 +54,9 @@ public class MedicationService extends IntentService {
     protected void onHandleIntent(final Intent intent) {
         final int action = intent.getIntExtra(ACTION_EXTRA, -1);
         switch (action) {
-            case 1: {
-                final String userId = intent.getStringExtra(PATIENT_USER_ID_EXTRA);
-                getPatientMedications(userId);
+            case GET_PATIENT_MEDICATIONS_ACTION: {
+                final String patientServerId = intent.getStringExtra(PATIENT_SERVER_ID_EXTRA);
+                loadPatientMedications(patientServerId);
                 break;
             }
             default:
@@ -65,40 +65,41 @@ public class MedicationService extends IntentService {
         }
     }
 
-    private void getPatientMedications(final String patientUserId) {
-        final long existingPatient_id = getExistingPatient_Id(patientUserId);
-        if(existingPatient_id == -1L) {
-            Log.e(TAG, "Patient not found: " + patientUserId);
+    private void loadPatientMedications(final String patientServerId) {
+        final long patientId = getPatientId(patientServerId);
+        if(patientId == -1L) {
+            Log.e(TAG, "Patient not found: " + patientServerId);
             return;
         }
-        final List<Medication> medications = symptomManagementAPI.get().getPatientMedications(patientUserId);
+        final List<Medication> medications = symptomManagementAPI.get().getPatientMedications(patientServerId);
         if(medications == null || medications.isEmpty()) {
-            Log.d(TAG, "No medications found for patient: " + patientUserId);
+            Log.d(TAG, "No medications found for patient: " + patientServerId);
             return;
         }
         for(final Medication medication: medications) {
-            long existingMedication_id = getMedication_id(medication);
-            if(existingMedication_id == -1L) {
+            long existingMedicationId = getMedicationId(medication);
+            if(existingMedicationId == -1L) {
                 Log.e(TAG, "Medication not found: " + medication.getServerId());
                 return;
             }
-            associatePatientMedication(existingPatient_id, existingMedication_id);
+            associatePatientMedication(patientId, existingMedicationId);
         }
     }
 
-    private void associatePatientMedication(final long patient_id, final long medication_id) {
-
+    private void associatePatientMedication(final long patientId, final long medicationId) {
+        final Uri uri = PatientContract.PatientMedicationEntry.buildPatientMedicationUri(patientId, medicationId);
+        this.getContentResolver().insert(uri, null);
     }
 
-    private long getMedication_id(final Medication medication) {
-        final long existingMedication_id = getExistingMedication_id(medication.getServerId());
+    private long getMedicationId(final Medication medication) {
+        final long existingMedication_id = getExistingMedicationId(medication.getServerId());
         if(existingMedication_id != -1L) {
             return existingMedication_id;
         }
         return createNewMedication(medication);
     }
 
-    private long getExistingMedication_id(final String medicationId) {
+    private long getExistingMedicationId(final String medicationId) {
         final Cursor cursor = this.getContentResolver().query(
                 MedicationContract.MedicationEntry.CONTENT_URI,
                 new String[]{MedicationContract.MedicationEntry._ID},
@@ -111,7 +112,7 @@ public class MedicationService extends IntentService {
         return -1L;
     }
 
-    private long getExistingPatient_Id(final String userId) {
+    private long getPatientId(final String userId) {
         final Cursor cursor = this.getContentResolver().query(
                 PatientContract.PatientEntry.CONTENT_URI,
                 new String[]{PatientContract.PatientEntry._ID},

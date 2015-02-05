@@ -81,7 +81,7 @@ public class DefaultPatientDao extends DefaultDao<Patient> implements PatientDao
         final ContentValues values = new ContentValues();
         values.put(PatientMedicationTable.COLUMN_MEDICATION_ID, medicationId);
         values.put(PatientMedicationTable.COLUMN_PATIENT_ID, patientId);
-        return mDatabase.insert(mTable, null, values);
+        return mDatabase.insert(PatientMedicationTable.TABLE_NAME, null, values);
     }
 
     @Override

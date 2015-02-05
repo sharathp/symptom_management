@@ -52,7 +52,7 @@ public class DoctorService extends IntentService {
     protected void onHandleIntent(final Intent intent) {
         final int action = intent.getIntExtra(ACTION_EXTRA, -1);
         switch (action) {
-            case 1: {
+            case GET_DOCTOR_ACTION: {
                 final String serverId = intent.getStringExtra(DOCTOR_SERVER_ID_EXTRA);
                 getDoctor(serverId);
                 break;

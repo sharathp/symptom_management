@@ -54,7 +54,7 @@ public class PatientService extends IntentService {
     protected void onHandleIntent(final Intent intent) {
         final int action = intent.getIntExtra(ACTION_EXTRA, -1);
         switch (action) {
-            case 1: {
+            case UPDATE_PATIENTS_ACTION: {
                 final String doctorServerId = intent.getStringExtra(DOCTOR_SERVER_ID_EXTRA);
                 updatePatients(doctorServerId);
                 break;
@@ -79,13 +79,19 @@ public class PatientService extends IntentService {
         for (final Patient patient : patients) {
             final long existingPatientId = getExistingPatientId(patient.getServerId());
             if (existingPatientId == -1L) {
-                final long newPatientId = createNewPatient(patient, doctorId);
+                long newPatientId = createNewPatient(patient, doctorId);
                 Log.d(TAG, "Created new patient: " + newPatientId);
             } else {
                 updateExistingPatient(existingPatientId, patient, doctorId);
                 Log.d(TAG, "Updated existing patient: " + existingPatientId);
             }
+            getMedications(patient.getServerId());
         }
+    }
+
+    private void getMedications(final String patientServerId) {
+        final Intent intent = MedicationService.createGetPatientMedicationsIntent(this, patientServerId);
+        startService(intent);
     }
 
     private long getExistingPatientId(final String serverId) {
