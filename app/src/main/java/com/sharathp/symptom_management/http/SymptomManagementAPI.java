@@ -39,10 +39,10 @@ public interface SymptomManagementAPI {
     Response updatePatientMedications(@Path("id") String id, @Body List<Medication> medications);
 
     @POST("/api/v1/patients/{id}/check-ins")
-    Response addPatientCheckin(@Body PatientCheckIn checkIn);
+    Response addPatientCheckin(@Path("id") String id, @Body PatientCheckIn checkIn);
 
     @GET("/api/v1/patients/{id}/check-ins")
-    List<PatientCheckIn> getPatientCheckins(@Query("from") Date from);
+    List<PatientCheckIn> getPatientCheckins(@Path("id") String id, @Query("from") Date from);
 
     @GET("/api/v1/patients")
     List<Patient> getPatientsByName(@Query("name") String name);

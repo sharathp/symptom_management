@@ -6,10 +6,12 @@ import android.database.sqlite.SQLiteDatabase;
 import com.sharathp.symptom_management.app.ForApplication;
 import com.sharathp.symptom_management.dao.DoctorDao;
 import com.sharathp.symptom_management.dao.MedicationDao;
+import com.sharathp.symptom_management.dao.PatientCheckInDao;
 import com.sharathp.symptom_management.dao.PatientDao;
 import com.sharathp.symptom_management.dao.ReminderDao;
 import com.sharathp.symptom_management.data.sqlite.dao.DefaultDoctorDao;
 import com.sharathp.symptom_management.data.sqlite.dao.DefaultMedicationDao;
+import com.sharathp.symptom_management.data.sqlite.dao.DefaultPatientCheckInDao;
 import com.sharathp.symptom_management.data.sqlite.dao.DefaultPatientDao;
 import com.sharathp.symptom_management.data.sqlite.dao.DefaultReminderDao;
 import com.sharathp.symptom_management.data.provider.SymptomManagementProvider;
@@ -20,13 +22,15 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 
+// TODO - remove all DAOs?
 @Module(library = true,
         injects = {
             SymptomManagementProvider.class,
             DefaultDoctorDao.class,
             DefaultPatientDao.class,
             DefaultMedicationDao.class,
-            DefaultReminderDao.class
+            DefaultReminderDao.class,
+            DefaultPatientCheckInDao.class
         },
         complete = false)
 public class DatabaseModule {
@@ -60,5 +64,11 @@ public class DatabaseModule {
     @Singleton
     ReminderDao provideReminderDao(final DefaultReminderDao defaultReminderDao) {
         return defaultReminderDao;
+    }
+
+    @Provides
+    @Singleton
+    PatientCheckInDao providePatientCheckInDao(final DefaultPatientCheckInDao defaultPatientCheckInDao) {
+        return defaultPatientCheckInDao;
     }
 }

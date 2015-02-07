@@ -1,13 +1,20 @@
 package com.sharathp.symptom_management.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Date;
 import java.util.List;
 
 public class PatientCheckIn {
     private long mId;
+
+    @SerializedName("id")
     private String mServerId;
-    private Patient mPatient;
+
+    @SerializedName("createdAt")
     private Date mCheckinTime;
+
+    private Patient mPatient;
     private Pain mPain;
     private Eating mEating;
     private boolean mMedicated;
