@@ -1,6 +1,6 @@
 package com.sharathp.symptom_management.data.sqlite.table;
 
-import static com.sharathp.symptom_management.task.MiscUtil.fullyQualify;
+import static com.sharathp.symptom_management.util.MiscUtil.fullyQualify;
 
 public interface PatientMedicationTable {
 

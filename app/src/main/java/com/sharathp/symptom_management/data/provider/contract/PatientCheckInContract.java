@@ -11,7 +11,7 @@ import com.sharathp.symptom_management.model.PatientCheckIn;
 import java.util.Date;
 
 public class PatientCheckInContract extends SymptomManagementContract {
-    public static final String PATH_CHECKINS = "patient_checkins";
+    public static final String PATH_CHECKINS = "patient-checkins";
 
     public static final class PatientCheckInEntry implements BaseColumns {
 

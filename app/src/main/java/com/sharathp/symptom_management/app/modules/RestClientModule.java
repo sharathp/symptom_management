@@ -9,6 +9,7 @@ import com.sharathp.symptom_management.app.ForApplication;
 import com.sharathp.symptom_management.http.LoginAPI;
 import com.sharathp.symptom_management.http.SymptomManagementAPI;
 import com.sharathp.symptom_management.login.Session;
+import com.sharathp.symptom_management.util.Constants;
 import com.squareup.okhttp.OkHttpClient;
 
 import java.util.Date;
@@ -82,7 +83,7 @@ public class RestClientModule {
 
     private RestAdapter.Builder restAdapterBuilder(final OkClient okClient) {
         final Gson gson = new GsonBuilder()
-                .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
+                .setDateFormat(Constants.DATE_FORMAT)
                 .create();
 
         final RestAdapter.Builder commonBuilder = new RestAdapter.Builder()

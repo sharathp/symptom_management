@@ -33,12 +33,12 @@ public class PatientCheckInService extends IntentService {
     public static final String PATIENT_SERVER_ID_EXTRA = "patientServerId";
     public static final String CHECKIN_FROM_EXTRA = "from";
 
-    public static final int GET_PATIENT_MEDICATIONS_ACTION = 1;
+    public static final int GET_PATIENT_CHECKINS_ACTION = 1;
 
     public static Intent createGetPatientCheckInsIntent(final Context context,
                         final String patientServerId, final Date from) {
         final Intent intent = new Intent(context, PatientCheckInService.class);
-        intent.putExtra(ACTION_EXTRA, GET_PATIENT_MEDICATIONS_ACTION);
+        intent.putExtra(ACTION_EXTRA, GET_PATIENT_CHECKINS_ACTION);
         intent.putExtra(PATIENT_SERVER_ID_EXTRA, patientServerId);
         intent.putExtra(CHECKIN_FROM_EXTRA, from);
         return intent;
@@ -59,14 +59,14 @@ public class PatientCheckInService extends IntentService {
     protected void onHandleIntent(final Intent intent) {
         final int action = intent.getIntExtra(ACTION_EXTRA, -1);
         switch (action) {
-            case GET_PATIENT_MEDICATIONS_ACTION: {
+            case GET_PATIENT_CHECKINS_ACTION: {
                 final String patientServerId = intent.getStringExtra(PATIENT_SERVER_ID_EXTRA);
                 Date from = (Date) intent.getSerializableExtra(CHECKIN_FROM_EXTRA);
                 if(from == null) {
                     from = new Date(0);
                 }
 
-                loadPatientMedications(patientServerId, from);
+                loadPatientCheckIns(patientServerId, from);
                 break;
             }
             default:
@@ -75,7 +75,7 @@ public class PatientCheckInService extends IntentService {
         }
     }
 
-    private void loadPatientMedications(final String patientServerId, final Date from) {
+    private void loadPatientCheckIns(final String patientServerId, final Date from) {
         final long patientId = getPatientId(patientServerId);
 
         if(patientId == -1L) {

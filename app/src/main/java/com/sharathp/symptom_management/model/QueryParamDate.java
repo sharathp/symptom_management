@@ -1,6 +1,7 @@
 package com.sharathp.symptom_management.model;
 
-import java.text.SimpleDateFormat;
+import com.sharathp.symptom_management.util.MiscUtil;
+
 import java.util.Date;
 
 public class QueryParamDate {
@@ -16,7 +17,6 @@ public class QueryParamDate {
 
     @Override
     public String toString() {
-        final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-        return sdf.format(mDate);
+        return MiscUtil.convertToString(mDate);
     }
 }

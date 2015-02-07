@@ -46,8 +46,10 @@ public class SymptomManagementProvider extends ContentProvider {
     private static final int PATIENT_MEDICATIONS = 500;
     private static final int PATIENT_MEDICATION_ID = 501;
 
-    private static final int PATIENT_CHECKINS = 600;
-    private static final int PATIENT_CHECKIN_ID = 601;
+    private static final int PATIENT_PATIENT_CHECKINS = 600;
+    private static final int PATIENT_CHECKINS = 601;
+    private static final int PATIENT_CHECKIN_ID = 602;
+
 
     @Inject
     DoctorDao mDoctorDao;
@@ -84,7 +86,8 @@ public class SymptomManagementProvider extends ContentProvider {
         matcher.addURI(authority, PatientContract.PATH_PATIENT + "/#/" + MedicationContract.PATH_MEDICATION, PATIENT_MEDICATIONS);
         matcher.addURI(authority, PatientContract.PATH_PATIENT + "/#/" + MedicationContract.PATH_MEDICATION + "/#", PATIENT_MEDICATION_ID);
 
-        matcher.addURI(authority, PatientContract.PATH_PATIENT + "/#/" + PatientCheckInContract.PATH_CHECKINS, PATIENT_CHECKINS);
+        matcher.addURI(authority, PatientContract.PATH_PATIENT + "/#/" + PatientCheckInContract.PATH_CHECKINS, PATIENT_PATIENT_CHECKINS);
+        matcher.addURI(authority, PatientCheckInContract.PATH_CHECKINS, PATIENT_CHECKINS);
         matcher.addURI(authority, PatientCheckInContract.PATH_CHECKINS + "/#", PATIENT_CHECKIN_ID);
 
         return matcher;
@@ -121,7 +124,7 @@ public class SymptomManagementProvider extends ContentProvider {
                 return MedicationContract.MedicationEntry.CONTENT_TYPE;
             case MEDICATION_ID:
                 return MedicationContract.MedicationEntry.CONTENT_ITEM_TYPE;
-            case PATIENT_CHECKINS:
+            case PATIENT_PATIENT_CHECKINS:
                 return PatientCheckInContract.PatientCheckInEntry.CONTENT_TYPE;
             case PATIENT_CHECKIN_ID:
                 return PatientCheckInContract.PatientCheckInEntry.CONTENT_ITEM_TYPE;
@@ -165,8 +168,11 @@ public class SymptomManagementProvider extends ContentProvider {
             case PATIENT_MEDICATIONS:
                 retCursor = mPatientDao.getMedicationsForPatient(getPatientId(uri), projection, sortOrder);
                 break;
-            case PATIENT_CHECKINS:
+            case PATIENT_PATIENT_CHECKINS:
                 retCursor = mPatientCheckInDao.getPatientCheckIns(getPatientId(uri), projection, sortOrder);
+                break;
+            case PATIENT_CHECKINS:
+                retCursor = mPatientCheckInDao.query(projection, selection, selectionArgs, sortOrder);
                 break;
             case PATIENT_CHECKIN_ID:
                 retCursor = mPatientCheckInDao.queryById(getPatientCheckinId(uri), projection);
@@ -206,7 +212,7 @@ public class SymptomManagementProvider extends ContentProvider {
                 mPatientDao.addMedicationForPatient(getPatientId(uri), getMedicationId(uri));
                 returnUri = uri;
                 break;
-            case PATIENT_CHECKINS:
+            case PATIENT_PATIENT_CHECKINS:
                 final long patientCheckInId = mPatientCheckInDao.createPatientCheckIn(getPatientId(uri), values);
                 if ( patientCheckInId > 0 ) {
                     returnUri = PatientCheckInContract.PatientCheckInEntry.buildPatientCheckInUri(patientCheckInId);
@@ -243,7 +249,7 @@ public class SymptomManagementProvider extends ContentProvider {
             case PATIENT_MEDICATION_ID:
                 rowsDeleted = mPatientDao.deleteMedicationForPatient(getPatientId(uri), getMedicationId(uri));
                 break;
-            case PATIENT_CHECKINS:
+            case PATIENT_PATIENT_CHECKINS:
                 rowsDeleted = mPatientCheckInDao.deletePatientCheckIns(getPatientId(uri), selection, selectionArgs);
                 break;
             default:
@@ -331,7 +337,7 @@ public class SymptomManagementProvider extends ContentProvider {
                 return Long.parseLong(pathSegments.get(pathSegments.size() - 2));
             case PATIENT_MEDICATION_ID:
                 return Long.parseLong(pathSegments.get(pathSegments.size() - 3));
-            case PATIENT_CHECKINS:
+            case PATIENT_PATIENT_CHECKINS:
                 return Long.parseLong(pathSegments.get(pathSegments.size() - 2));
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);

@@ -2,7 +2,7 @@ package com.sharathp.symptom_management.data.sqlite.table;
 
 import android.provider.BaseColumns;
 
-import static com.sharathp.symptom_management.task.MiscUtil.fullyQualify;
+import static com.sharathp.symptom_management.util.MiscUtil.fullyQualify;
 
 public interface DoctorTable extends BaseColumns {
 

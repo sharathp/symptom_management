@@ -21,7 +21,7 @@
         android:textAppearance="?android:attr/textAppearance"
         android:text="Id"
         android:textColor="@android:color/darker_gray"
-        android:layout_below="@+id/name_text_view"
+        android:layout_below="@id/name_text_view"
         android:layout_marginTop="5dp"/>
 
 </RelativeLayout>

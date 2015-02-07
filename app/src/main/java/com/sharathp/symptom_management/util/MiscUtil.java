@@ -1,4 +1,7 @@
-package com.sharathp.symptom_management.task;
+package com.sharathp.symptom_management.util;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class MiscUtil {
 
@@ -12,5 +15,10 @@ public class MiscUtil {
         sb.append(".");
         sb.append(column);
         return sb.toString();
+    }
+
+    public static String convertToString(final Date date) {
+        final SimpleDateFormat sdf = new SimpleDateFormat(Constants.DATE_FORMAT);
+        return sdf.format(date);
     }
 }

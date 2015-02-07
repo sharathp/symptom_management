@@ -1,4 +1,4 @@
-package com.sharathp.symptom_management.task;
+package com.sharathp.symptom_management.util;
 
 import android.annotation.TargetApi;
 import android.os.AsyncTask;
