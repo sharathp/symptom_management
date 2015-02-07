@@ -89,7 +89,7 @@ public class PatientAllDetailsFragment extends BaseFragment {
                     fragment = new MedicationListFragment();
                     break;
                 case 2:
-                    fragment = new PatientDetailFragment();
+                    fragment = new PatientCheckInListFragment();
                     break;
             }
             if(fragment == null) {

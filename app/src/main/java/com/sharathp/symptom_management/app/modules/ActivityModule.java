@@ -14,6 +14,7 @@ import com.sharathp.symptom_management.fragment.LoginFragment;
 import com.sharathp.symptom_management.fragment.doctor.DoctorFragment;
 import com.sharathp.symptom_management.fragment.doctor.MedicationListFragment;
 import com.sharathp.symptom_management.fragment.doctor.PatientAllDetailsFragment;
+import com.sharathp.symptom_management.fragment.doctor.PatientCheckInListFragment;
 import com.sharathp.symptom_management.fragment.doctor.PatientDetailFragment;
 import com.sharathp.symptom_management.fragment.doctor.PatientListFragment;
 import com.sharathp.symptom_management.fragment.patient.PatientFragment;
@@ -42,7 +43,8 @@ import dagger.Provides;
                 PatientAllDetailsFragment.class,
                 PatientListFragment.class,
                 PatientDetailFragment.class,
-                MedicationListFragment.class
+                MedicationListFragment.class,
+                PatientCheckInListFragment.class
         },
         complete = false)
 public final class ActivityModule {

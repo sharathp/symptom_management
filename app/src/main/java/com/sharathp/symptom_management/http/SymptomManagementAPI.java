@@ -4,6 +4,7 @@ import com.sharathp.symptom_management.model.Doctor;
 import com.sharathp.symptom_management.model.Medication;
 import com.sharathp.symptom_management.model.Patient;
 import com.sharathp.symptom_management.model.PatientCheckIn;
+import com.sharathp.symptom_management.model.QueryParamDate;
 
 import java.util.Date;
 import java.util.List;
@@ -42,7 +43,7 @@ public interface SymptomManagementAPI {
     Response addPatientCheckin(@Path("id") String id, @Body PatientCheckIn checkIn);
 
     @GET("/api/v1/patients/{id}/check-ins")
-    List<PatientCheckIn> getPatientCheckins(@Path("id") String id, @Query("from") Date from);
+    List<PatientCheckIn> getPatientCheckins(@Path("id") String id, @Query("from") QueryParamDate from);
 
     @GET("/api/v1/patients")
     List<Patient> getPatientsByName(@Query("name") String name);

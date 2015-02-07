@@ -3,11 +3,15 @@ package com.sharathp.symptom_management.app.modules;
 import android.content.Context;
 import android.util.Base64;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.sharathp.symptom_management.app.ForApplication;
 import com.sharathp.symptom_management.http.LoginAPI;
 import com.sharathp.symptom_management.http.SymptomManagementAPI;
 import com.sharathp.symptom_management.login.Session;
 import com.squareup.okhttp.OkHttpClient;
+
+import java.util.Date;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -18,6 +22,7 @@ import dagger.Provides;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.client.OkClient;
+import retrofit.converter.GsonConverter;
 
 @Module(library = true,
         complete = false)
@@ -76,10 +81,16 @@ public class RestClientModule {
     }
 
     private RestAdapter.Builder restAdapterBuilder(final OkClient okClient) {
+        final Gson gson = new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
+                .create();
+
         final RestAdapter.Builder commonBuilder = new RestAdapter.Builder()
                 .setEndpoint(ROOT)
                 .setClient(okClient)
+                .setConverter(new GsonConverter(gson))
                 .setLogLevel(RestAdapter.LogLevel.FULL);
+
         return commonBuilder;
     }
 

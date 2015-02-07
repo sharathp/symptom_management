@@ -17,9 +17,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sharathp.symptom_management.R;
-import com.sharathp.symptom_management.data.provider.contract.PatientContract;
+import com.sharathp.symptom_management.data.provider.contract.PatientCheckInContract;
 import com.sharathp.symptom_management.fragment.BaseListFragment;
-import com.sharathp.symptom_management.model.Medication;
+import com.sharathp.symptom_management.model.PatientCheckIn;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -32,9 +32,7 @@ public class PatientCheckInListFragment extends BaseListFragment implements Load
     private static final int PATIENT_CHECKINS_LOADER_ID = 0;
     private ListView mListView;
 
-
-
-    private MedicationListAdapter mMedicationListAdapter;
+    private PatientCheckInListAdapter mPatientCheckInListAdapter;
 
     private long mPatientId;
 
@@ -49,17 +47,17 @@ public class PatientCheckInListFragment extends BaseListFragment implements Load
         super.onActivityCreated(savedInstanceState);
         if (getArguments().containsKey(PatientAllDetailsFragment.ARG_PATIENT_ID)) {
             mPatientId = getArguments().getLong(PatientAllDetailsFragment.ARG_PATIENT_ID);
-            loadMedications();
+            loadPatientCheckIns();
         }
     }
 
-    private void loadMedications() {
+    private void loadPatientCheckIns() {
         getLoaderManager().initLoader(PATIENT_CHECKINS_LOADER_ID, null, this);
     }
 
     private void initializeListViewAndAdapter() {
-        mMedicationListAdapter = new MedicationListAdapter(getActivity(), null, 0);
-        setListAdapter(mMedicationListAdapter);
+        mPatientCheckInListAdapter = new PatientCheckInListAdapter(getActivity(), null, 0);
+        setListAdapter(mPatientCheckInListAdapter);
         // this is required as setting list adapter above, shows the list view
         setListShown(false);
 
@@ -67,10 +65,10 @@ public class PatientCheckInListFragment extends BaseListFragment implements Load
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(final AdapterView<?> adapterView, final View view, final int position, final long l) {
-                final Cursor cursor = mMedicationListAdapter.getCursor();
+                final Cursor cursor = mPatientCheckInListAdapter.getCursor();
                 if (cursor != null && cursor.moveToPosition(position)) {
-                    final Medication medication = PatientContract.PatientMedicationEntry.readMedication(cursor);
-                    Toast.makeText(getActivity(), medication.getName(), Toast.LENGTH_LONG);
+                    final PatientCheckIn patientCheckIn = PatientCheckInContract.PatientCheckInEntry.readPatientCheckIn(cursor);
+                    Toast.makeText(getActivity(), patientCheckIn.getCheckinTime().toGMTString(), Toast.LENGTH_LONG);
                 }
             }
         });
@@ -79,41 +77,41 @@ public class PatientCheckInListFragment extends BaseListFragment implements Load
     public Loader<Cursor> onCreateLoader(final int id, final Bundle args) {
         switch (id) {
             case PATIENT_CHECKINS_LOADER_ID:
-                final String sortOrder = PatientContract.PatientMedicationEntry.COLUMN_NAME + " ASC";
-                final CursorLoader cursorLoader = new CursorLoader(getActivity(), getPatientMedicationsUri(),
-                        PatientContract.PatientMedicationEntry.ALL_COLUMNS, null, null, sortOrder);
+                final String sortOrder = PatientCheckInContract.PatientCheckInEntry.COLUMN_CHECKIN_TIME + " ASC";
+                final CursorLoader cursorLoader = new CursorLoader(getActivity(), getPatientPatientCheckInsUri(),
+                        PatientCheckInContract.PatientCheckInEntry.ALL_COLUMNS, null, null, sortOrder);
                 return cursorLoader;
             default:
                 return null;
         }
     }
 
-    private Uri getPatientMedicationsUri() {
-        return PatientContract.PatientMedicationEntry.buildPatientMedicationsUri(mPatientId);
+    private Uri getPatientPatientCheckInsUri() {
+        return PatientCheckInContract.PatientCheckInEntry.buildPatientPatientCheckInsUri(mPatientId);
     }
 
     @Override
     public void onLoadFinished(final Loader<Cursor> loader, final Cursor cursor) {
-        mMedicationListAdapter.swapCursor(cursor);
+        mPatientCheckInListAdapter.swapCursor(cursor);
         // show list view - list view will be initially hidden..
         setListShown(true);
     }
 
     @Override
     public void onLoaderReset(final Loader<Cursor> loader) {
-        mMedicationListAdapter.swapCursor(null);
+        mPatientCheckInListAdapter.swapCursor(null);
     }
 
     // nested classes and interfaces..
-    static class MedicationListAdapter extends CursorAdapter {
+    static class PatientCheckInListAdapter extends CursorAdapter {
 
-        MedicationListAdapter(final Context context, final Cursor c, final int flags) {
+        PatientCheckInListAdapter(final Context context, final Cursor c, final int flags) {
             super(context, c, flags);
         }
 
         @Override
         public View newView(final Context context, final Cursor cursor, final ViewGroup parent) {
-            final View view = LayoutInflater.from(context).inflate(R.layout.list_item_medication, parent, false);
+            final View view = LayoutInflater.from(context).inflate(R.layout.list_item_checkin, parent, false);
             final ViewHolder viewHolder = new ViewHolder(view);
             view.setTag(viewHolder);
             return view;
@@ -122,15 +120,15 @@ public class PatientCheckInListFragment extends BaseListFragment implements Load
         @Override
         public void bindView(final View view, final Context context, final Cursor cursor) {
             final ViewHolder viewHolder = (ViewHolder) view.getTag();
-            final Medication medication = PatientContract.PatientMedicationEntry.readMedication(cursor);
-            viewHolder.mNameTextView.setText(medication.getName());
-            viewHolder.mServerIdTextView.setText(medication.getServerId());
+            final PatientCheckIn patientCheckIn = PatientCheckInContract.PatientCheckInEntry.readPatientCheckIn(cursor);
+            viewHolder.mTimeTextView.setText(patientCheckIn.getCheckinTime().toGMTString());
+            viewHolder.mServerIdTextView.setText(patientCheckIn.getServerId());
         }
     }
 
     static class ViewHolder {
-        @InjectView(R.id.name_text_view)
-        TextView mNameTextView;
+        @InjectView(R.id.time_text_view)
+        TextView mTimeTextView;
 
         @InjectView(R.id.server_id_text_view)
         TextView mServerIdTextView;

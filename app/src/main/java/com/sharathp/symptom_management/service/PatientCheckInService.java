@@ -1,13 +1,20 @@
 package com.sharathp.symptom_management.service;
 
 import android.app.IntentService;
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.util.Log;
 
 import com.sharathp.symptom_management.app.SymptomManagementApplication;
+import com.sharathp.symptom_management.data.provider.contract.PatientCheckInContract;
+import com.sharathp.symptom_management.data.provider.contract.PatientContract;
 import com.sharathp.symptom_management.http.SymptomManagementAPI;
 import com.sharathp.symptom_management.model.PatientCheckIn;
+import com.sharathp.symptom_management.model.QueryParamDate;
 
 import java.util.Date;
 import java.util.List;
@@ -30,7 +37,7 @@ public class PatientCheckInService extends IntentService {
 
     public static Intent createGetPatientCheckInsIntent(final Context context,
                         final String patientServerId, final Date from) {
-        final Intent intent = new Intent(context, MedicationService.class);
+        final Intent intent = new Intent(context, PatientCheckInService.class);
         intent.putExtra(ACTION_EXTRA, GET_PATIENT_MEDICATIONS_ACTION);
         intent.putExtra(PATIENT_SERVER_ID_EXTRA, patientServerId);
         intent.putExtra(CHECKIN_FROM_EXTRA, from);
@@ -69,7 +76,56 @@ public class PatientCheckInService extends IntentService {
     }
 
     private void loadPatientMedications(final String patientServerId, final Date from) {
-        final List<PatientCheckIn> checkInList =
-                mSymptomManagementAPI.get().getPatientCheckins(patientServerId, from);
+        final long patientId = getPatientId(patientServerId);
+
+        if(patientId == -1L) {
+            Log.e(TAG, "Patient not found: " + patientServerId);
+        }
+
+        final List<PatientCheckIn> patientCheckins =
+                mSymptomManagementAPI.get().getPatientCheckins(patientServerId, new QueryParamDate(from));
+
+        for(final PatientCheckIn patientCheckIn: patientCheckins) {
+            final long patientCheckInId = getPatientCheckInId(patientCheckIn.getServerId());
+            if(patientCheckInId != -1L) {
+                Log.d(TAG, "Patient Check-in exists: " + patientCheckIn.getServerId());
+                continue;
+            }
+            final long newPatientCheckInId = createPatientCheckIn(patientId, patientCheckIn);
+            Log.d(TAG, "Created new Patient Check-in : " + newPatientCheckInId);
+        }
+    }
+
+    private long createPatientCheckIn(final long patientId, final PatientCheckIn patientCheckIn) {
+        final Uri patientCheckInUri = PatientCheckInContract.PatientCheckInEntry.buildPatientPatientCheckInsUri(patientId);
+        final ContentValues contentValues = PatientCheckInContract.PatientCheckInEntry.getContentValues(patientCheckIn);
+        final Uri insertedUri = this.getContentResolver().insert(patientCheckInUri, contentValues);
+        return ContentUris.parseId(insertedUri);
+    }
+
+    private long getPatientId(final String serverId) {
+        final Cursor cursor = this.getContentResolver().query(
+                PatientContract.PatientEntry.CONTENT_URI,
+                new String[]{PatientContract.PatientEntry._ID},
+                PatientContract.PatientEntry.COLUMN_SERVER_ID + " = ?",
+                new String[]{serverId}, null);
+
+        if (cursor.moveToFirst()) {
+            return cursor.getLong(0);
+        }
+        return -1L;
+    }
+
+    private long getPatientCheckInId(final String serverId) {
+        final Cursor cursor = this.getContentResolver().query(
+                PatientCheckInContract.PatientCheckInEntry.CONTENT_URI,
+                new String[]{PatientCheckInContract.PatientCheckInEntry._ID},
+                PatientCheckInContract.PatientCheckInEntry.COLUMN_SERVER_ID + " = ?",
+                new String[]{serverId}, null);
+
+        if (cursor.moveToFirst()) {
+            return cursor.getLong(0);
+        }
+        return -1L;
     }
 }

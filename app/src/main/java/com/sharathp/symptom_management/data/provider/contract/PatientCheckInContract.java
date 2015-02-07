@@ -61,7 +61,7 @@ public class PatientCheckInContract extends SymptomManagementContract {
             return contentValues;
         }
 
-        public static Uri buildPatientAllCheckInsUri(final long patientId) {
+        public static Uri buildPatientPatientCheckInsUri(final long patientId) {
             final Uri patientUri = PatientContract.PatientEntry.buildPatientUri(patientId);
             return Uri.withAppendedPath(patientUri, PATH_CHECKINS);
         }

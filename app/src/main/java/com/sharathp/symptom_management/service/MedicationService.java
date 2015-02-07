@@ -112,12 +112,12 @@ public class MedicationService extends IntentService {
         return -1L;
     }
 
-    private long getPatientId(final String userId) {
+    private long getPatientId(final String serverId) {
         final Cursor cursor = this.getContentResolver().query(
                 PatientContract.PatientEntry.CONTENT_URI,
                 new String[]{PatientContract.PatientEntry._ID},
                 PatientContract.PatientEntry.COLUMN_SERVER_ID + " = ?",
-                new String[]{userId}, null);
+                new String[]{serverId}, null);
 
         if (cursor.moveToFirst()) {
             return cursor.getLong(0);

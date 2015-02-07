@@ -85,12 +85,18 @@ public class PatientService extends IntentService {
                 updateExistingPatient(existingPatientId, patient, doctorId);
                 Log.d(TAG, "Updated existing patient: " + existingPatientId);
             }
-            getMedications(patient.getServerId());
+            loadMedications(patient.getServerId());
+            loadPatientCheckIns(patient.getServerId());
         }
     }
 
-    private void getMedications(final String patientServerId) {
+    private void loadMedications(final String patientServerId) {
         final Intent intent = MedicationService.createGetPatientMedicationsIntent(this, patientServerId);
+        startService(intent);
+    }
+
+    private void loadPatientCheckIns(final String patientServerId) {
+        final Intent intent = PatientCheckInService.createGetPatientCheckInsIntent(this, patientServerId, null);
         startService(intent);
     }
 
