@@ -1,12 +1,14 @@
 package com.sharathp.symptom_management.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Date;
 
-/**
- *
- */
 public class MedicationIntake {
+    @SerializedName("medication")
     private Medication mMedication;
+
+    @SerializedName("time")
     private Date mTime;
 
     public Medication getMedication() {

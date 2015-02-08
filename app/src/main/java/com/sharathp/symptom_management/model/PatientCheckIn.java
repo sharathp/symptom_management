@@ -11,14 +11,20 @@ public class PatientCheckIn {
     @SerializedName("id")
     private String mServerId;
 
-    @SerializedName("createdAt")
+    @SerializedName("checkInTime")
     private Date mCheckinTime;
 
-    private Patient mPatient;
+    @SerializedName("pain")
     private Pain mPain;
+
+    @SerializedName("eating")
     private Eating mEating;
+
+    @SerializedName("medicated")
     private boolean mMedicated;
-    private List<MedicationIntake> mMedications;
+
+    @SerializedName("medicationIntakes")
+    private List<MedicationIntake> mMedicationIntakes;
 
     public long getId() {
         return mId;
@@ -34,14 +40,6 @@ public class PatientCheckIn {
 
     public void setServerId(String serverId) {
         this.mServerId = serverId;
-    }
-
-    public Patient getPatient() {
-        return mPatient;
-    }
-
-    public void setPatient(Patient patient) {
-        this.mPatient = patient;
     }
 
     public Date getCheckinTime() {
@@ -76,11 +74,11 @@ public class PatientCheckIn {
         this.mMedicated = medicated;
     }
 
-    public List<MedicationIntake> getMedications() {
-        return mMedications;
+    public List<MedicationIntake> getMedicationIntakes() {
+        return mMedicationIntakes;
     }
 
-    public void setMedications(List<MedicationIntake> medications) {
-        this.mMedications = medications;
+    public void setMedicationIntakes(List<MedicationIntake> medicationIntakes) {
+        this.mMedicationIntakes = medicationIntakes;
     }
 }
