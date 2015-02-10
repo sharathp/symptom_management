@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -122,7 +123,7 @@ public class PatientCheckInListFragment extends BaseListFragment implements Load
             final ViewHolder viewHolder = (ViewHolder) view.getTag();
             final PatientCheckIn patientCheckIn = PatientCheckInContract.PatientCheckInEntry.readPatientCheckIn(cursor);
             viewHolder.mTimeTextView.setText(patientCheckIn.getCheckinTime().toGMTString());
-            viewHolder.mServerIdTextView.setText(patientCheckIn.getServerId());
+            // viewHolder.mServerIdTextView.setText(patientCheckIn.getServerId());
         }
     }
 
@@ -130,8 +131,8 @@ public class PatientCheckInListFragment extends BaseListFragment implements Load
         @InjectView(R.id.time_text_view)
         TextView mTimeTextView;
 
-        @InjectView(R.id.server_id_text_view)
-        TextView mServerIdTextView;
+        @InjectView(R.id.medicine_image_view)
+        ImageView mMedicineImageView;
 
         ViewHolder(final View view) {
             ButterKnife.inject(this, view);
