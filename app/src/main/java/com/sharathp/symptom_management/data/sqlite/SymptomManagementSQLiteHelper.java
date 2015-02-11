@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.sharathp.symptom_management.data.sqlite.table.CheckinMedicationTable;
 import com.sharathp.symptom_management.data.sqlite.table.DoctorTable;
 import com.sharathp.symptom_management.data.sqlite.table.MedicationTable;
 import com.sharathp.symptom_management.data.sqlite.table.PatientCheckInTable;
@@ -32,6 +33,7 @@ public class SymptomManagementSQLiteHelper extends SQLiteOpenHelper {
         db.execSQL(MedicationTable.SQL_CREATE);
         db.execSQL(PatientMedicationTable.SQL_CREATE);
         db.execSQL(PatientCheckInTable.SQL_CREATE);
+        db.execSQL(CheckinMedicationTable.SQL_CREATE);
     }
 
     @Override
@@ -51,6 +53,7 @@ public class SymptomManagementSQLiteHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + MedicationTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + PatientMedicationTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + PatientCheckInTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + CheckinMedicationTable.TABLE_NAME);
         onCreate(db);
     }
 }

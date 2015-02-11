@@ -5,11 +5,21 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Date;
 
 public class MedicationIntake {
+    private long id;
+
     @SerializedName("medication")
     private Medication mMedication;
 
     @SerializedName("time")
     private Date mTime;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(final long id) {
+        this.id = id;
+    }
 
     public Medication getMedication() {
         return mMedication;

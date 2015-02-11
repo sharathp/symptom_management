@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.sharathp.symptom_management.app.SymptomManagementApplication;
+import com.sharathp.symptom_management.dao.CheckinMedicationDao;
 import com.sharathp.symptom_management.dao.DoctorDao;
 import com.sharathp.symptom_management.dao.MedicationDao;
 import com.sharathp.symptom_management.dao.PatientCheckInDao;
@@ -50,6 +51,8 @@ public class SymptomManagementProvider extends ContentProvider {
     private static final int PATIENT_CHECKINS = 601;
     private static final int PATIENT_CHECKIN_ID = 602;
 
+    private static final int CHECKIN_MEDICATIONS = 700;
+
 
     @Inject
     DoctorDao mDoctorDao;
@@ -65,6 +68,9 @@ public class SymptomManagementProvider extends ContentProvider {
 
     @Inject
     PatientCheckInDao mPatientCheckInDao;
+
+    @Inject
+    CheckinMedicationDao mCheckinMedicationDao;
 
     private static UriMatcher buildUriMatcher() {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -89,6 +95,8 @@ public class SymptomManagementProvider extends ContentProvider {
         matcher.addURI(authority, PatientContract.PATH_PATIENT + "/#/" + PatientCheckInContract.PATH_CHECKINS, PATIENT_PATIENT_CHECKINS);
         matcher.addURI(authority, PatientCheckInContract.PATH_CHECKINS, PATIENT_CHECKINS);
         matcher.addURI(authority, PatientCheckInContract.PATH_CHECKINS + "/#", PATIENT_CHECKIN_ID);
+
+        matcher.addURI(authority, PatientCheckInContract.PATH_CHECKINS + "/#/" + PatientCheckInContract.PATH_CHECKIN_MEDICATIONS, CHECKIN_MEDICATIONS);
 
         return matcher;
     }
@@ -128,6 +136,8 @@ public class SymptomManagementProvider extends ContentProvider {
                 return PatientCheckInContract.PatientCheckInEntry.CONTENT_TYPE;
             case PATIENT_CHECKIN_ID:
                 return PatientCheckInContract.PatientCheckInEntry.CONTENT_ITEM_TYPE;
+            case CHECKIN_MEDICATIONS:
+                return PatientCheckInContract.PatientCheckInMedicationIntakeEntry.CONTENT_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -177,6 +187,9 @@ public class SymptomManagementProvider extends ContentProvider {
             case PATIENT_CHECKIN_ID:
                 retCursor = mPatientCheckInDao.queryById(getPatientCheckinId(uri), projection);
                 break;
+            case CHECKIN_MEDICATIONS:
+                retCursor = mCheckinMedicationDao.getAllMedicationsForCheckin(getPatientCheckinId(uri), projection, sortOrder);
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -216,6 +229,12 @@ public class SymptomManagementProvider extends ContentProvider {
                 final long patientCheckInId = mPatientCheckInDao.createPatientCheckIn(getPatientId(uri), values);
                 if ( patientCheckInId > 0 ) {
                     returnUri = PatientCheckInContract.PatientCheckInEntry.buildPatientCheckInUri(patientCheckInId);
+                }
+                break;
+            case CHECKIN_MEDICATIONS:
+                final long checkinMedicationId = mCheckinMedicationDao.createCheckInMedication(getPatientCheckinId(uri), values);
+                if ( checkinMedicationId > 0 ) {
+                    returnUri = PatientCheckInContract.PatientCheckInMedicationIntakeEntry.buildCheckInMedicationUri(checkinMedicationId);
                 }
                 break;
             default:
@@ -364,9 +383,12 @@ public class SymptomManagementProvider extends ContentProvider {
     }
 
     private long getPatientCheckinId(final Uri uri) {
+        final List<String> pathSegments = uri.getPathSegments();
         switch (sUriMatcher.match(uri)) {
             case PATIENT_CHECKIN_ID:
                 return ContentUris.parseId(uri);
+            case CHECKIN_MEDICATIONS:
+                return Long.parseLong(pathSegments.get(pathSegments.size() - 2));
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }

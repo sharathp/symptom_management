@@ -4,11 +4,13 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.sharathp.symptom_management.app.ForApplication;
+import com.sharathp.symptom_management.dao.CheckinMedicationDao;
 import com.sharathp.symptom_management.dao.DoctorDao;
 import com.sharathp.symptom_management.dao.MedicationDao;
 import com.sharathp.symptom_management.dao.PatientCheckInDao;
 import com.sharathp.symptom_management.dao.PatientDao;
 import com.sharathp.symptom_management.dao.ReminderDao;
+import com.sharathp.symptom_management.data.sqlite.dao.DefaultCheckinMedicationDao;
 import com.sharathp.symptom_management.data.sqlite.dao.DefaultDoctorDao;
 import com.sharathp.symptom_management.data.sqlite.dao.DefaultMedicationDao;
 import com.sharathp.symptom_management.data.sqlite.dao.DefaultPatientCheckInDao;
@@ -30,7 +32,8 @@ import dagger.Provides;
             DefaultPatientDao.class,
             DefaultMedicationDao.class,
             DefaultReminderDao.class,
-            DefaultPatientCheckInDao.class
+            DefaultPatientCheckInDao.class,
+            DefaultCheckinMedicationDao.class
         },
         complete = false)
 public class DatabaseModule {
@@ -70,5 +73,11 @@ public class DatabaseModule {
     @Singleton
     PatientCheckInDao providePatientCheckInDao(final DefaultPatientCheckInDao defaultPatientCheckInDao) {
         return defaultPatientCheckInDao;
+    }
+
+    @Provides
+    @Singleton
+    CheckinMedicationDao provideCheckinMedicationDao(final DefaultCheckinMedicationDao defaultCheckinMedicationDao) {
+        return defaultCheckinMedicationDao;
     }
 }

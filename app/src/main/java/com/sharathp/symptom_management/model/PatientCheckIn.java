@@ -20,7 +20,6 @@ public class PatientCheckIn {
     @SerializedName("eating")
     private Eating mEating;
 
-    @SerializedName("medicated")
     private boolean mMedicated;
 
     @SerializedName("medicationIntakes")

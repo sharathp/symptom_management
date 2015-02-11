@@ -13,6 +13,7 @@ import com.sharathp.symptom_management.app.SymptomManagementApplication;
 import com.sharathp.symptom_management.data.provider.contract.PatientCheckInContract;
 import com.sharathp.symptom_management.data.provider.contract.PatientContract;
 import com.sharathp.symptom_management.http.SymptomManagementAPI;
+import com.sharathp.symptom_management.model.MedicationIntake;
 import com.sharathp.symptom_management.model.PatientCheckIn;
 import com.sharathp.symptom_management.model.QueryParamDate;
 
@@ -99,6 +100,19 @@ public class PatientCheckInService extends IntentService {
     private long createPatientCheckIn(final long patientId, final PatientCheckIn patientCheckIn) {
         final Uri patientCheckInUri = PatientCheckInContract.PatientCheckInEntry.buildPatientPatientCheckInsUri(patientId);
         final ContentValues contentValues = PatientCheckInContract.PatientCheckInEntry.getContentValues(patientCheckIn);
+        final Uri insertedUri = this.getContentResolver().insert(patientCheckInUri, contentValues);
+        final long patientCheckinId = ContentUris.parseId(insertedUri);
+        for (final MedicationIntake medicationIntake : patientCheckIn.getMedicationIntakes()) {
+            final long checkinMedicationId = createCheckinMedication(patientCheckinId, medicationIntake);
+            Log.d(TAG, "Created new Check-in medication: " + checkinMedicationId);
+        }
+        return  patientCheckinId;
+    }
+
+    private long createCheckinMedication(final long checkinId, final MedicationIntake medicationIntake) {
+        // This assumes the medication already exists
+        final ContentValues contentValues = PatientCheckInContract.PatientCheckInMedicationIntakeEntry.getContentValues(medicationIntake);
+        final Uri patientCheckInUri = PatientCheckInContract.PatientCheckInMedicationIntakeEntry.buildCheckInMedicationsUri(checkinId);
         final Uri insertedUri = this.getContentResolver().insert(patientCheckInUri, contentValues);
         return ContentUris.parseId(insertedUri);
     }
