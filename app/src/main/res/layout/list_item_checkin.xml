@@ -14,7 +14,6 @@
         android:layout_alignParentStart="true"
         android:textAppearance="?android:attr/textAppearance" />
 
-
     <ImageView
         android:id="@+id/pain_image_view"
         android:layout_width="16dp"
@@ -27,13 +26,23 @@
         android:layout_marginRight="16dp"/>
 
     <ImageView
+        android:id="@+id/eat_image_view"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:src="@drawable/eat_cannot"
+        android:contentDescription="Cannot eat"
+        android:layout_toLeftOf="@id/pain_image_view"
+        android:layout_alignBottom="@id/pain_image_view"
+        android:layout_marginRight="16dp" />
+
+    <ImageView
         android:id="@+id/medicine_image_view"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:src="@drawable/pill"
-        android:layout_toLeftOf="@id/pain_image_view"
-        android:layout_alignBottom="@id/pain_image_view"
         android:contentDescription="Medicine Taken"
+        android:layout_toLeftOf="@id/eat_image_view"
+        android:layout_alignBottom="@id/pain_image_view"
         android:layout_marginRight="16dp"/>
 
 </RelativeLayout>
