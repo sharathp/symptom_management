@@ -18,18 +18,16 @@
         android:id="@+id/pain_image_view"
         android:layout_width="16dp"
         android:layout_height="16dp"
-        android:src="@drawable/pain_high"
         android:contentDescription="High Pain"
         android:layout_below="@id/time_text_view"
         android:layout_alignParentRight="true"
         android:layout_marginTop="8dp"
-        android:layout_marginRight="16dp"/>
+        android:layout_marginRight="16dp" />
 
     <ImageView
         android:id="@+id/eat_image_view"
         android:layout_width="16dp"
         android:layout_height="16dp"
-        android:src="@drawable/eat_cannot"
         android:contentDescription="Cannot eat"
         android:layout_toLeftOf="@id/pain_image_view"
         android:layout_alignBottom="@id/pain_image_view"
@@ -39,10 +37,9 @@
         android:id="@+id/medicine_image_view"
         android:layout_width="16dp"
         android:layout_height="16dp"
-        android:src="@drawable/pill"
         android:contentDescription="Medicine Taken"
         android:layout_toLeftOf="@id/eat_image_view"
         android:layout_alignBottom="@id/pain_image_view"
-        android:layout_marginRight="16dp"/>
+        android:layout_marginRight="16dp" />
 
 </RelativeLayout>

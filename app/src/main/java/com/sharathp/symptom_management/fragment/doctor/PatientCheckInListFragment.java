@@ -20,6 +20,8 @@ import android.widget.Toast;
 import com.sharathp.symptom_management.R;
 import com.sharathp.symptom_management.data.provider.contract.PatientCheckInContract;
 import com.sharathp.symptom_management.fragment.BaseListFragment;
+import com.sharathp.symptom_management.model.Eating;
+import com.sharathp.symptom_management.model.Pain;
 import com.sharathp.symptom_management.model.PatientCheckIn;
 
 import butterknife.ButterKnife;
@@ -123,7 +125,35 @@ public class PatientCheckInListFragment extends BaseListFragment implements Load
             final ViewHolder viewHolder = (ViewHolder) view.getTag();
             final PatientCheckIn patientCheckIn = PatientCheckInContract.PatientCheckInEntry.readPatientCheckIn(cursor);
             viewHolder.mTimeTextView.setText(patientCheckIn.getCheckinTime().toGMTString());
-            // viewHolder.mServerIdTextView.setText(patientCheckIn.getServerId());
+            viewHolder.mEatImageView.setImageResource(getEatImage(patientCheckIn.getEating()));
+            viewHolder.mPainImageView.setImageResource(getPainImage(patientCheckIn.getPain()));
+            if (patientCheckIn.isMedicated()) {
+                viewHolder.mMedicineImageView.setImageResource(R.drawable.pill);
+            }
+        }
+
+        private int getEatImage(final Eating eating) {
+            switch (eating) {
+                case CANNOT_EAT:
+                    return R.drawable.eat_cannot;
+                case NO:
+                    return R.drawable.eat_no;
+                case SOME:
+                    return R.drawable.eat_some;
+            }
+            return R.drawable.eat_some;
+        }
+
+        private int getPainImage(final Pain pain) {
+            switch (pain) {
+                case HIGH:
+                    return R.drawable.pain_high;
+                case MEDIUM:
+                    return R.drawable.pain_med;
+                case LOW:
+                    return R.drawable.pain_low;
+            }
+            return R.drawable.pain_low;
         }
     }
 
@@ -133,6 +163,12 @@ public class PatientCheckInListFragment extends BaseListFragment implements Load
 
         @InjectView(R.id.medicine_image_view)
         ImageView mMedicineImageView;
+
+        @InjectView(R.id.pain_image_view)
+        ImageView mPainImageView;
+
+        @InjectView(R.id.eat_image_view)
+        ImageView mEatImageView;
 
         ViewHolder(final View view) {
             ButterKnife.inject(this, view);

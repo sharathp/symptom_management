@@ -81,8 +81,16 @@ public class PatientCheckInContract extends SymptomManagementContract {
             contentValues.put(COLUMN_CHECKIN_TIME, patientCheckIn.getCheckinTime().getTime());
             contentValues.put(COLUMN_PAIN, patientCheckIn.getPain().name());
             contentValues.put(COLUMN_EATING, patientCheckIn.getEating().name());
-            contentValues.put(COLUMN_MEDICATED, patientCheckIn.isMedicated() ? 1 : 0);
+
+
+
+            contentValues.put(COLUMN_MEDICATED, isMedicated(patientCheckIn) ? 1 : 0);
             return contentValues;
+        }
+
+        private static boolean isMedicated(final PatientCheckIn patientCheckIn) {
+            return patientCheckIn.getMedicationIntakes() != null &&
+                    patientCheckIn.getMedicationIntakes().size() > 0;
         }
 
         public static Uri buildPatientPatientCheckInsUri(final long patientId) {
