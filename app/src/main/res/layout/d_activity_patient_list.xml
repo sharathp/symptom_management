@@ -1,7 +1,17 @@
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:id="@+id/patient_list"
-    android:name="com.sharathp.symptom_management.fragment.doctor.PatientListFragment"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    android:layout_marginLeft="16dp" android:layout_marginRight="16dp"
-    tools:context="com.sharathp.symptom_management.activity.doctor.PatientListActivity"
-    tools:layout="@android:layout/list_content" />
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <include android:id="@+id/toolbar"
+             layout="@layout/c_toolbar"/>
+
+    <fragment android:id="@+id/patient_list"
+              android:name="com.sharathp.symptom_management.fragment.doctor.PatientListFragment"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              tools:context="com.sharathp.symptom_management.activity.doctor.PatientListActivity"
+              tools:layout="@android:layout/list_content" />
+
+</LinearLayout>

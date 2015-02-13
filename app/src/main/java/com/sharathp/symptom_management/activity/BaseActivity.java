@@ -2,8 +2,10 @@ package com.sharathp.symptom_management.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 
+import com.sharathp.symptom_management.R;
 import com.sharathp.symptom_management.app.SymptomManagementApplication;
 import com.sharathp.symptom_management.app.modules.ActivityModule;
 
@@ -15,13 +17,17 @@ import dagger.ObjectGraph;
 /**
  * {@link android.app.Activity} base class for all activities.
  */
-public abstract class BaseActivity extends FragmentActivity {
+public abstract class BaseActivity extends ActionBarActivity {
     private ObjectGraph mActivityScopeGraph;
+    // TODO - modify this to be injected
+    private Toolbar mToolbar;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         injectDependencies();
+        setContentView(getLayoutResource());
+        setToolbarAsActionBar();
     }
 
     @Override
@@ -32,19 +38,10 @@ public abstract class BaseActivity extends FragmentActivity {
         super.onDestroy();
     }
 
-    /**
-     * Create a new Dagger ObjectGraph to add new dependencies using a plus operation and inject the
-     * declared one in the activity. This new graph will be destroyed once the activity lifecycle
-     * finish.
-     *
-     * This is the key of how to use Activity scope dependency injection.
-     */
-    private void injectDependencies() {
-        final SymptomManagementApplication application = (SymptomManagementApplication) getApplication();
-        final List<Object> activityScopeModules = getModules();
-        activityScopeModules.add(new ActivityModule(this));
-        mActivityScopeGraph = application.plus(activityScopeModules);
-        inject(this);
+    protected abstract int getLayoutResource();
+
+    protected void setActionBarIcon(final int iconRes) {
+        mToolbar.setNavigationIcon(iconRes);
     }
 
     /**
@@ -73,5 +70,28 @@ public abstract class BaseActivity extends FragmentActivity {
                 Intent.FLAG_ACTIVITY_CLEAR_TASK |
                 Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+    }
+
+    private void setToolbarAsActionBar() {
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (mToolbar != null) {
+            setSupportActionBar(mToolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+    /**
+     * Create a new Dagger ObjectGraph to add new dependencies using a plus operation and inject the
+     * declared one in the activity. This new graph will be destroyed once the activity lifecycle
+     * finish.
+     *
+     * This is the key of how to use Activity scope dependency injection.
+     */
+    private void injectDependencies() {
+        final SymptomManagementApplication application = (SymptomManagementApplication) getApplication();
+        final List<Object> activityScopeModules = getModules();
+        activityScopeModules.add(new ActivityModule(this));
+        mActivityScopeGraph = application.plus(activityScopeModules);
+        inject(this);
     }
 }

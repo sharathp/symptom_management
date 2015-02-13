@@ -60,7 +60,7 @@ public class LoginFragment extends BaseFragment {
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
-        final View rootView = inflater.inflate(R.layout.fragment_login, container, false);
+        final View rootView = inflater.inflate(R.layout.c_fragment_login, container, false);
         return rootView;
     }
 

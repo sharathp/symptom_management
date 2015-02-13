@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.astuetz.PagerSlidingTabStrip;
 import com.sharathp.symptom_management.R;
 import com.sharathp.symptom_management.app.ui.widget.SlidingTabLayout;
 import com.sharathp.symptom_management.fragment.BaseFragment;

@@ -39,12 +39,13 @@ public class PatientListActivity extends BaseActivity
     private boolean mTwoPane;
 
     @Override
+    protected int getLayoutResource() {
+        return R.layout.d_activity_patient_list;
+    }
+
+    @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.d_activity_patient_list);
-        // Show the Up button in the action bar.
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-
         if (findViewById(R.id.patient_detail_container) != null) {
             // The detail container view will be present only in the
             // large-screen layouts (res/values-large and
