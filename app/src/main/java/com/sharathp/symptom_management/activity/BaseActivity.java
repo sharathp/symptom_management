@@ -2,8 +2,11 @@ package com.sharathp.symptom_management.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
+import android.view.MenuItem;
 
 import com.sharathp.symptom_management.R;
 import com.sharathp.symptom_management.app.SymptomManagementApplication;
@@ -21,6 +24,7 @@ public abstract class BaseActivity extends ActionBarActivity {
     private ObjectGraph mActivityScopeGraph;
     // TODO - modify this to be injected
     private Toolbar mToolbar;
+    private DrawerLayout mDrawer;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -28,6 +32,7 @@ public abstract class BaseActivity extends ActionBarActivity {
         injectDependencies();
         setContentView(getLayoutResource());
         setToolbarAsActionBar();
+        initializeDrawer();
     }
 
     @Override
@@ -36,6 +41,19 @@ public abstract class BaseActivity extends ActionBarActivity {
         // soon as possible.
         mActivityScopeGraph = null;
         super.onDestroy();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home: {
+                if(mDrawer != null) {
+                    mDrawer.openDrawer(Gravity.START);
+                    return true;
+                }
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     protected abstract int getLayoutResource();
@@ -77,6 +95,14 @@ public abstract class BaseActivity extends ActionBarActivity {
         if (mToolbar != null) {
             setSupportActionBar(mToolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+    private void initializeDrawer() {
+        mDrawer = (DrawerLayout) findViewById(R.id.drawer);
+        if(mDrawer != null) {
+            mDrawer.setDrawerShadow(R.drawable.drawer_shadow, Gravity.START);
+            setActionBarIcon(R.drawable.ic_ab_drawer);
         }
     }
 

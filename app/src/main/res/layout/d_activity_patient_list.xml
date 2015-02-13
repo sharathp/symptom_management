@@ -1,17 +1,31 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".HomeActivity"
+    android:id="@+id/drawer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <include android:id="@+id/toolbar"
-             layout="@layout/c_toolbar"/>
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:orientation="vertical">
 
-    <fragment android:id="@+id/patient_list"
-              android:name="com.sharathp.symptom_management.fragment.doctor.PatientListFragment"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              tools:context="com.sharathp.symptom_management.activity.doctor.PatientListActivity"
-              tools:layout="@android:layout/list_content" />
+        <include android:id="@+id/toolbar"
+                 layout="@layout/c_toolbar"/>
 
-</LinearLayout>
+        <fragment android:id="@+id/patient_list"
+                  android:name="com.sharathp.symptom_management.fragment.doctor.PatientListFragment"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  tools:context="com.sharathp.symptom_management.activity.doctor.PatientListActivity"
+                  tools:layout="@android:layout/list_content" />
+
+    </LinearLayout>
+
+    <ListView
+        android:layout_width="260dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@color/windowBackgroundColor" />
+
+</android.support.v4.widget.DrawerLayout>
