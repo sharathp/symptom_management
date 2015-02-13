@@ -4,13 +4,10 @@
               android:layout_height="match_parent"
               android:orientation="vertical" >
 
-    <com.astuetz.PagerSlidingTabStrip
+    <com.sharathp.symptom_management.app.ui.widget.SlidingTabLayout
         android:id="@+id/patient_detail_view_tabs"
-        app:pstsShouldExpand="true"
-        app:pstsTextAllCaps="true"
         android:layout_width="match_parent"
-        android:layout_height="48dp">
-    </com.astuetz.PagerSlidingTabStrip>
+        android:layout_height="wrap_content" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/patient_detail_view_pager"
