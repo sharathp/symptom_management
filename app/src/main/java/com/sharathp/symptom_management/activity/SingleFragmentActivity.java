@@ -24,7 +24,15 @@ public abstract class SingleFragmentActivity extends BaseActivity {
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.c_activity_single;
+        if(includeDrawer()) {
+            return R.layout.c_activity_single;
+        } else {
+            return R.layout.c_activity_single_no_drawer;
+        }
+    }
+
+    protected boolean includeDrawer() {
+        return true;
     }
 
     protected abstract Fragment getFragment();

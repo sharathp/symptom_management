@@ -5,13 +5,6 @@
     tools:context=".MainActivity">
 
     <include android:id="@+id/toolbar"
-        layout="@layout/c_toolbar"/>
-
-    <TextView
-        android:text="@string/hello_world"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/toolbar"
-        android:padding="4dp" />
+             layout="@layout/c_toolbar"/>
 
 </RelativeLayout>

@@ -12,8 +12,8 @@
 
 
     <string name="patient_checkin_text">Check In</string>
-    <string name="action_doctor_sign_in">Login as Doctor</string>
-    <string name="action_patient_sign_in">Login as Patient</string>
+    <string name="action_doctor_sign_in">LOGIN AS DOCTOR</string>
+    <string name="action_patient_sign_in">LOGIN AS PATIENT</string>
     <string name="doctor_action_refresh_patients">Refresh Patients</string>
 
     <string name="doctor_patient_details_tab_title">Details</string>
@@ -31,6 +31,6 @@
     <string name="error_field_required">This field is required</string>
     <string name="title_patient_list">Patients</string>
     <string name="title_patient_detail">Patient Detail</string>
-    <string name="my_patients_button_text">My Patients</string>
+    <string name="my_patients_button_text">MY PATIENTS</string>
 
 </resources>
