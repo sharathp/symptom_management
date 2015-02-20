@@ -237,7 +237,8 @@ public class PatientListFragment extends BaseListFragment implements LoaderManag
             final ViewHolder viewHolder = (ViewHolder) view.getTag();
             final Patient patient = PatientContract.PatientEntry.readPatient(cursor);
             viewHolder.mNameTextView.setText(patient.getFirstName() + " " + patient.getLastName());
-            viewHolder.mRecordNumberTextView.setText(patient.getRecordNumber());
+            // TODO - create a new content-provider url to get the patient + last check-in time and display here..
+            viewHolder.mCheckInTextView.setText(patient.getRecordNumber());
         }
     }
 
@@ -245,8 +246,8 @@ public class PatientListFragment extends BaseListFragment implements LoaderManag
         @InjectView(R.id.name_text_view)
         TextView mNameTextView;
 
-        @InjectView(R.id.medical_record_text_view)
-        TextView mRecordNumberTextView;
+        @InjectView(R.id.checkin_time_text_view)
+        TextView mCheckInTextView;
 
         ViewHolder(final View view) {
             ButterKnife.inject(this, view);

@@ -8,4 +8,10 @@
 
     <style name="AppTheme.Base" parent="Theme.AppCompat.Light.NoActionBar" />
 
+    <style name="Toolbar.Theme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:textColorPrimary">@color/textPrimary</item>
+    </style>
+
+    <style name="Toolbar.PopupTheme" parent="ThemeOverlay.AppCompat.Light" />
+
 </resources>
