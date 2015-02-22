@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,9 @@ import com.sharathp.symptom_management.fragment.BaseListFragment;
 import com.sharathp.symptom_management.model.Eating;
 import com.sharathp.symptom_management.model.Pain;
 import com.sharathp.symptom_management.model.PatientCheckIn;
+
+import java.util.Calendar;
+import java.util.Date;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -124,12 +128,17 @@ public class PatientCheckInListFragment extends BaseListFragment implements Load
         public void bindView(final View view, final Context context, final Cursor cursor) {
             final ViewHolder viewHolder = (ViewHolder) view.getTag();
             final PatientCheckIn patientCheckIn = PatientCheckInContract.PatientCheckInEntry.readPatientCheckIn(cursor);
-            viewHolder.mTimeTextView.setText(patientCheckIn.getCheckinTime().toGMTString());
+            viewHolder.mTimeTextView.setText(getDateString(patientCheckIn.getCheckinTime()));
             viewHolder.mEatImageView.setImageResource(getEatImage(patientCheckIn.getEating()));
             viewHolder.mPainImageView.setImageResource(getPainImage(patientCheckIn.getPain()));
             if (patientCheckIn.isMedicated()) {
                 viewHolder.mMedicineImageView.setImageResource(R.drawable.pill);
             }
+        }
+
+        private CharSequence getDateString(final Date time) {
+            final long now = Calendar.getInstance().getTime().getTime();
+            return DateUtils.getRelativeTimeSpanString(time.getTime(), now, DateUtils.MINUTE_IN_MILLIS);
         }
 
         private int getEatImage(final Eating eating) {
