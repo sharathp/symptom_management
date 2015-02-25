@@ -111,9 +111,11 @@ public class PatientCheckInListFragment extends BaseListFragment implements Load
 
     // nested classes and interfaces..
     static class PatientCheckInListAdapter extends CursorAdapter {
+        final Context mContext;
 
         PatientCheckInListAdapter(final Context context, final Cursor c, final int flags) {
             super(context, c, flags);
+            this.mContext = context;
         }
 
         @Override
@@ -138,7 +140,10 @@ public class PatientCheckInListFragment extends BaseListFragment implements Load
 
         private CharSequence getDateString(final Date time) {
             final long now = Calendar.getInstance().getTime().getTime();
-            return DateUtils.getRelativeTimeSpanString(time.getTime(), now, DateUtils.MINUTE_IN_MILLIS);
+            final String dateText = DateUtils.getRelativeTimeSpanString(
+                    time.getTime(), now, DateUtils.MINUTE_IN_MILLIS, DateUtils.FORMAT_ABBREV_RELATIVE)
+                    .toString();
+            return mContext.getString(R.string.patient_checkin_list_time_format, dateText);
         }
 
         private int getEatImage(final Eating eating) {

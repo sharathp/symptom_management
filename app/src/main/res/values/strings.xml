@@ -19,6 +19,7 @@
     <string name="doctor_patient_details_tab_title">Details</string>
     <string name="doctor_patient_medications_tab_title">Medications</string>
     <string name="doctor_patient_checkins_tab_title">Check-ins</string>
+    <string name="patient_checkin_list_time_format">%s</string>
 
     <!-- Strings related to login -->
     <string name="prompt_username">Username</string>
