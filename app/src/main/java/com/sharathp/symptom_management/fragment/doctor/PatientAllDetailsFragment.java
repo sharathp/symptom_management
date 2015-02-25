@@ -60,14 +60,9 @@ public class PatientAllDetailsFragment extends BaseFragment {
 
         // Center the tabs in the layout
         mSlidingTabLayout.setDistributeEvenly(true);
+        mSlidingTabLayout.setCustomTabView(R.layout.c_tab_indicator, android.R.id.text1);
+        mSlidingTabLayout.setSelectedIndicatorColors(getResources().getColor(R.color.accent));
         mSlidingTabLayout.setViewPager(mViewPager);
-
-        mSlidingTabLayout.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
-            @Override
-            public int getIndicatorColor(final int position) {
-                return getResources().getColor(R.color.accent);
-            }
-        });
     }
 
     private static class PatientDetailsFragmentPagerAdapter extends FragmentPagerAdapter {

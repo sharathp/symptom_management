@@ -32,6 +32,6 @@
     <string name="error_field_required">This field is required</string>
     <string name="title_patient_list">Patients</string>
     <string name="title_patient_detail">Patient Detail</string>
-    <string name="my_patients_button_text">MY PATIENTS</string>
+    <string name="my_patients_button_text">My Patients</string>
 
 </resources>

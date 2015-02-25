@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.gc.materialdesign.views.ButtonRectangle;
 import com.sharathp.symptom_management.R;
 import com.sharathp.symptom_management.activity.doctor.PatientListActivity;
 import com.sharathp.symptom_management.fragment.BaseFragment;
@@ -23,6 +24,9 @@ public class DoctorFragment extends BaseFragment {
     @InjectView(R.id.doctor_welcome_text)
     TextView mWelcomeView;
 
+    @InjectView(R.id.my_patients_button)
+    ButtonRectangle mPatientsButton;
+
     @OnClick(R.id.my_patients_button)
     void viewMyPatients() {
         final Intent intent = new Intent(getActivity(), PatientListActivity.class);
@@ -38,6 +42,7 @@ public class DoctorFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mPatientsButton.setTextColor(getResources().getColor(R.color.textPrimary));
         mWelcomeView.setText("Hello " + Session.restore(getActivity()).getUserName());
     }
 }
