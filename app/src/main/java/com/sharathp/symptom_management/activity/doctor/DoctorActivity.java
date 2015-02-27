@@ -6,6 +6,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.sharathp.symptom_management.R;
+import com.sharathp.symptom_management.activity.SettingsActivity;
 import com.sharathp.symptom_management.activity.SingleFragmentActivity;
 import com.sharathp.symptom_management.fragment.doctor.DoctorFragment;
 import com.sharathp.symptom_management.login.Session;
@@ -37,6 +38,8 @@ public class DoctorActivity extends SingleFragmentActivity {
                 startService(intent);
                 return true;
             case R.id.doctor_action_settings:
+                final Intent settingsIntent = new Intent(this, SettingsActivity.class);
+                startActivity(settingsIntent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -3,6 +3,7 @@ package com.sharathp.symptom_management.app.modules;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 
 import com.sharathp.symptom_management.app.ForApplication;
@@ -46,7 +47,7 @@ public class RootModule {
     @Provides
     @Singleton
     SharedPreferences provideSharedPreferences(@ForApplication final Context context) {
-        return context.getSharedPreferences("symptom_management", MODE_PRIVATE);
+        return PreferenceManager.getDefaultSharedPreferences(context);
     }
 
     @Provides
