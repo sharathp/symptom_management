@@ -14,13 +14,25 @@ public abstract class SingleFragmentActivity extends BaseActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_single);
         final Fragment fragment = getFragment();
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, fragment)
                     .commit();
         }
+    }
+
+    @Override
+    protected int getLayoutResource() {
+        if(includeDrawer()) {
+            return R.layout.c_activity_single;
+        } else {
+            return R.layout.c_activity_single_no_drawer;
+        }
+    }
+
+    protected boolean includeDrawer() {
+        return true;
     }
 
     protected abstract Fragment getFragment();

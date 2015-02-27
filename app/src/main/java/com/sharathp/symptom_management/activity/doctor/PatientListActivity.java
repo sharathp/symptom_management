@@ -39,12 +39,13 @@ public class PatientListActivity extends BaseActivity
     private boolean mTwoPane;
 
     @Override
+    protected int getLayoutResource() {
+        return R.layout.d_activity_patient_list;
+    }
+
+    @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.d_activity_patient_list);
-        // Show the Up button in the action bar.
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-
         if (findViewById(R.id.patient_detail_container) != null) {
             // The detail container view will be present only in the
             // large-screen layouts (res/values-large and
@@ -75,17 +76,7 @@ public class PatientListActivity extends BaseActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         final int id = item.getItemId();
-        switch(id) {
-            case android.R.id.home:
-                // This ID represents the Home or Up button. In the case of this
-                // activity, the Up button is shown. Use NavUtils to allow users
-                // to navigate up one level in the application structure. For
-                // more details, see the Navigation pattern on Android Design:
-                //
-                // http://developer.android.com/design/patterns/navigation.html#up-vs-back
-                //
-                NavUtils.navigateUpFromSameTask(this);
-                return true;
+        switch (id) {
             case R.id.doctor_logout:
                 Session.clearSavedSession(this);
                 logout();

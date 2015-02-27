@@ -15,11 +15,11 @@
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
-        android:id="@+id/medical_record_text_view"
+        android:id="@+id/checkin_time_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearance"
-        android:text="Patient Id"
+        android:text="Last Check-in: %1$s"
         android:textColor="@android:color/darker_gray"
         android:layout_below="@+id/name_text_view"
         android:layout_marginTop="5dp"/>

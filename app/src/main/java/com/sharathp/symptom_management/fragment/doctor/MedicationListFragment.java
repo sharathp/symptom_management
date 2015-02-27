@@ -110,7 +110,7 @@ public class MedicationListFragment extends BaseListFragment implements LoaderMa
 
         @Override
         public View newView(final Context context, final Cursor cursor, final ViewGroup parent) {
-            final View view = LayoutInflater.from(context).inflate(R.layout.list_item_medication, parent, false);
+            final View view = LayoutInflater.from(context).inflate(R.layout.c_list_item_medication, parent, false);
             final ViewHolder viewHolder = new ViewHolder(view);
             view.setTag(viewHolder);
             return view;

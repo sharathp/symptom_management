@@ -21,12 +21,13 @@ import com.sharathp.symptom_management.fragment.doctor.PatientAllDetailsFragment
 public class PatientDetailActivity extends BaseActivity {
 
     @Override
+    protected int getLayoutResource() {
+        return R.layout.d_activity_patient_detail;
+    }
+
+    @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.d_activity_patient_detail);
-
-        // Show the Up button in the action bar.
-        getActionBar().setDisplayHomeAsUpEnabled(true);
 
         // savedInstanceState is non-null when there is fragment state
         // saved from previous configurations of this activity

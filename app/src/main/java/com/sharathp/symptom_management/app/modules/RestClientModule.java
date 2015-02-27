@@ -1,14 +1,18 @@
 package com.sharathp.symptom_management.app.modules;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Base64;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sharathp.symptom_management.app.ForApplication;
+import com.sharathp.symptom_management.app.model.StringPreferenceEndpoint;
+import com.sharathp.symptom_management.app.qualifiers.ApiEndpoint;
 import com.sharathp.symptom_management.http.LoginAPI;
 import com.sharathp.symptom_management.http.SymptomManagementAPI;
 import com.sharathp.symptom_management.login.Session;
+import com.sharathp.symptom_management.model.prefs.StringPreference;
 import com.sharathp.symptom_management.util.Constants;
 import com.squareup.okhttp.OkHttpClient;
 
@@ -20,6 +24,8 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import retrofit.Endpoint;
+import retrofit.Endpoints;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.client.OkClient;
@@ -39,7 +45,7 @@ public class RestClientModule {
     private static final String PATIENT_CLIENT_ID = "mobile_patient";
     private static final String PATIENT_CLIENT_SECRET = "mobile_patient";
 
-    private static final String ROOT = "http://192.168.0.102:8080";
+    private static final String DEV_ROOT = "http://192.168.0.110:8080";
 
     @Inject
     @ForApplication
@@ -47,8 +53,21 @@ public class RestClientModule {
 
     @Provides
     @Singleton
-    SymptomManagementAPI provideSymptomManagementAPI(final OkClient okClient) {
-        final RestAdapter.Builder commonAdapter = restAdapterBuilder(okClient);
+    StringPreference provideEndpointPreference(final SharedPreferences preferences) {
+        return new StringPreference(preferences, "api_endpoint", DEV_ROOT);
+    }
+
+    @Provides
+    @Singleton
+    StringPreferenceEndpoint provideEndpoint(final StringPreference preference) {
+        return new StringPreferenceEndpoint(preference);
+    }
+
+    @Provides
+    @Singleton
+    SymptomManagementAPI provideSymptomManagementAPI(final OkClient okClient,
+                                                     final StringPreferenceEndpoint endpoint) {
+        final RestAdapter.Builder commonAdapter = restAdapterBuilder(okClient, endpoint);
         commonAdapter.setRequestInterceptor(authorizationInterceptor());
         return commonAdapter.build().create(SymptomManagementAPI.class);
     }
@@ -56,8 +75,9 @@ public class RestClientModule {
     @Provides
     @Singleton
     @Named("DoctorLoginApi")
-    LoginAPI provideDoctorLoginApi(final OkClient okClient) {
-        final RestAdapter.Builder doctorLoginAdapter = restAdapterBuilder(okClient);
+    LoginAPI provideDoctorLoginApi(final OkClient okClient,
+                                   final StringPreferenceEndpoint endpoint) {
+        final RestAdapter.Builder doctorLoginAdapter = restAdapterBuilder(okClient, endpoint);
         doctorLoginAdapter.setRequestInterceptor(
                 loginInterceptor(DOCTOR_CLIENT_ID, DOCTOR_CLIENT_SECRET));
         return doctorLoginAdapter.build().create(LoginAPI.class);
@@ -66,8 +86,9 @@ public class RestClientModule {
     @Provides
     @Singleton
     @Named("PatientLoginApi")
-    LoginAPI providePatientLoginApi(final OkClient okClient) {
-        final RestAdapter.Builder patientLoginAdapter = restAdapterBuilder(okClient);
+    LoginAPI providePatientLoginApi(final OkClient okClient,
+                                    final StringPreferenceEndpoint endpoint) {
+        final RestAdapter.Builder patientLoginAdapter = restAdapterBuilder(okClient, endpoint);
         patientLoginAdapter.setRequestInterceptor(
                 loginInterceptor(PATIENT_CLIENT_ID, PATIENT_CLIENT_SECRET));
         return patientLoginAdapter.build().create(LoginAPI.class);
@@ -81,13 +102,14 @@ public class RestClientModule {
         return okClient;
     }
 
-    private RestAdapter.Builder restAdapterBuilder(final OkClient okClient) {
+    private RestAdapter.Builder restAdapterBuilder(final OkClient okClient,
+                                                   final StringPreferenceEndpoint endpoint) {
         final Gson gson = new GsonBuilder()
                 .setDateFormat(Constants.DATE_FORMAT)
                 .create();
 
         final RestAdapter.Builder commonBuilder = new RestAdapter.Builder()
-                .setEndpoint(ROOT)
+                .setEndpoint(endpoint)
                 .setClient(okClient)
                 .setConverter(new GsonConverter(gson))
                 .setLogLevel(RestAdapter.LogLevel.FULL);

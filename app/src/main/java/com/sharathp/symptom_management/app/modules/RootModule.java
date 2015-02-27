@@ -1,6 +1,9 @@
 package com.sharathp.symptom_management.app.modules;
 
+import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 
 import com.sharathp.symptom_management.app.ForApplication;
@@ -11,6 +14,8 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+
+import static android.content.Context.MODE_PRIVATE;
 
 @Module(
         includes = {
@@ -37,6 +42,12 @@ public class RootModule {
     @Singleton
     Context provideApplicationContext() {
         return mApplication;
+    }
+
+    @Provides
+    @Singleton
+    SharedPreferences provideSharedPreferences(@ForApplication final Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context);
     }
 
     @Provides

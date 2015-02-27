@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,9 @@ import com.sharathp.symptom_management.fragment.BaseListFragment;
 import com.sharathp.symptom_management.model.Eating;
 import com.sharathp.symptom_management.model.Pain;
 import com.sharathp.symptom_management.model.PatientCheckIn;
+
+import java.util.Calendar;
+import java.util.Date;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -107,14 +111,16 @@ public class PatientCheckInListFragment extends BaseListFragment implements Load
 
     // nested classes and interfaces..
     static class PatientCheckInListAdapter extends CursorAdapter {
+        final Context mContext;
 
         PatientCheckInListAdapter(final Context context, final Cursor c, final int flags) {
             super(context, c, flags);
+            this.mContext = context;
         }
 
         @Override
         public View newView(final Context context, final Cursor cursor, final ViewGroup parent) {
-            final View view = LayoutInflater.from(context).inflate(R.layout.list_item_checkin, parent, false);
+            final View view = LayoutInflater.from(context).inflate(R.layout.c_list_item_checkin, parent, false);
             final ViewHolder viewHolder = new ViewHolder(view);
             view.setTag(viewHolder);
             return view;
@@ -124,12 +130,20 @@ public class PatientCheckInListFragment extends BaseListFragment implements Load
         public void bindView(final View view, final Context context, final Cursor cursor) {
             final ViewHolder viewHolder = (ViewHolder) view.getTag();
             final PatientCheckIn patientCheckIn = PatientCheckInContract.PatientCheckInEntry.readPatientCheckIn(cursor);
-            viewHolder.mTimeTextView.setText(patientCheckIn.getCheckinTime().toGMTString());
+            viewHolder.mTimeTextView.setText(getDateString(patientCheckIn.getCheckinTime()));
             viewHolder.mEatImageView.setImageResource(getEatImage(patientCheckIn.getEating()));
             viewHolder.mPainImageView.setImageResource(getPainImage(patientCheckIn.getPain()));
             if (patientCheckIn.isMedicated()) {
                 viewHolder.mMedicineImageView.setImageResource(R.drawable.pill);
             }
+        }
+
+        private CharSequence getDateString(final Date time) {
+            final long now = Calendar.getInstance().getTime().getTime();
+            final String dateText = DateUtils.getRelativeTimeSpanString(
+                    time.getTime(), now, DateUtils.MINUTE_IN_MILLIS, DateUtils.FORMAT_ABBREV_RELATIVE)
+                    .toString();
+            return mContext.getString(R.string.patient_checkin_list_time_format, dateText);
         }
 
         private int getEatImage(final Eating eating) {

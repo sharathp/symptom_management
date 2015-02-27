@@ -10,8 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.astuetz.PagerSlidingTabStrip;
 import com.sharathp.symptom_management.R;
+import com.sharathp.symptom_management.app.ui.widget.SlidingTabLayout;
 import com.sharathp.symptom_management.fragment.BaseFragment;
 
 import java.lang.ref.WeakReference;
@@ -33,7 +33,8 @@ public class PatientAllDetailsFragment extends BaseFragment {
     ViewPager mViewPager;
 
     @InjectView(R.id.patient_detail_view_tabs)
-    PagerSlidingTabStrip mTabsStrip;
+    SlidingTabLayout mSlidingTabLayout;
+
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -56,7 +57,12 @@ public class PatientAllDetailsFragment extends BaseFragment {
         mViewPager.setAdapter(
                 new PatientDetailsFragmentPagerAdapter(getChildFragmentManager(),
                         getArguments(), getActivity()));
-        mTabsStrip.setViewPager(mViewPager);
+
+        // Center the tabs in the layout
+        mSlidingTabLayout.setDistributeEvenly(true);
+        mSlidingTabLayout.setCustomTabView(R.layout.c_tab_indicator, android.R.id.text1);
+        mSlidingTabLayout.setSelectedIndicatorColors(getResources().getColor(R.color.accent));
+        mSlidingTabLayout.setViewPager(mViewPager);
     }
 
     private static class PatientDetailsFragmentPagerAdapter extends FragmentPagerAdapter {
