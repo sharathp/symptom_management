@@ -8,8 +8,6 @@ import android.view.MenuItem;
 
 import com.sharathp.symptom_management.R;
 import com.sharathp.symptom_management.fragment.LoginFragment;
-import com.sharathp.symptom_management.login.Session;
-import com.sharathp.symptom_management.service.PatientService;
 
 
 /**
@@ -45,11 +43,6 @@ public class LoginActivity extends SingleFragmentActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    @Override
-    protected boolean includeDrawer() {
-        return false;
     }
 
     @Override
