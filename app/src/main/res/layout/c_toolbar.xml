@@ -6,4 +6,5 @@
     android:layout_height="wrap_content"
     android:background="@color/colorPrimary"
     app:theme="@style/Toolbar.Theme"
+    app:navigationIcon="?attr/homeAsUpIndicator"
     app:popupTheme="@style/Toolbar.PopupTheme"/>

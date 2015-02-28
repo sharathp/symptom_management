@@ -46,6 +46,8 @@ public class PatientListActivity extends BaseActivity
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         if (findViewById(R.id.patient_detail_container) != null) {
             // The detail container view will be present only in the
             // large-screen layouts (res/values-large and

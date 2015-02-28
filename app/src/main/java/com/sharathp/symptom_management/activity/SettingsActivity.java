@@ -10,12 +10,17 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
+
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import com.sharathp.symptom_management.R;
 
@@ -45,8 +50,21 @@ public class SettingsActivity extends PreferenceActivity {
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-
         setupSimplePreferencesScreen();
+        setUpToolbar();
+    }
+
+    private void setUpToolbar() {
+        final LinearLayout root = (LinearLayout)findViewById(android.R.id.list).getParent().getParent().getParent();
+        final Toolbar bar = (Toolbar) LayoutInflater.from(this).inflate(R.layout.c_toolbar, root, false);
+        bar.setTitle(R.string.title_activity_settings);
+        root.addView(bar, 0); // insert at top
+        bar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                finish();
+            }
+        });
     }
 
     /**
@@ -66,15 +84,15 @@ public class SettingsActivity extends PreferenceActivity {
         addPreferencesFromResource(R.xml.pref_general);
 
         // Add 'notifications' preferences, and a corresponding header.
-        PreferenceCategory fakeHeader = new PreferenceCategory(this);
-        fakeHeader.setTitle(R.string.pref_header_notifications);
-        getPreferenceScreen().addPreference(fakeHeader);
+        PreferenceCategory prefHeader = new PreferenceCategory(this);
+        prefHeader.setTitle(R.string.pref_header_notifications);
+        getPreferenceScreen().addPreference(prefHeader);
         addPreferencesFromResource(R.xml.pref_notification);
 
         // Add 'data and sync' preferences, and a corresponding header.
-        fakeHeader = new PreferenceCategory(this);
-        fakeHeader.setTitle(R.string.pref_header_data_sync);
-        getPreferenceScreen().addPreference(fakeHeader);
+        prefHeader = new PreferenceCategory(this);
+        prefHeader.setTitle(R.string.pref_header_data_sync);
+        getPreferenceScreen().addPreference(prefHeader);
         addPreferencesFromResource(R.xml.pref_data_sync);
 
         // Bind the summaries of EditText/List/Dialog/Ringtone preferences to
@@ -91,6 +109,12 @@ public class SettingsActivity extends PreferenceActivity {
     @Override
     public boolean onIsMultiPane() {
         return isXLargeTablet(this) && !isSimplePreferences(this);
+    }
+
+    @Override
+    protected boolean isValidFragment(final String fragmentName) {
+        // TODO - fix me
+        return true;
     }
 
     /**
