@@ -9,6 +9,8 @@
 
     <color name="tabTextDefault">#99DDDDDD</color>
 
+    <color name="material_drawer_selected_text">@color/textSecondary</color>
+
     <color name="windowBackgroundColor">#333333</color>
     <color name="blackTranslucent">#80000000</color>
 </resources>

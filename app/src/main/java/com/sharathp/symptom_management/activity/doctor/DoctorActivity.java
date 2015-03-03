@@ -37,10 +37,10 @@ public class DoctorActivity extends SingleFragmentActivity {
 
         new Drawer()
             .withActivity(this)
+            .withHeader(R.layout.c_drawer_header)
             .withToolbar(getToolbar())
-            .withHeader()
             .addDrawerItems(
-                    new PrimaryDrawerItem().withName(R.string.drawer_item_home).withIcon(R.drawable.ic_home).withIdentifier(homeId),
+                    new SecondaryDrawerItem().withName(R.string.drawer_item_home).withIcon(R.drawable.ic_home).withIdentifier(homeId),
                     new DividerDrawerItem(),
                     new SecondaryDrawerItem().withName(R.string.drawer_item_settings).withIcon(R.drawable.ic_settings).withIdentifier(settingsId),
                     new SecondaryDrawerItem().withName(R.string.drawer_item_about).withIcon(R.drawable.ic_info).withIdentifier(aboutId),
