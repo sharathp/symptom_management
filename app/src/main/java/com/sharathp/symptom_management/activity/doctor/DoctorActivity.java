@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mikepenz.materialdrawer.Drawer;
@@ -35,9 +36,14 @@ public class DoctorActivity extends SingleFragmentActivity {
         final int aboutId = 3;
         final int rateId = 4;
 
+        final String userName = Session.restore(this).getUserName();
+        final View headerView = getLayoutInflater().inflate(R.layout.c_drawer_header, null, false);
+        final TextView nameView = (TextView) headerView.findViewById(R.id.drawer_header_user_name_text_view);
+        nameView.setText(userName);
+
         new Drawer()
             .withActivity(this)
-            .withHeader(R.layout.c_drawer_header)
+            .withHeader(headerView)
             .withToolbar(getToolbar())
             .addDrawerItems(
                     new SecondaryDrawerItem().withName(R.string.drawer_item_home).withIcon(R.drawable.ic_home).withIdentifier(homeId),
