@@ -53,6 +53,7 @@ public class SymptomManagementProvider extends ContentProvider {
 
     private static final int CHECKIN_MEDICATIONS = 700;
 
+    private static final int RECENT_CHECKINS = 800;
 
     @Inject
     DoctorDao mDoctorDao;

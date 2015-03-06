@@ -58,20 +58,8 @@ public class PatientCheckInContract extends SymptomManagementContract {
                 return null;
             }
 
-            final long id = cursor.getLong(_ID_INDEX);
-            final String serverId = cursor.getString(COLUMN_SERVER_ID_INDEX);
-            final Date checkInTime = new Date(cursor.getLong(COLUMN_CHECKIN_TIME_INDEX));
-            final String pain = cursor.getString(COLUMN_PAIN_INDEX);
-            final String eating = cursor.getString(COLUMN_EATING_INDEX);
-            final int medicated = cursor.getInt(COLUMN_MEDICATED_INDEX);
-
             final PatientCheckIn patientCheckIn = new PatientCheckIn();
-            patientCheckIn.setId(id);
-            patientCheckIn.setCheckinTime(checkInTime);
-            patientCheckIn.setServerId(serverId);
-            patientCheckIn.setPain(Pain.valueOf(pain));
-            patientCheckIn.setEating(Eating.valueOf(eating));
-            patientCheckIn.setMedicated(medicated != 0);
+            populateCheckIn(cursor, patientCheckIn);
             return patientCheckIn;
         }
 
@@ -81,11 +69,24 @@ public class PatientCheckInContract extends SymptomManagementContract {
             contentValues.put(COLUMN_CHECKIN_TIME, patientCheckIn.getCheckinTime().getTime());
             contentValues.put(COLUMN_PAIN, patientCheckIn.getPain().name());
             contentValues.put(COLUMN_EATING, patientCheckIn.getEating().name());
-
-
-
             contentValues.put(COLUMN_MEDICATED, isMedicated(patientCheckIn) ? 1 : 0);
             return contentValues;
+        }
+
+        public static void populateCheckIn(final Cursor cursor, final PatientCheckIn patientCheckIn) {
+            final long id = cursor.getLong(_ID_INDEX);
+            final String serverId = cursor.getString(COLUMN_SERVER_ID_INDEX);
+            final Date checkInTime = new Date(cursor.getLong(COLUMN_CHECKIN_TIME_INDEX));
+            final String pain = cursor.getString(COLUMN_PAIN_INDEX);
+            final String eating = cursor.getString(COLUMN_EATING_INDEX);
+            final int medicated = cursor.getInt(COLUMN_MEDICATED_INDEX);
+
+            patientCheckIn.setId(id);
+            patientCheckIn.setCheckinTime(checkInTime);
+            patientCheckIn.setServerId(serverId);
+            patientCheckIn.setPain(Pain.valueOf(pain));
+            patientCheckIn.setEating(Eating.valueOf(eating));
+            patientCheckIn.setMedicated(medicated != 0);
         }
 
         private static boolean isMedicated(final PatientCheckIn patientCheckIn) {

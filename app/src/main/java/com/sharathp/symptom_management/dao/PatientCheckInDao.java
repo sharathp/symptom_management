@@ -12,4 +12,6 @@ public interface PatientCheckInDao extends Dao<PatientCheckIn> {
     long createPatientCheckIn(long patientId, ContentValues values);
 
     int deletePatientCheckIns(long patientId, String selection, String[] selectionArgs);
+
+    Cursor getRecentCheckInsForDoctor(long doctorId, String[] projection, String sortOrder);
 }

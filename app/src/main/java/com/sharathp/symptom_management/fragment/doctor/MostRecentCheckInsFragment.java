@@ -13,20 +13,22 @@ import android.widget.Toast;
 
 import com.sharathp.symptom_management.adapter.common.PatientCheckInListAdapter;
 import com.sharathp.symptom_management.data.provider.contract.PatientCheckInContract;
+import com.sharathp.symptom_management.data.provider.contract.RecentCheckInContract;
 import com.sharathp.symptom_management.fragment.BaseListFragment;
+import com.sharathp.symptom_management.login.Session;
 import com.sharathp.symptom_management.model.PatientCheckIn;
 
 /**
- * A list fragment representing a list of patient check-ins.
+ * Fragment to display most recent check-ins of all the patients of this doctor.
+ *
+ * @author sharathp
  */
-public class PatientCheckInListFragment extends BaseListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
-    private static final String TAG = PatientCheckInListFragment.class.getSimpleName();
-    private static final int PATIENT_CHECKINS_LOADER_ID = 0;
+public class MostRecentCheckInsFragment extends BaseListFragment implements LoaderManager.LoaderCallbacks<Cursor>  {
+    private static final String TAG = MostRecentCheckInsFragment.class.getSimpleName();
+    private static final int RECENTS_CHECKINS_LOADER_ID = 0;
     private ListView mListView;
 
     private PatientCheckInListAdapter mPatientCheckInListAdapter;
-
-    private long mPatientId;
 
     @Override
     public void onViewCreated(final View view, final Bundle savedInstanceState) {
@@ -37,14 +39,11 @@ public class PatientCheckInListFragment extends BaseListFragment implements Load
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (getArguments().containsKey(PatientAllDetailsFragment.ARG_PATIENT_ID)) {
-            mPatientId = getArguments().getLong(PatientAllDetailsFragment.ARG_PATIENT_ID);
-            loadPatientCheckIns();
-        }
+        loadRecentCheckIns();
     }
 
-    private void loadPatientCheckIns() {
-        getLoaderManager().initLoader(PATIENT_CHECKINS_LOADER_ID, null, this);
+    private void loadRecentCheckIns() {
+        getLoaderManager().initLoader(RECENTS_CHECKINS_LOADER_ID, null, this);
     }
 
     private void initializeListViewAndAdapter() {
@@ -59,6 +58,7 @@ public class PatientCheckInListFragment extends BaseListFragment implements Load
             public void onItemClick(final AdapterView<?> adapterView, final View view, final int position, final long l) {
                 final Cursor cursor = mPatientCheckInListAdapter.getCursor();
                 if (cursor != null && cursor.moveToPosition(position)) {
+                    // TODO - FIXME
                     final PatientCheckIn patientCheckIn = PatientCheckInContract.PatientCheckInEntry.readPatientCheckIn(cursor);
                     Toast.makeText(getActivity(), patientCheckIn.getCheckinTime().toGMTString(), Toast.LENGTH_LONG);
                 }
@@ -68,18 +68,20 @@ public class PatientCheckInListFragment extends BaseListFragment implements Load
     @Override
     public Loader<Cursor> onCreateLoader(final int id, final Bundle args) {
         switch (id) {
-            case PATIENT_CHECKINS_LOADER_ID:
+            case RECENTS_CHECKINS_LOADER_ID:
                 final String sortOrder = PatientCheckInContract.PatientCheckInEntry.COLUMN_CHECKIN_TIME + " ASC";
-                final CursorLoader cursorLoader = new CursorLoader(getActivity(), getPatientPatientCheckInsUri(),
-                        PatientCheckInContract.PatientCheckInEntry.ALL_COLUMNS, null, null, sortOrder);
+                // TODO - FIXME
+                final CursorLoader cursorLoader = new CursorLoader(getActivity(), getRecentCheckInsUri(),
+                        RecentCheckInContract.RecentCheckInEntry.ALL_COLUMNS, null, null, sortOrder);
                 return cursorLoader;
             default:
                 return null;
         }
     }
 
-    private Uri getPatientPatientCheckInsUri() {
-        return PatientCheckInContract.PatientCheckInEntry.buildPatientPatientCheckInsUri(mPatientId);
+    private Uri getRecentCheckInsUri() {
+        final long doctorId =Session.restore(getActivity()).getId();
+        return RecentCheckInContract.RecentCheckInEntry.buildRecentCheckInsUri(doctorId);
     }
 
     @Override
