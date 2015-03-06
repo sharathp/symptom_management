@@ -19,8 +19,10 @@ import com.sharathp.symptom_management.data.provider.contract.DoctorContract;
 import com.sharathp.symptom_management.data.provider.contract.MedicationContract;
 import com.sharathp.symptom_management.data.provider.contract.PatientCheckInContract;
 import com.sharathp.symptom_management.data.provider.contract.PatientContract;
+import com.sharathp.symptom_management.data.provider.contract.RecentCheckInContract;
 import com.sharathp.symptom_management.data.provider.contract.ReminderContract;
 import com.sharathp.symptom_management.data.provider.contract.SymptomManagementContract;
+import com.sharathp.symptom_management.model.RecentCheckIn;
 
 import java.util.List;
 
@@ -47,8 +49,8 @@ public class SymptomManagementProvider extends ContentProvider {
     private static final int PATIENT_MEDICATIONS = 500;
     private static final int PATIENT_MEDICATION_ID = 501;
 
-    private static final int PATIENT_PATIENT_CHECKINS = 600;
-    private static final int PATIENT_CHECKINS = 601;
+    private static final int ALL_PATIENT_CHECKINS = 600;
+    private static final int PATIENT_PATIENT_CHECKINS = 601;
     private static final int PATIENT_CHECKIN_ID = 602;
 
     private static final int CHECKIN_MEDICATIONS = 700;
@@ -94,10 +96,12 @@ public class SymptomManagementProvider extends ContentProvider {
         matcher.addURI(authority, PatientContract.PATH_PATIENT + "/#/" + MedicationContract.PATH_MEDICATION + "/#", PATIENT_MEDICATION_ID);
 
         matcher.addURI(authority, PatientContract.PATH_PATIENT + "/#/" + PatientCheckInContract.PATH_CHECKINS, PATIENT_PATIENT_CHECKINS);
-        matcher.addURI(authority, PatientCheckInContract.PATH_CHECKINS, PATIENT_CHECKINS);
+        matcher.addURI(authority, PatientCheckInContract.PATH_CHECKINS, ALL_PATIENT_CHECKINS);
         matcher.addURI(authority, PatientCheckInContract.PATH_CHECKINS + "/#", PATIENT_CHECKIN_ID);
 
         matcher.addURI(authority, PatientCheckInContract.PATH_CHECKINS + "/#/" + PatientCheckInContract.PATH_CHECKIN_MEDICATIONS, CHECKIN_MEDICATIONS);
+
+        matcher.addURI(authority, DoctorContract.PATH_DOCTOR + "/#/" + RecentCheckInContract.PATH_RECENT_CHECKINS, RECENT_CHECKINS);
 
         return matcher;
     }
@@ -139,6 +143,8 @@ public class SymptomManagementProvider extends ContentProvider {
                 return PatientCheckInContract.PatientCheckInEntry.CONTENT_ITEM_TYPE;
             case CHECKIN_MEDICATIONS:
                 return PatientCheckInContract.PatientCheckInMedicationIntakeEntry.CONTENT_TYPE;
+            case RECENT_CHECKINS:
+                return RecentCheckInContract.RecentCheckInEntry.CONTENT_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -182,7 +188,7 @@ public class SymptomManagementProvider extends ContentProvider {
             case PATIENT_PATIENT_CHECKINS:
                 retCursor = mPatientCheckInDao.getPatientCheckIns(getPatientId(uri), projection, sortOrder);
                 break;
-            case PATIENT_CHECKINS:
+            case ALL_PATIENT_CHECKINS:
                 retCursor = mPatientCheckInDao.query(projection, selection, selectionArgs, sortOrder);
                 break;
             case PATIENT_CHECKIN_ID:
@@ -190,6 +196,12 @@ public class SymptomManagementProvider extends ContentProvider {
                 break;
             case CHECKIN_MEDICATIONS:
                 retCursor = mCheckinMedicationDao.getAllMedicationsForCheckin(getPatientCheckinId(uri), projection, sortOrder);
+                break;
+            case RECENT_CHECKINS:
+                retCursor = mPatientCheckInDao.getRecentCheckInsForDoctor(getDoctorId(uri), projection,
+                        Integer.valueOf(uri.getQueryParameter(RecentCheckInContract.NUM_RECENT_CHECKINS_PARAM)));
+                // set notification uri for all check-ins
+                retCursor.setNotificationUri(getContext().getContentResolver(), PatientCheckInContract.PatientCheckInEntry.CONTENT_URI);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -207,7 +219,7 @@ public class SymptomManagementProvider extends ContentProvider {
                 final long patientId = mPatientDao.insert(values);
                 if ( patientId > 0 ) {
                     returnUri = PatientContract.PatientEntry.buildPatientUri(patientId);
-                    notifyPatientsChanged(uri, values);
+                    notifyNewPatients(uri, values);
                 }
                 break;
             case DOCTORS:
@@ -230,6 +242,8 @@ public class SymptomManagementProvider extends ContentProvider {
                 final long patientCheckInId = mPatientCheckInDao.createPatientCheckIn(getPatientId(uri), values);
                 if ( patientCheckInId > 0 ) {
                     returnUri = PatientCheckInContract.PatientCheckInEntry.buildPatientCheckInUri(patientCheckInId);
+                    // notify that check-ins are updated
+                    notifyNewCheckIns();
                 }
                 break;
             case CHECKIN_MEDICATIONS:
@@ -271,6 +285,7 @@ public class SymptomManagementProvider extends ContentProvider {
                 break;
             case PATIENT_PATIENT_CHECKINS:
                 rowsDeleted = mPatientCheckInDao.deletePatientCheckIns(getPatientId(uri), selection, selectionArgs);
+                notifyNewCheckIns();
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -315,7 +330,7 @@ public class SymptomManagementProvider extends ContentProvider {
     }
 
     // try best to notify changes..
-    private void notifyPatientsChanged(final Uri uri, final ContentValues values) {
+    private void notifyNewPatients(final Uri uri, final ContentValues values) {
         Long doctor_id = null;
 
         switch (sUriMatcher.match(uri)) {
@@ -336,12 +351,17 @@ public class SymptomManagementProvider extends ContentProvider {
         getContext().getContentResolver().notifyChange(doctorPatientsUri, null);
     }
 
+    private void notifyNewCheckIns() {
+        getContext().getContentResolver().notifyChange(PatientCheckInContract.PatientCheckInEntry.CONTENT_URI, null);
+    }
+
     private long getDoctorId(final Uri uri) {
         final List<String> pathSegments = uri.getPathSegments();
         switch (sUriMatcher.match(uri)) {
             case DOCTOR_ID:
                 return ContentUris.parseId(uri);
             case DOCTOR_PATIENTS:
+            case RECENT_CHECKINS:
                 return Long.parseLong(pathSegments.get(pathSegments.size() - 2));
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);

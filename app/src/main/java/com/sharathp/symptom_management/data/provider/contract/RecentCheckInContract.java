@@ -11,6 +11,8 @@ import com.sharathp.symptom_management.model.RecentCheckIn;
 public class RecentCheckInContract extends SymptomManagementContract  {
     public static final String PATH_RECENT_CHECKINS = "recent-checkins";
 
+    public static final String NUM_RECENT_CHECKINS_PARAM = "numCount";
+
     public static final class RecentCheckInEntry implements BaseColumns {
 
         public static final String CONTENT_TYPE =
@@ -19,6 +21,11 @@ public class RecentCheckInContract extends SymptomManagementContract  {
                 "vnd.android.cursor.item/" + CONTENT_AUTHORITY + "/" + PATH_RECENT_CHECKINS;
 
         // Column names
+        public static final String COLUMN_SERVER_ID = PatientCheckInContract.PatientCheckInEntry.COLUMN_SERVER_ID;
+        public static final String COLUMN_CHECKIN_TIME = PatientCheckInContract.PatientCheckInEntry.COLUMN_CHECKIN_TIME;
+        public static final String COLUMN_PAIN = PatientCheckInContract.PatientCheckInEntry.COLUMN_PAIN;
+        public static final String COLUMN_EATING = PatientCheckInContract.PatientCheckInEntry.COLUMN_EATING;
+        public static final String COLUMN_MEDICATED = PatientCheckInContract.PatientCheckInEntry.COLUMN_MEDICATED;
         public static final String COLUMN_PATIENT_ID = "patient_id";
         public static final String COLUMN_PATIENT_FIRST_NAME = "patient_first_name";
         public static final String COLUMN_PATIENT_LAST_NAME = "patient_last_name";
@@ -28,12 +35,12 @@ public class RecentCheckInContract extends SymptomManagementContract  {
         public static final int COLUMN_PATIENT_LAST_NAME_INDEX = 8;
 
         public static final String[] ALL_COLUMNS = new String[]{
-                PatientCheckInContract.PatientCheckInEntry._ID,
-                PatientCheckInContract.PatientCheckInEntry.COLUMN_SERVER_ID,
-                PatientCheckInContract.PatientCheckInEntry.COLUMN_CHECKIN_TIME,
-                PatientCheckInContract.PatientCheckInEntry.COLUMN_PAIN,
-                PatientCheckInContract.PatientCheckInEntry.COLUMN_EATING,
-                PatientCheckInContract.PatientCheckInEntry.COLUMN_MEDICATED,
+                _ID,
+                COLUMN_SERVER_ID,
+                COLUMN_CHECKIN_TIME,
+                COLUMN_PAIN,
+                COLUMN_EATING,
+                COLUMN_MEDICATED,
                 COLUMN_PATIENT_ID,
                 COLUMN_PATIENT_FIRST_NAME,
                 COLUMN_PATIENT_LAST_NAME
@@ -69,9 +76,13 @@ public class RecentCheckInContract extends SymptomManagementContract  {
             return contentValues;
         }
 
-        public static Uri buildRecentCheckInsUri(final long doctorId) {
+        public static Uri buildRecentCheckInsUri(final long doctorId, final int numCheckins) {
             final Uri doctorUri = DoctorContract.DoctorEntry.buildDoctorUri(doctorId);
-            return Uri.withAppendedPath(doctorUri, PATH_RECENT_CHECKINS);
+            return DoctorContract.DoctorEntry.buildDoctorUri(doctorId)
+                    .withAppendedPath(doctorUri, PATH_RECENT_CHECKINS)
+                    .buildUpon()
+                    .appendQueryParameter(NUM_RECENT_CHECKINS_PARAM, String.valueOf(numCheckins))
+                    .build();
         }
     }
 }
