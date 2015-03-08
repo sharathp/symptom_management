@@ -5,7 +5,16 @@
     <EditTextPreference
         android:key="api_endpoint"
         android:title="@string/pref_title_api_endpoint"
-        android:defaultValue="@string/pref_default_api_endpoint"
+        android:defaultValue="http://192.168.0.102:8080"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:maxLines="1" />
+
+    <EditTextPreference
+        android:key="num_recent_checkins"
+        android:title="@string/pref_title_num_recent_checkins"
+        android:inputType="number"
+        android:defaultValue="5"
         android:selectAllOnFocus="true"
         android:singleLine="true"
         android:maxLines="1" />

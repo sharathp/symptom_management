@@ -7,7 +7,7 @@
     <string name="pref_header_general">General</string>
 
     <string name="pref_title_api_endpoint">API Endpoint</string>
-    <string name="pref_default_api_endpoint">http://192.168.0.102:8080</string>
+    <string name="pref_title_num_recent_checkins">Number of Recent Checkins</string>
 
     <!-- Example settings for Data & Sync -->
     <string name="pref_header_data_sync">Data &amp; sync</string>
