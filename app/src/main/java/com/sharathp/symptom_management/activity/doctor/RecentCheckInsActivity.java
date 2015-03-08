@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import com.sharathp.symptom_management.R;
-import com.sharathp.symptom_management.activity.SingleFragmentActivity;
 import com.sharathp.symptom_management.fragment.doctor.RecentCheckInsFragment;
 import com.sharathp.symptom_management.ui.DoctorDrawer;
 

@@ -8,22 +8,32 @@ import android.view.MenuItem;
 
 import com.sharathp.symptom_management.R;
 import com.sharathp.symptom_management.activity.SettingsActivity;
-import com.sharathp.symptom_management.activity.SingleFragmentActivity;
 import com.sharathp.symptom_management.fragment.doctor.DoctorFragment;
 import com.sharathp.symptom_management.login.Session;
 import com.sharathp.symptom_management.service.PatientService;
 import com.sharathp.symptom_management.ui.DoctorDrawer;
 
-public class DoctorActivity extends SingleFragmentActivity {
+public class DoctorActivity extends DoctorDrawerActivity {
+
+    @Override
+    protected int getLayoutResource() {
+        return R.layout.c_activity_single;
+    }
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setDrawer();
+        final Fragment fragment = new DoctorFragment();
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.container, fragment)
+                    .commit();
+        }
     }
 
-    private void setDrawer() {
-        new DoctorDrawer(this, getToolbar());
+    @Override
+    protected int getDrawerItemPosition() {
+        return DoctorDrawer.HOME_ID;
     }
 
     @Override
@@ -56,10 +66,5 @@ public class DoctorActivity extends SingleFragmentActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    @Override
-    protected Fragment getFragment() {
-        return new DoctorFragment();
     }
 }

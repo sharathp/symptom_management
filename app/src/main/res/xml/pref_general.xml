@@ -10,7 +10,7 @@
         android:singleLine="true"
         android:maxLines="1" />
 
-    <EditTextPreference
+    <com.sharathp.symptom_management.activity.prefs.IntEditTextPreference
         android:key="num_recent_checkins"
         android:title="@string/pref_title_num_recent_checkins"
         android:inputType="number"

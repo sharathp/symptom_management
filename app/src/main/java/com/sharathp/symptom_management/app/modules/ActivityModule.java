@@ -8,6 +8,7 @@ import com.sharathp.symptom_management.activity.MainActivity;
 import com.sharathp.symptom_management.activity.doctor.DoctorActivity;
 import com.sharathp.symptom_management.activity.doctor.PatientDetailActivity;
 import com.sharathp.symptom_management.activity.doctor.PatientListActivity;
+import com.sharathp.symptom_management.activity.doctor.RecentCheckInsActivity;
 import com.sharathp.symptom_management.activity.patient.PatientActivity;
 import com.sharathp.symptom_management.app.ForActivity;
 import com.sharathp.symptom_management.fragment.LoginFragment;
@@ -17,6 +18,7 @@ import com.sharathp.symptom_management.fragment.doctor.PatientAllDetailsFragment
 import com.sharathp.symptom_management.fragment.doctor.PatientCheckInListFragment;
 import com.sharathp.symptom_management.fragment.doctor.PatientDetailFragment;
 import com.sharathp.symptom_management.fragment.doctor.PatientListFragment;
+import com.sharathp.symptom_management.fragment.doctor.RecentCheckInsFragment;
 import com.sharathp.symptom_management.fragment.patient.PatientFragment;
 
 import javax.inject.Singleton;
@@ -44,7 +46,9 @@ import dagger.Provides;
                 PatientListFragment.class,
                 PatientDetailFragment.class,
                 MedicationListFragment.class,
-                PatientCheckInListFragment.class
+                PatientCheckInListFragment.class,
+                RecentCheckInsActivity.class,
+                RecentCheckInsFragment.class
         },
         complete = false)
 public final class ActivityModule {
