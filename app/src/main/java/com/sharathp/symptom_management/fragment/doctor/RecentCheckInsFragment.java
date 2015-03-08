@@ -3,6 +3,7 @@ package com.sharathp.symptom_management.fragment.doctor;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -19,13 +20,14 @@ import com.sharathp.symptom_management.login.Session;
 import com.sharathp.symptom_management.model.PatientCheckIn;
 
 /**
- * Fragment to display most recent check-ins of all the patients of this doctor.
+ * Fragment to display recent check-ins of all the patients of this doctor.
  *
  * @author sharathp
  */
-public class MostRecentCheckInsFragment extends BaseListFragment implements LoaderManager.LoaderCallbacks<Cursor>  {
-    private static final String TAG = MostRecentCheckInsFragment.class.getSimpleName();
+public class RecentCheckInsFragment extends BaseListFragment implements LoaderManager.LoaderCallbacks<Cursor>  {
+    private static final String TAG = RecentCheckInsFragment.class.getSimpleName();
     private static final int RECENTS_CHECKINS_LOADER_ID = 0;
+    private static final int DEFAULT_RECENT_NUM_CHECKINS = 5;
     private ListView mListView;
 
     private PatientCheckInListAdapter mPatientCheckInListAdapter;
@@ -81,7 +83,12 @@ public class MostRecentCheckInsFragment extends BaseListFragment implements Load
 
     private Uri getRecentCheckInsUri() {
         final long doctorId =Session.restore(getActivity()).getId();
-        return RecentCheckInContract.RecentCheckInEntry.buildRecentCheckInsUri(doctorId);
+        return RecentCheckInContract.RecentCheckInEntry.buildRecentCheckInsUri(doctorId, getNumberOfRecentCheckIns());
+    }
+
+    private int getNumberOfRecentCheckIns() {
+        return PreferenceManager.getDefaultSharedPreferences(getActivity())
+                .getInt("num_recent_checkins", DEFAULT_RECENT_NUM_CHECKINS);
     }
 
     @Override

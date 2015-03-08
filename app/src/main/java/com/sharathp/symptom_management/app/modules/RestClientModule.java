@@ -8,7 +8,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sharathp.symptom_management.app.ForApplication;
 import com.sharathp.symptom_management.app.model.StringPreferenceEndpoint;
-import com.sharathp.symptom_management.app.qualifiers.ApiEndpoint;
 import com.sharathp.symptom_management.http.LoginAPI;
 import com.sharathp.symptom_management.http.SymptomManagementAPI;
 import com.sharathp.symptom_management.login.Session;
@@ -16,16 +15,12 @@ import com.sharathp.symptom_management.model.prefs.StringPreference;
 import com.sharathp.symptom_management.util.Constants;
 import com.squareup.okhttp.OkHttpClient;
 
-import java.util.Date;
-
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import retrofit.Endpoint;
-import retrofit.Endpoints;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.client.OkClient;

@@ -17,9 +17,11 @@ import com.sharathp.symptom_management.login.Session;
 
 public class DoctorDrawer {
     public static final int HOME_ID = 1;
-    public static final int SETTINGS_ID = 2;
-    public static final int ABOUT_ID = 3;
-    public static final int RATE_ID = 4;
+    public static final int RECENT_CHECKINS_ID = 2;
+    public static final int ALL_PATIENTS_LAST_CHECKIN_ID = 3;
+    public static final int SETTINGS_ID = 4;
+    public static final int ABOUT_ID = 5;
+    public static final int RATE_ID = 6;
 
     private Drawer.Result mDrawer;
 
@@ -55,7 +57,13 @@ public class DoctorDrawer {
                                             final int position, final long id, final IDrawerItem drawerItem) {
                         switch (drawerItem.getIdentifier()) {
                             case HOME_ID:
-
+                                // TODO - go home
+                                break;
+                            case RECENT_CHECKINS_ID:
+                                // TODO - go recent checkins
+                                break;
+                            case ALL_PATIENTS_LAST_CHECKIN_ID:
+                                // TODO - go to last checkin of each patient
                                 break;
                             case SETTINGS_ID:
                                 // TODO - go to settings
@@ -72,5 +80,4 @@ public class DoctorDrawer {
                 })
                 .build();
         return mDrawer;
-    }
-}
+    }}

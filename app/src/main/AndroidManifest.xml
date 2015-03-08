@@ -53,6 +53,10 @@
                 android:value="com.sharathp.symptom_management.activity.doctor.PatientListActivity" />
         </activity>
 
+        <activity
+            android:name=".activity.doctor.RecentCheckInsActivity"
+            android:label="@string/title_recent_checkins" />
+
         <service
             android:name=".service.PatientService"
             android:enabled="true"
