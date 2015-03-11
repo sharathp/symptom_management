@@ -34,5 +34,6 @@
     <string name="title_patient_detail">Patient Detail</string>
     <string name="my_patients_button_text">My Patients</string>
     <string name="title_recent_checkins">Recent Checkins</string>
+    <string name="title_all_patients_last_checkin">Last Checkin</string>
 
 </resources>

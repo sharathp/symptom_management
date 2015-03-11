@@ -128,7 +128,7 @@ public class DefaultPatientCheckInDao extends DefaultDao<PatientCheckIn> impleme
     }
 
     @Override
-    public Cursor getAllPatientsLastCheckInForDoctor(final long doctorId, final String[] projection) {
+    public Cursor getAllPatientsLastCheckInForDoctor(final long doctorId, final String[] projection, final String sortOrder) {
         final SQLiteQueryBuilder sqLiteQueryBuilder = new SQLiteQueryBuilder();
         sqLiteQueryBuilder.setTables(ALL_PATIENTS_LAST_CHECKIN_JOIN_TABLES);
         sqLiteQueryBuilder.setProjectionMap(NAMED_CHECKIN_PROJECTION);
@@ -140,7 +140,7 @@ public class DefaultPatientCheckInDao extends DefaultDao<PatientCheckIn> impleme
                 new String[] {Long.toString(doctorId)},
                 null,
                 null,
-                NamedCheckInContract.NamedCheckInEntry.COLUMN_PATIENT_FIRST_NAME + ", " + NamedCheckInContract.NamedCheckInEntry.COLUMN_PATIENT_LAST_NAME
+                sortOrder
         );
     }
 }

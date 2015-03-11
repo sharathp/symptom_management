@@ -56,6 +56,9 @@
             android:name=".activity.doctor.RecentCheckInsActivity"
             android:label="@string/title_recent_checkins" />
 
+        <activity android:name=".activity.doctor.AllPatientsLastCheckinActivity"
+                  android:label="@string/title_all_patients_last_checkin" />
+
         <service
             android:name=".service.PatientService"
             android:enabled="true"

@@ -56,6 +56,8 @@ public class SymptomManagementProvider extends ContentProvider {
 
     private static final int RECENT_CHECKINS = 800;
 
+    private static final int ALL_PATIENTS_LAST_CHECKIN = 900;
+
     @Inject
     DoctorDao mDoctorDao;
 
@@ -101,6 +103,7 @@ public class SymptomManagementProvider extends ContentProvider {
         matcher.addURI(authority, PatientCheckInContract.PATH_CHECKINS + "/#/" + PatientCheckInContract.PATH_CHECKIN_MEDICATIONS, CHECKIN_MEDICATIONS);
 
         matcher.addURI(authority, DoctorContract.PATH_DOCTOR + "/#/" + NamedCheckInContract.PATH_RECENT_CHECKINS, RECENT_CHECKINS);
+        matcher.addURI(authority, DoctorContract.PATH_DOCTOR + "/#/" + NamedCheckInContract.ALL_PATIENTS_LAST_CHECKIN, ALL_PATIENTS_LAST_CHECKIN);
 
         return matcher;
     }
@@ -143,6 +146,7 @@ public class SymptomManagementProvider extends ContentProvider {
             case CHECKIN_MEDICATIONS:
                 return PatientCheckInContract.PatientCheckInMedicationIntakeEntry.CONTENT_TYPE;
             case RECENT_CHECKINS:
+            case ALL_PATIENTS_LAST_CHECKIN:
                 return NamedCheckInContract.NamedCheckInEntry.CONTENT_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -199,6 +203,11 @@ public class SymptomManagementProvider extends ContentProvider {
             case RECENT_CHECKINS:
                 retCursor = mPatientCheckInDao.getRecentCheckInsForDoctor(getDoctorId(uri), projection,
                         Integer.valueOf(uri.getQueryParameter(NamedCheckInContract.NUM_RECENT_CHECKINS_PARAM)));
+                // set notification uri for all check-ins
+                retCursor.setNotificationUri(getContext().getContentResolver(), PatientCheckInContract.PatientCheckInEntry.CONTENT_URI);
+                break;
+            case ALL_PATIENTS_LAST_CHECKIN:
+                retCursor = mPatientCheckInDao.getAllPatientsLastCheckInForDoctor(getDoctorId(uri), projection, sortOrder);
                 // set notification uri for all check-ins
                 retCursor.setNotificationUri(getContext().getContentResolver(), PatientCheckInContract.PatientCheckInEntry.CONTENT_URI);
                 break;
@@ -361,6 +370,7 @@ public class SymptomManagementProvider extends ContentProvider {
                 return ContentUris.parseId(uri);
             case DOCTOR_PATIENTS:
             case RECENT_CHECKINS:
+            case ALL_PATIENTS_LAST_CHECKIN:
                 return Long.parseLong(pathSegments.get(pathSegments.size() - 2));
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);

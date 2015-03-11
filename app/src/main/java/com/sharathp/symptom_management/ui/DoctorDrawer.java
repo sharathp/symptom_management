@@ -15,6 +15,7 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.sharathp.symptom_management.R;
 import com.sharathp.symptom_management.activity.SettingsActivity;
+import com.sharathp.symptom_management.activity.doctor.AllPatientsLastCheckinActivity;
 import com.sharathp.symptom_management.activity.doctor.DoctorActivity;
 import com.sharathp.symptom_management.activity.doctor.RecentCheckInsActivity;
 import com.sharathp.symptom_management.login.Session;
@@ -22,7 +23,7 @@ import com.sharathp.symptom_management.login.Session;
 public class DoctorDrawer {
     public static final int HOME_ID = 1;
     public static final int RECENT_CHECKINS_ID = 2;
-    public static final int PATIENTS_LAST_CHECKIN_ID = 3;
+    public static final int ALL_PATIENTS_LAST_CHECKIN_ID = 3;
     public static final int SETTINGS_ID = 4;
     public static final int ABOUT_ID = 5;
     public static final int RATE_ID = 6;
@@ -53,7 +54,7 @@ public class DoctorDrawer {
                 .addDrawerItems(
                         new SecondaryDrawerItem().withName(R.string.drawer_item_home).withIcon(R.drawable.ic_home).withIdentifier(HOME_ID),
                         new SecondaryDrawerItem().withName(R.string.drawer_item_recent_checkins).withIcon(R.drawable.ic_recent).withIdentifier(RECENT_CHECKINS_ID),
-                        new SecondaryDrawerItem().withName(R.string.drawer_item_patients_last_checkin).withIcon(R.drawable.ic_checkin).withIdentifier(PATIENTS_LAST_CHECKIN_ID),
+                        new SecondaryDrawerItem().withName(R.string.drawer_item_patients_last_checkin).withIcon(R.drawable.ic_checkin).withIdentifier(ALL_PATIENTS_LAST_CHECKIN_ID),
                         new DividerDrawerItem(),
                         new SecondaryDrawerItem().withName(R.string.drawer_item_settings).withIcon(R.drawable.ic_settings).withIdentifier(SETTINGS_ID),
                         new SecondaryDrawerItem().withName(R.string.drawer_item_about).withIcon(R.drawable.ic_info).withIdentifier(ABOUT_ID),
@@ -73,23 +74,27 @@ public class DoctorDrawer {
                                 intent = new Intent(mActivity, RecentCheckInsActivity.class);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 break;
-                            case PATIENTS_LAST_CHECKIN_ID:
-                                // TODO - go to last checkin of each patient
+                            case ALL_PATIENTS_LAST_CHECKIN_ID:
+                                intent = new Intent(mActivity, AllPatientsLastCheckinActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 break;
                             case SETTINGS_ID:
                                 intent = new Intent(mActivity, SettingsActivity.class);
                                 break;
                             case ABOUT_ID:
                                 // TODO - go to about
+                                Toast.makeText(activity, "About Not Implemented", Toast.LENGTH_LONG).show();
                                 break;
                             case RATE_ID:
-                                // TODO - go to rate app in play store
+                                Toast.makeText(activity, "Rate-It Not Implemented", Toast.LENGTH_LONG).show();
                                 break;
                         }
-                        mActivity.startActivity(intent);
-                        Toast.makeText(activity, "Clicked: " + drawerItem.getIdentifier(), Toast.LENGTH_LONG).show();
+                        if (intent != null) {
+                            mActivity.startActivity(intent);
+                        }
                     }
                 })
                 .build();
         return mDrawer;
-    }}
+    }
+}

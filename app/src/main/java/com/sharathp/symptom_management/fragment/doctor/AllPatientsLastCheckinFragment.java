@@ -3,7 +3,6 @@ package com.sharathp.symptom_management.fragment.doctor;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -19,15 +18,9 @@ import com.sharathp.symptom_management.fragment.BaseListFragment;
 import com.sharathp.symptom_management.login.Session;
 import com.sharathp.symptom_management.model.PatientCheckIn;
 
-/**
- * Fragment to display recent check-ins of all the patients of this doctor.
- *
- * @author sharathp
- */
-public class RecentCheckInsFragment extends BaseListFragment implements LoaderManager.LoaderCallbacks<Cursor>  {
-    private static final String TAG = RecentCheckInsFragment.class.getSimpleName();
-    private static final int RECENTS_CHECKINS_LOADER_ID = 0;
-    private static final int DEFAULT_RECENT_NUM_CHECKINS = 5;
+public class AllPatientsLastCheckinFragment extends BaseListFragment implements LoaderManager.LoaderCallbacks<Cursor>  {
+    private static final String TAG = AllPatientsLastCheckinFragment.class.getSimpleName();
+    private static final int ALL_PATIENTS_LAST_CHECKIN_LOADER_ID = 0;
     private ListView mListView;
 
     private NamedCheckInListAdapter mNamedCheckInListAdapter;
@@ -45,7 +38,7 @@ public class RecentCheckInsFragment extends BaseListFragment implements LoaderMa
     }
 
     private void loadRecentCheckIns() {
-        getLoaderManager().initLoader(RECENTS_CHECKINS_LOADER_ID, null, this);
+        getLoaderManager().initLoader(ALL_PATIENTS_LAST_CHECKIN_LOADER_ID, null, this);
     }
 
     private void initializeListViewAndAdapter() {
@@ -70,23 +63,20 @@ public class RecentCheckInsFragment extends BaseListFragment implements LoaderMa
     @Override
     public Loader<Cursor> onCreateLoader(final int id, final Bundle args) {
         switch (id) {
-            case RECENTS_CHECKINS_LOADER_ID:
-                final CursorLoader cursorLoader = new CursorLoader(getActivity(), getRecentCheckInsUri(),
-                        NamedCheckInContract.NamedCheckInEntry.ALL_COLUMNS, null, null, null);
+            case ALL_PATIENTS_LAST_CHECKIN_LOADER_ID:
+                final String sortOrder = NamedCheckInContract.NamedCheckInEntry.COLUMN_PATIENT_FIRST_NAME +
+                        ", " + NamedCheckInContract.NamedCheckInEntry.COLUMN_PATIENT_LAST_NAME;
+                final CursorLoader cursorLoader = new CursorLoader(getActivity(), getAllPatientsLastCheckinUri(),
+                        NamedCheckInContract.NamedCheckInEntry.ALL_COLUMNS, null, null, sortOrder);
                 return cursorLoader;
             default:
                 return null;
         }
     }
 
-    private Uri getRecentCheckInsUri() {
-        final long doctorId =Session.restore(getActivity()).getId();
-        return NamedCheckInContract.NamedCheckInEntry.buildRecentCheckInsUri(doctorId, getNumberOfRecentCheckIns());
-    }
-
-    private int getNumberOfRecentCheckIns() {
-        return PreferenceManager.getDefaultSharedPreferences(getActivity())
-                .getInt("num_recent_checkins", DEFAULT_RECENT_NUM_CHECKINS);
+    private Uri getAllPatientsLastCheckinUri() {
+        final long doctorId = Session.restore(getActivity()).getId();
+        return NamedCheckInContract.NamedCheckInEntry.buildAllPatientLastCheckinUri(doctorId);
     }
 
     @Override
