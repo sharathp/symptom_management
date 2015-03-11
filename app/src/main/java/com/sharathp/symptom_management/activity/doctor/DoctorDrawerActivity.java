@@ -19,8 +19,18 @@ public abstract class DoctorDrawerActivity extends BaseActivity {
         setDrawer();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setSelectedDrawerItem();
+    }
+
     private void setDrawer() {
         mDoctorDrawer = new DoctorDrawer(this, getToolbar());
+        setSelectedDrawerItem();
+    }
+
+    private void setSelectedDrawerItem() {
         final int selectedDrawerItemId = getDrawerItemPosition();
         if(selectedDrawerItemId != -1) {
             mDoctorDrawer.setDrawerItemAsSelected(selectedDrawerItemId);
