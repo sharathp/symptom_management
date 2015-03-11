@@ -17,12 +17,11 @@ import com.sharathp.symptom_management.dao.PatientDao;
 import com.sharathp.symptom_management.dao.ReminderDao;
 import com.sharathp.symptom_management.data.provider.contract.DoctorContract;
 import com.sharathp.symptom_management.data.provider.contract.MedicationContract;
+import com.sharathp.symptom_management.data.provider.contract.NamedCheckInContract;
 import com.sharathp.symptom_management.data.provider.contract.PatientCheckInContract;
 import com.sharathp.symptom_management.data.provider.contract.PatientContract;
-import com.sharathp.symptom_management.data.provider.contract.RecentCheckInContract;
 import com.sharathp.symptom_management.data.provider.contract.ReminderContract;
 import com.sharathp.symptom_management.data.provider.contract.SymptomManagementContract;
-import com.sharathp.symptom_management.model.RecentCheckIn;
 
 import java.util.List;
 
@@ -101,7 +100,7 @@ public class SymptomManagementProvider extends ContentProvider {
 
         matcher.addURI(authority, PatientCheckInContract.PATH_CHECKINS + "/#/" + PatientCheckInContract.PATH_CHECKIN_MEDICATIONS, CHECKIN_MEDICATIONS);
 
-        matcher.addURI(authority, DoctorContract.PATH_DOCTOR + "/#/" + RecentCheckInContract.PATH_RECENT_CHECKINS, RECENT_CHECKINS);
+        matcher.addURI(authority, DoctorContract.PATH_DOCTOR + "/#/" + NamedCheckInContract.PATH_RECENT_CHECKINS, RECENT_CHECKINS);
 
         return matcher;
     }
@@ -144,7 +143,7 @@ public class SymptomManagementProvider extends ContentProvider {
             case CHECKIN_MEDICATIONS:
                 return PatientCheckInContract.PatientCheckInMedicationIntakeEntry.CONTENT_TYPE;
             case RECENT_CHECKINS:
-                return RecentCheckInContract.RecentCheckInEntry.CONTENT_TYPE;
+                return NamedCheckInContract.NamedCheckInEntry.CONTENT_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -199,7 +198,7 @@ public class SymptomManagementProvider extends ContentProvider {
                 break;
             case RECENT_CHECKINS:
                 retCursor = mPatientCheckInDao.getRecentCheckInsForDoctor(getDoctorId(uri), projection,
-                        Integer.valueOf(uri.getQueryParameter(RecentCheckInContract.NUM_RECENT_CHECKINS_PARAM)));
+                        Integer.valueOf(uri.getQueryParameter(NamedCheckInContract.NUM_RECENT_CHECKINS_PARAM)));
                 // set notification uri for all check-ins
                 retCursor.setNotificationUri(getContext().getContentResolver(), PatientCheckInContract.PatientCheckInEntry.CONTENT_URI);
                 break;

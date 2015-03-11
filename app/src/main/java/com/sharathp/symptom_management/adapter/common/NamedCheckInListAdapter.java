@@ -2,7 +2,6 @@ package com.sharathp.symptom_management.adapter.common;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,15 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sharathp.symptom_management.R;
-import com.sharathp.symptom_management.data.provider.contract.PatientCheckInContract;
-import com.sharathp.symptom_management.data.provider.contract.RecentCheckInContract;
-import com.sharathp.symptom_management.model.Eating;
-import com.sharathp.symptom_management.model.Pain;
-import com.sharathp.symptom_management.model.PatientCheckIn;
+import com.sharathp.symptom_management.data.provider.contract.NamedCheckInContract;
 import com.sharathp.symptom_management.model.RecentCheckIn;
-
-import java.util.Calendar;
-import java.util.Date;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -41,7 +33,7 @@ public class NamedCheckInListAdapter extends CursorAdapter {
     @Override
     public void bindView(final View view, final Context context, final Cursor cursor) {
         final ViewHolder viewHolder = (ViewHolder) view.getTag();
-        final RecentCheckIn recentCheckIn = RecentCheckInContract.RecentCheckInEntry.readRecentCheckIn(cursor);
+        final RecentCheckIn recentCheckIn = NamedCheckInContract.NamedCheckInEntry.readRecentCheckIn(cursor);
         viewHolder.mNameTextView.setText(getPatientName(recentCheckIn));
         viewHolder.mTimeTextView.setText(CheckInUtils.getDateString(recentCheckIn.getCheckinTime(), context));
         viewHolder.mEatImageView.setImageResource(CheckInUtils.getEatImage(recentCheckIn.getEating()));

@@ -13,8 +13,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.sharathp.symptom_management.adapter.common.NamedCheckInListAdapter;
+import com.sharathp.symptom_management.data.provider.contract.NamedCheckInContract;
 import com.sharathp.symptom_management.data.provider.contract.PatientCheckInContract;
-import com.sharathp.symptom_management.data.provider.contract.RecentCheckInContract;
 import com.sharathp.symptom_management.fragment.BaseListFragment;
 import com.sharathp.symptom_management.login.Session;
 import com.sharathp.symptom_management.model.PatientCheckIn;
@@ -74,7 +74,7 @@ public class RecentCheckInsFragment extends BaseListFragment implements LoaderMa
                 final String sortOrder = PatientCheckInContract.PatientCheckInEntry.COLUMN_CHECKIN_TIME + " ASC";
                 // TODO - FIXME
                 final CursorLoader cursorLoader = new CursorLoader(getActivity(), getRecentCheckInsUri(),
-                        RecentCheckInContract.RecentCheckInEntry.ALL_COLUMNS, null, null, sortOrder);
+                        NamedCheckInContract.NamedCheckInEntry.ALL_COLUMNS, null, null, sortOrder);
                 return cursorLoader;
             default:
                 return null;
@@ -83,7 +83,7 @@ public class RecentCheckInsFragment extends BaseListFragment implements LoaderMa
 
     private Uri getRecentCheckInsUri() {
         final long doctorId =Session.restore(getActivity()).getId();
-        return RecentCheckInContract.RecentCheckInEntry.buildRecentCheckInsUri(doctorId, getNumberOfRecentCheckIns());
+        return NamedCheckInContract.NamedCheckInEntry.buildRecentCheckInsUri(doctorId, getNumberOfRecentCheckIns());
     }
 
     private int getNumberOfRecentCheckIns() {

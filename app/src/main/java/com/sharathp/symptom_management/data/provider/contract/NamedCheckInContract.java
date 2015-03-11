@@ -8,12 +8,13 @@ import android.provider.BaseColumns;
 import com.sharathp.symptom_management.model.Patient;
 import com.sharathp.symptom_management.model.RecentCheckIn;
 
-public class RecentCheckInContract extends SymptomManagementContract  {
+public class NamedCheckInContract extends SymptomManagementContract  {
     public static final String PATH_RECENT_CHECKINS = "recent-checkins";
+    public static final String ALL_PATIENTS_LAST_CHECKIN = "all-patients-last-checkin";
 
     public static final String NUM_RECENT_CHECKINS_PARAM = "numCount";
 
-    public static final class RecentCheckInEntry implements BaseColumns {
+    public static final class NamedCheckInEntry implements BaseColumns {
 
         public static final String CONTENT_TYPE =
                 "vnd.android.cursor.dir/" + CONTENT_AUTHORITY + "/" + PATH_RECENT_CHECKINS;
@@ -68,21 +69,17 @@ public class RecentCheckInContract extends SymptomManagementContract  {
             return recentCheckIn;
         }
 
-        public static ContentValues getContentValues(final RecentCheckIn recentCheckIn) {
-            final ContentValues contentValues = PatientCheckInContract.PatientCheckInEntry.getContentValues(recentCheckIn);
-            contentValues.put(COLUMN_PATIENT_ID, recentCheckIn.getPatient().getId());
-            contentValues.put(COLUMN_PATIENT_FIRST_NAME, recentCheckIn.getPatient().getFirstName());
-            contentValues.put(COLUMN_PATIENT_LAST_NAME, recentCheckIn.getPatient().getLastName());
-            return contentValues;
-        }
-
         public static Uri buildRecentCheckInsUri(final long doctorId, final int numCheckins) {
             final Uri doctorUri = DoctorContract.DoctorEntry.buildDoctorUri(doctorId);
-            return DoctorContract.DoctorEntry.buildDoctorUri(doctorId)
-                    .withAppendedPath(doctorUri, PATH_RECENT_CHECKINS)
+            return Uri.withAppendedPath(doctorUri, PATH_RECENT_CHECKINS)
                     .buildUpon()
                     .appendQueryParameter(NUM_RECENT_CHECKINS_PARAM, String.valueOf(numCheckins))
                     .build();
+        }
+
+        public static Uri buildAllPatientLastCheckinUri(final long doctorId) {
+            final Uri doctorUri = DoctorContract.DoctorEntry.buildDoctorUri(doctorId);
+            return Uri.withAppendedPath(doctorUri, ALL_PATIENTS_LAST_CHECKIN);
         }
     }
 }
