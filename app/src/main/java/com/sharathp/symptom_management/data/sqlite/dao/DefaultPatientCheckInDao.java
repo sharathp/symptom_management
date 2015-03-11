@@ -119,7 +119,7 @@ public class DefaultPatientCheckInDao extends DefaultDao<PatientCheckIn> impleme
         return sqLiteQueryBuilder.query(
                 mDatabase,
                 projection,
-                DoctorTable._ID + " = ?",
+                "d." + DoctorTable._ID + " = ?",
                 new String[] {Long.toString(doctorId)},
                 null,
                 null,
