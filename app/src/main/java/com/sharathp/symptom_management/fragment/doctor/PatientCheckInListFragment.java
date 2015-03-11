@@ -69,7 +69,7 @@ public class PatientCheckInListFragment extends BaseListFragment implements Load
     public Loader<Cursor> onCreateLoader(final int id, final Bundle args) {
         switch (id) {
             case PATIENT_CHECKINS_LOADER_ID:
-                final String sortOrder = PatientCheckInContract.PatientCheckInEntry.COLUMN_CHECKIN_TIME + " ASC";
+                final String sortOrder = PatientCheckInContract.PatientCheckInEntry.COLUMN_CHECKIN_TIME + " DESC";
                 final CursorLoader cursorLoader = new CursorLoader(getActivity(), getPatientPatientCheckInsUri(),
                         PatientCheckInContract.PatientCheckInEntry.ALL_COLUMNS, null, null, sortOrder);
                 return cursorLoader;
