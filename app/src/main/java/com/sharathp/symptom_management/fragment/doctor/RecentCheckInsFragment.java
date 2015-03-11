@@ -12,7 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.sharathp.symptom_management.adapter.common.PatientCheckInListAdapter;
+import com.sharathp.symptom_management.adapter.common.NamedCheckInListAdapter;
 import com.sharathp.symptom_management.data.provider.contract.PatientCheckInContract;
 import com.sharathp.symptom_management.data.provider.contract.RecentCheckInContract;
 import com.sharathp.symptom_management.fragment.BaseListFragment;
@@ -30,7 +30,7 @@ public class RecentCheckInsFragment extends BaseListFragment implements LoaderMa
     private static final int DEFAULT_RECENT_NUM_CHECKINS = 5;
     private ListView mListView;
 
-    private PatientCheckInListAdapter mPatientCheckInListAdapter;
+    private NamedCheckInListAdapter mNamedCheckInListAdapter;
 
     @Override
     public void onViewCreated(final View view, final Bundle savedInstanceState) {
@@ -49,8 +49,8 @@ public class RecentCheckInsFragment extends BaseListFragment implements LoaderMa
     }
 
     private void initializeListViewAndAdapter() {
-        mPatientCheckInListAdapter = new PatientCheckInListAdapter(getActivity(), null, 0);
-        setListAdapter(mPatientCheckInListAdapter);
+        mNamedCheckInListAdapter = new NamedCheckInListAdapter(getActivity(), null, 0);
+        setListAdapter(mNamedCheckInListAdapter);
         // this is required as setting list adapter above, shows the list view
         setListShown(false);
 
@@ -58,7 +58,7 @@ public class RecentCheckInsFragment extends BaseListFragment implements LoaderMa
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(final AdapterView<?> adapterView, final View view, final int position, final long l) {
-                final Cursor cursor = mPatientCheckInListAdapter.getCursor();
+                final Cursor cursor = mNamedCheckInListAdapter.getCursor();
                 if (cursor != null && cursor.moveToPosition(position)) {
                     // TODO - FIXME
                     final PatientCheckIn patientCheckIn = PatientCheckInContract.PatientCheckInEntry.readPatientCheckIn(cursor);
@@ -93,13 +93,13 @@ public class RecentCheckInsFragment extends BaseListFragment implements LoaderMa
 
     @Override
     public void onLoadFinished(final Loader<Cursor> loader, final Cursor cursor) {
-        mPatientCheckInListAdapter.swapCursor(cursor);
+        mNamedCheckInListAdapter.swapCursor(cursor);
         // show list view - list view will be initially hidden..
         setListShown(true);
     }
 
     @Override
     public void onLoaderReset(final Loader<Cursor> loader) {
-        mPatientCheckInListAdapter.swapCursor(null);
+        mNamedCheckInListAdapter.swapCursor(null);
     }
 }

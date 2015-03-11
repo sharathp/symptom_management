@@ -1,10 +1,7 @@
 package com.sharathp.symptom_management.fragment.doctor;
 
 import android.app.Activity;
-
 import android.content.Context;
-
-
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;

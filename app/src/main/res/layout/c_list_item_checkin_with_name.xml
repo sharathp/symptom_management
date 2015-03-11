@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:minHeight="?android:attr/listPreferredItemHeight"
+    android:paddingTop="5dp"
+    android:paddingLeft="16dp" >
+
+    <TextView
+        android:id="@+id/name_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Name"
+        android:textSize="16sp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/time_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Time"
+        android:layout_alignParentLeft="true"
+        android:textSize="12sp"
+        android:layout_alignBottom="@+id/pain_image_view"/>
+
+    <ImageView
+        android:id="@+id/pain_image_view"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:contentDescription="High Pain"
+        android:layout_below="@id/name_text_view"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="16dp" />
+
+    <ImageView
+        android:id="@+id/eat_image_view"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:contentDescription="Cannot eat"
+        android:layout_toLeftOf="@id/pain_image_view"
+        android:layout_alignBottom="@id/pain_image_view"
+        android:layout_marginRight="16dp" />
+
+    <ImageView
+        android:id="@+id/medicine_image_view"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:contentDescription="Medicine Taken"
+        android:layout_toLeftOf="@id/eat_image_view"
+        android:layout_alignBottom="@id/pain_image_view"
+        android:layout_marginRight="16dp" />
+
+</RelativeLayout>

@@ -11,7 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.sharathp.symptom_management.adapter.common.PatientCheckInListAdapter;
+import com.sharathp.symptom_management.adapter.common.CheckInListAdapter;
 import com.sharathp.symptom_management.data.provider.contract.PatientCheckInContract;
 import com.sharathp.symptom_management.fragment.BaseListFragment;
 import com.sharathp.symptom_management.model.PatientCheckIn;
@@ -24,7 +24,7 @@ public class PatientCheckInListFragment extends BaseListFragment implements Load
     private static final int PATIENT_CHECKINS_LOADER_ID = 0;
     private ListView mListView;
 
-    private PatientCheckInListAdapter mPatientCheckInListAdapter;
+    private CheckInListAdapter mCheckInListAdapter;
 
     private long mPatientId;
 
@@ -48,8 +48,8 @@ public class PatientCheckInListFragment extends BaseListFragment implements Load
     }
 
     private void initializeListViewAndAdapter() {
-        mPatientCheckInListAdapter = new PatientCheckInListAdapter(getActivity(), null, 0);
-        setListAdapter(mPatientCheckInListAdapter);
+        mCheckInListAdapter = new CheckInListAdapter(getActivity(), null, 0);
+        setListAdapter(mCheckInListAdapter);
         // this is required as setting list adapter above, shows the list view
         setListShown(false);
 
@@ -57,7 +57,7 @@ public class PatientCheckInListFragment extends BaseListFragment implements Load
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(final AdapterView<?> adapterView, final View view, final int position, final long l) {
-                final Cursor cursor = mPatientCheckInListAdapter.getCursor();
+                final Cursor cursor = mCheckInListAdapter.getCursor();
                 if (cursor != null && cursor.moveToPosition(position)) {
                     final PatientCheckIn patientCheckIn = PatientCheckInContract.PatientCheckInEntry.readPatientCheckIn(cursor);
                     Toast.makeText(getActivity(), patientCheckIn.getCheckinTime().toGMTString(), Toast.LENGTH_LONG);
@@ -84,13 +84,13 @@ public class PatientCheckInListFragment extends BaseListFragment implements Load
 
     @Override
     public void onLoadFinished(final Loader<Cursor> loader, final Cursor cursor) {
-        mPatientCheckInListAdapter.swapCursor(cursor);
+        mCheckInListAdapter.swapCursor(cursor);
         // show list view - list view will be initially hidden..
         setListShown(true);
     }
 
     @Override
     public void onLoaderReset(final Loader<Cursor> loader) {
-        mPatientCheckInListAdapter.swapCursor(null);
+        mCheckInListAdapter.swapCursor(null);
     }
 }
