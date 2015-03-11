@@ -19,10 +19,22 @@ import javax.inject.Inject;
 
 public class DefaultPatientCheckInDao extends DefaultDao<PatientCheckIn> implements PatientCheckInDao {
 
-    private static final String NAMED_CHECKIN_JOIN_TABLES =
+    private static final String VIRTUAL_PATIENT_LAST_CHECKIN_TABLE =
+            "(SELECT " + PatientCheckInTable.COLUMN_PATIENT_ID + ", MAX(" + PatientCheckInTable.COLUMN_CHECKIN_TIME + ") AS last_checkin_time" +
+            " FROM " + PatientCheckInTable.TABLE_NAME +
+            " GROUP BY " + PatientCheckInTable.COLUMN_PATIENT_ID + ")";
+
+    private static final String RECENT_CHECKIN_JOIN_TABLES =
             DoctorTable.TABLE_NAME + " d" +
             " INNER JOIN " + PatientTable.TABLE_NAME + " p ON d." + DoctorTable._ID + " = p." + PatientTable.COLUMN_DOCTOR_ID +
             " INNER JOIN " + PatientCheckInTable.TABLE_NAME + " c ON p." + PatientTable._ID + " = c." + PatientCheckInTable.COLUMN_PATIENT_ID;
+
+    private static final String ALL_PATIENTS_LAST_CHECKIN_JOIN_TABLES =
+            DoctorTable.TABLE_NAME + " d" +
+                    " INNER JOIN " + PatientTable.TABLE_NAME + " p ON d." + DoctorTable._ID + " = p." + PatientTable.COLUMN_DOCTOR_ID +
+                    " INNER JOIN " + PatientCheckInTable.TABLE_NAME + " c ON p." + PatientTable._ID + " = c." + PatientCheckInTable.COLUMN_PATIENT_ID +
+                    " INNER JOIN " + VIRTUAL_PATIENT_LAST_CHECKIN_TABLE + " lc ON c." + PatientCheckInTable.COLUMN_PATIENT_ID + " = lc." + PatientCheckInTable.COLUMN_PATIENT_ID +
+                    " AND c." + PatientCheckInTable.COLUMN_CHECKIN_TIME + " = lc.last_checkin_time";
 
     private static final Map<String, String> NAMED_CHECKIN_PROJECTION = new HashMap<String, String>();
 
@@ -100,7 +112,7 @@ public class DefaultPatientCheckInDao extends DefaultDao<PatientCheckIn> impleme
     @Override
     public Cursor getRecentCheckInsForDoctor(final long doctorId, final String[] projection, final int numEntries) {
         final SQLiteQueryBuilder sqLiteQueryBuilder = new SQLiteQueryBuilder();
-        sqLiteQueryBuilder.setTables(NAMED_CHECKIN_JOIN_TABLES);
+        sqLiteQueryBuilder.setTables(RECENT_CHECKIN_JOIN_TABLES);
         sqLiteQueryBuilder.setProjectionMap(NAMED_CHECKIN_PROJECTION);
 
         return sqLiteQueryBuilder.query(
@@ -118,10 +130,9 @@ public class DefaultPatientCheckInDao extends DefaultDao<PatientCheckIn> impleme
     @Override
     public Cursor getAllPatientsLastCheckInForDoctor(final long doctorId, final String[] projection) {
         final SQLiteQueryBuilder sqLiteQueryBuilder = new SQLiteQueryBuilder();
-        sqLiteQueryBuilder.setTables(NAMED_CHECKIN_JOIN_TABLES);
+        sqLiteQueryBuilder.setTables(ALL_PATIENTS_LAST_CHECKIN_JOIN_TABLES);
         sqLiteQueryBuilder.setProjectionMap(NAMED_CHECKIN_PROJECTION);
 
-        // TODO - fix this query
         return sqLiteQueryBuilder.query(
                 mDatabase,
                 projection,
