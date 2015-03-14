@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:paddingLeft="@dimen/activity_horizontal_margin"
+              android:paddingRight="@dimen/activity_horizontal_margin"
+              android:paddingTop="@dimen/activity_vertical_margin" >
+
+    <TextView
+        android:id="@+id/checkin_time_text_view"
+        android:text="Checkin Time @"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="12dp"/>
+
+    <TableLayout android:id="@+id/checkin_details_table"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_below="@id/checkin_time_text_view"
+                 android:layout_marginLeft="30dp"
+                 android:layout_marginTop="20dp">
+        <TableRow>
+            <TextView
+                android:text="@string/checkin_detail_pain_label"
+                android:padding="5dip"
+                android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/checkin_pain_text_view"
+                android:text="N/A"
+                android:gravity="right"
+                android:padding="5dip" />
+            <ImageView
+                android:id="@+id/pain_image_view"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:contentDescription="High Pain" />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:text="@string/checkin_detail_eating_label"
+                android:padding="5dip"
+                android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/checkin_eating_text_view"
+                android:text="N/A"
+                android:gravity="right"
+                android:padding="5dip" />
+            <ImageView
+                android:id="@+id/eat_image_view"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:contentDescription="Cannot eat" />
+        </TableRow>
+    </TableLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/checkin_medications_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/checkin_details_table"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="20dp" />
+
+</RelativeLayout>

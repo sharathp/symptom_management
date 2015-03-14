@@ -1,4 +1,4 @@
-package com.sharathp.symptom_management.activity;
+package com.sharathp.symptom_management.activity.common;
 
 import android.content.Intent;
 import android.os.Bundle;

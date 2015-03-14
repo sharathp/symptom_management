@@ -19,7 +19,7 @@ import android.widget.TextView;
 import com.sharathp.symptom_management.R;
 import com.sharathp.symptom_management.data.provider.contract.DoctorContract;
 import com.sharathp.symptom_management.data.provider.contract.PatientContract;
-import com.sharathp.symptom_management.fragment.BaseListFragment;
+import com.sharathp.symptom_management.fragment.common.BaseListFragment;
 import com.sharathp.symptom_management.login.Session;
 import com.sharathp.symptom_management.model.Patient;
 

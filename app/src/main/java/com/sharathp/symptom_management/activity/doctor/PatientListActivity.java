@@ -2,12 +2,11 @@ package com.sharathp.symptom_management.activity.doctor;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.sharathp.symptom_management.R;
-import com.sharathp.symptom_management.activity.BaseActivity;
+import com.sharathp.symptom_management.activity.common.BaseActivity;
 import com.sharathp.symptom_management.fragment.doctor.PatientAllDetailsFragment;
 import com.sharathp.symptom_management.fragment.doctor.PatientListFragment;
 import com.sharathp.symptom_management.login.Session;

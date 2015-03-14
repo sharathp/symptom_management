@@ -1,10 +1,8 @@
 package com.sharathp.symptom_management.activity.doctor;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 
-import com.sharathp.symptom_management.R;
-import com.sharathp.symptom_management.activity.BaseActivity;
+import com.sharathp.symptom_management.activity.common.BaseActivity;
 import com.sharathp.symptom_management.ui.DoctorDrawer;
 
 /**

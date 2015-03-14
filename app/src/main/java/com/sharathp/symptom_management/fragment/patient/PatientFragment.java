@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.sharathp.symptom_management.R;
-import com.sharathp.symptom_management.fragment.BaseFragment;
+import com.sharathp.symptom_management.fragment.common.BaseFragment;
 
 /**
  * Patient {@link Fragment}.

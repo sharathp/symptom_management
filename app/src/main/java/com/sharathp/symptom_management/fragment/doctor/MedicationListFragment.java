@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 import com.sharathp.symptom_management.R;
 import com.sharathp.symptom_management.data.provider.contract.PatientContract;
-import com.sharathp.symptom_management.fragment.BaseListFragment;
+import com.sharathp.symptom_management.fragment.common.BaseListFragment;
 import com.sharathp.symptom_management.model.Medication;
 
 import butterknife.ButterKnife;

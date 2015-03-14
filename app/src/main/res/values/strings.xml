@@ -36,4 +36,8 @@
     <string name="title_recent_checkins">Recent Checkins</string>
     <string name="title_all_patients_last_checkin">Last Checkin</string>
 
+    <string name="checkin_detail_pain_label">Pain</string>
+    <string name="checkin_detail_eating_label">Eating</string>
+    <string name="checkin_detail_time_format">Checkin Time @ %s</string>
+
 </resources>

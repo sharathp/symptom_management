@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import com.sharathp.symptom_management.adapter.common.CheckInListAdapter;
 import com.sharathp.symptom_management.data.provider.contract.PatientCheckInContract;
-import com.sharathp.symptom_management.fragment.BaseListFragment;
+import com.sharathp.symptom_management.fragment.common.BaseListFragment;
 import com.sharathp.symptom_management.model.PatientCheckIn;
 
 /**

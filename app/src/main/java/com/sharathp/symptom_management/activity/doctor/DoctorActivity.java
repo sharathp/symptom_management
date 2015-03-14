@@ -7,7 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.sharathp.symptom_management.R;
-import com.sharathp.symptom_management.activity.SettingsActivity;
+import com.sharathp.symptom_management.activity.common.SettingsActivity;
 import com.sharathp.symptom_management.fragment.doctor.DoctorFragment;
 import com.sharathp.symptom_management.login.Session;
 import com.sharathp.symptom_management.service.PatientService;

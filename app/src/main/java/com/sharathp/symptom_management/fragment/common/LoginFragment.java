@@ -1,4 +1,4 @@
-package com.sharathp.symptom_management.fragment;
+package com.sharathp.symptom_management.fragment.common;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;

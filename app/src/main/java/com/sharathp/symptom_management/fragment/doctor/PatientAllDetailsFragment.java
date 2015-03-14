@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 
 import com.sharathp.symptom_management.R;
 import com.sharathp.symptom_management.app.ui.widget.SlidingTabLayout;
-import com.sharathp.symptom_management.fragment.BaseFragment;
+import com.sharathp.symptom_management.fragment.common.BaseFragment;
 
 import java.lang.ref.WeakReference;
 

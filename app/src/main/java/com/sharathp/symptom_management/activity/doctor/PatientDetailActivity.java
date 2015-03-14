@@ -6,7 +6,7 @@ import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 
 import com.sharathp.symptom_management.R;
-import com.sharathp.symptom_management.activity.BaseActivity;
+import com.sharathp.symptom_management.activity.common.BaseActivity;
 import com.sharathp.symptom_management.fragment.doctor.PatientAllDetailsFragment;
 
 /**

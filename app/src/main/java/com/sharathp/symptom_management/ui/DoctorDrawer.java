@@ -14,7 +14,7 @@ import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.sharathp.symptom_management.R;
-import com.sharathp.symptom_management.activity.SettingsActivity;
+import com.sharathp.symptom_management.activity.common.SettingsActivity;
 import com.sharathp.symptom_management.activity.doctor.AllPatientsLastCheckinActivity;
 import com.sharathp.symptom_management.activity.doctor.DoctorActivity;
 import com.sharathp.symptom_management.activity.doctor.RecentCheckInsActivity;

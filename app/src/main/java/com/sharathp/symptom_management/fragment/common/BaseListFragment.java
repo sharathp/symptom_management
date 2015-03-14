@@ -1,11 +1,11 @@
-package com.sharathp.symptom_management.fragment;
+package com.sharathp.symptom_management.fragment.common;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.View;
 
-import com.sharathp.symptom_management.activity.BaseActivity;
+import com.sharathp.symptom_management.activity.common.BaseActivity;
 
 import butterknife.ButterKnife;
 

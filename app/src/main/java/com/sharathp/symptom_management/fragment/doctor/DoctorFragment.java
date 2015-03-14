@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.gc.materialdesign.views.ButtonRectangle;
 import com.sharathp.symptom_management.R;
 import com.sharathp.symptom_management.activity.doctor.PatientListActivity;
-import com.sharathp.symptom_management.fragment.BaseFragment;
+import com.sharathp.symptom_management.fragment.common.BaseFragment;
 import com.sharathp.symptom_management.login.Session;
 
 import butterknife.InjectView;

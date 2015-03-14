@@ -1,4 +1,4 @@
-package com.sharathp.symptom_management.activity;
+package com.sharathp.symptom_management.activity.common;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,7 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.sharathp.symptom_management.R;
-import com.sharathp.symptom_management.fragment.LoginFragment;
+import com.sharathp.symptom_management.fragment.common.LoginFragment;
 
 
 /**
