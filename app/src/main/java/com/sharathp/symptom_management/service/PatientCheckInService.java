@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.sharathp.symptom_management.app.SymptomManagementApplication;
+import com.sharathp.symptom_management.data.provider.contract.MedicationContract;
 import com.sharathp.symptom_management.data.provider.contract.PatientCheckInContract;
 import com.sharathp.symptom_management.data.provider.contract.PatientContract;
 import com.sharathp.symptom_management.http.SymptomManagementAPI;
@@ -111,10 +112,26 @@ public class PatientCheckInService extends IntentService {
 
     private long createCheckinMedication(final long checkinId, final MedicationIntake medicationIntake) {
         // This assumes the medication already exists
+        final long medicationId = getMedicationId(medicationIntake.getMedication().getServerId());
+        medicationIntake.getMedication().setId(medicationId);
+
         final ContentValues contentValues = PatientCheckInContract.PatientCheckInMedicationIntakeEntry.getContentValues(medicationIntake);
         final Uri patientCheckInUri = PatientCheckInContract.PatientCheckInMedicationIntakeEntry.buildCheckInMedicationsUri(checkinId);
         final Uri insertedUri = this.getContentResolver().insert(patientCheckInUri, contentValues);
         return ContentUris.parseId(insertedUri);
+    }
+
+    private long getMedicationId(final String serverId) {
+        final Cursor cursor = this.getContentResolver().query(
+                MedicationContract.MedicationEntry.CONTENT_URI,
+                new String[]{MedicationContract.MedicationEntry._ID},
+                MedicationContract.MedicationEntry.COLUMN_SERVER_ID + " = ?",
+                new String[]{serverId}, null);
+
+        if (cursor.moveToFirst()) {
+            return cursor.getLong(0);
+        }
+        return -1L;
     }
 
     private long getPatientId(final String serverId) {

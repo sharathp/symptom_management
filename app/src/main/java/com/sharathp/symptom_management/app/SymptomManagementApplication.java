@@ -3,6 +3,7 @@ package com.sharathp.symptom_management.app;
 import android.app.Application;
 import android.content.Context;
 
+import com.facebook.stetho.Stetho;
 import com.sharathp.symptom_management.BuildConfig;
 import com.sharathp.symptom_management.app.modules.RootModule;
 
@@ -26,6 +27,7 @@ public class SymptomManagementApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        setUpSteth();
     }
 
     /**
@@ -58,6 +60,16 @@ public class SymptomManagementApplication extends Application {
         } else {
             Timber.plant(new CrashReportingTree());
         }
+    }
+
+    private void setUpSteth() {
+        Stetho.initialize(
+            Stetho.newInitializerBuilder(this)
+                    .enableDumpapp(
+                            Stetho.defaultDumperPluginsProvider(this))
+                    .enableWebKitInspector(
+                            Stetho.defaultInspectorModulesProvider(this))
+                    .build());
     }
 
     private void initializeDependencyInjector() {

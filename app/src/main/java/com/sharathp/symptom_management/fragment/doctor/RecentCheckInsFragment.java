@@ -10,14 +10,12 @@ import android.support.v4.content.Loader;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.sharathp.symptom_management.adapter.common.NamedCheckInListAdapter;
 import com.sharathp.symptom_management.data.provider.contract.NamedCheckInContract;
-import com.sharathp.symptom_management.data.provider.contract.PatientCheckInContract;
 import com.sharathp.symptom_management.fragment.common.BaseListFragment;
+import com.sharathp.symptom_management.fragment.common.CheckInDetailsDialogFragment;
 import com.sharathp.symptom_management.login.Session;
-import com.sharathp.symptom_management.model.PatientCheckIn;
 
 /**
  * Fragment to display recent check-ins of all the patients of this doctor.
@@ -57,13 +55,9 @@ public class RecentCheckInsFragment extends BaseListFragment implements LoaderMa
         mListView = getListView();
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(final AdapterView<?> adapterView, final View view, final int position, final long l) {
-                final Cursor cursor = mNamedCheckInListAdapter.getCursor();
-                if (cursor != null && cursor.moveToPosition(position)) {
-                    // TODO - FIXME
-                    final PatientCheckIn patientCheckIn = PatientCheckInContract.PatientCheckInEntry.readPatientCheckIn(cursor);
-                    Toast.makeText(getActivity(), patientCheckIn.getCheckinTime().toGMTString(), Toast.LENGTH_LONG);
-                }
+            public void onItemClick(final AdapterView<?> adapterView, final View view, final int position, final long id) {
+                final CheckInDetailsDialogFragment fragment = CheckInDetailsDialogFragment.createInstance(id);
+                fragment.show(getFragmentManager(), "checkin-details");
             }
         });
     }
@@ -71,12 +65,10 @@ public class RecentCheckInsFragment extends BaseListFragment implements LoaderMa
     public Loader<Cursor> onCreateLoader(final int id, final Bundle args) {
         switch (id) {
             case RECENTS_CHECKINS_LOADER_ID:
-                final CursorLoader cursorLoader = new CursorLoader(getActivity(), getRecentCheckInsUri(),
+                return new CursorLoader(getActivity(), getRecentCheckInsUri(),
                         NamedCheckInContract.NamedCheckInEntry.ALL_COLUMNS, null, null, null);
-                return cursorLoader;
-            default:
-                return null;
         }
+        return null;
     }
 
     private Uri getRecentCheckInsUri() {

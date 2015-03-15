@@ -119,14 +119,13 @@ public class PatientCheckInContract extends SymptomManagementContract {
         public static final String COLUMN_MEDICATION_NAME = "medication_name";
         public static final String COLUMN_MEDICATION_ID = "medication_id";
         public static final String COLUMN_MEDICATION_SERVER_ID = "medication_server_id";
-        public static final String COLUMN_CHECKIN_ID = "checkin_id";
 
         public static final String[] ALL_COLUMNS = new String[]{
                 _ID,
                 COLUMN_MEDICATION_ID,
                 COLUMN_MEDICATION_NAME,
                 COLUMN_MEDICATION_TIME,
-                COLUMN_MEDICATION_SERVER_ID
+                COLUMN_MEDICATION_SERVER_ID,
         };
 
         public static final int _ID_INDEX = 0;

@@ -39,6 +39,8 @@ dependencies {
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.android.support:support-v4:21.0.3'
     compile 'com.android.support:recyclerview-v7:21.0.3'
+    compile 'com.facebook.stetho:stetho:1.0.1'
+    compile 'com.facebook.stetho:stetho-okhttp:1.0.1'
     compile('com.mikepenz.materialdrawer:library:1.0.2@aar') {
         transitive = true
     }

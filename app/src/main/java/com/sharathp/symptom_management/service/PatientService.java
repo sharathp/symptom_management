@@ -85,6 +85,7 @@ public class PatientService extends IntentService {
                 updateExistingPatient(existingPatientId, patient, doctorId);
                 Log.d(TAG, "Updated existing patient: " + existingPatientId);
             }
+            // FIXME - possible race-conditions, if we assume medications exist before patient's check-ins are loaded into database
             loadMedications(patient.getServerId());
             loadPatientCheckIns(patient.getServerId());
         }

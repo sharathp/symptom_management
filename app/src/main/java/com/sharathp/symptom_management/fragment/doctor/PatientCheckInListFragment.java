@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.sharathp.symptom_management.adapter.common.CheckInListAdapter;
 import com.sharathp.symptom_management.data.provider.contract.PatientCheckInContract;
 import com.sharathp.symptom_management.fragment.common.BaseListFragment;
+import com.sharathp.symptom_management.fragment.common.CheckInDetailsDialogFragment;
 import com.sharathp.symptom_management.model.PatientCheckIn;
 
 /**
@@ -43,6 +44,12 @@ public class PatientCheckInListFragment extends BaseListFragment implements Load
         }
     }
 
+    @Override
+    public void onListItemClick(final ListView l, final View v, final int position, final long id) {
+        final CheckInDetailsDialogFragment fragment = CheckInDetailsDialogFragment.createInstance(id);
+        fragment.show(getFragmentManager(), "checkin-details");
+    }
+
     private void loadPatientCheckIns() {
         getLoaderManager().initLoader(PATIENT_CHECKINS_LOADER_ID, null, this);
     }
@@ -56,12 +63,9 @@ public class PatientCheckInListFragment extends BaseListFragment implements Load
         mListView = getListView();
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(final AdapterView<?> adapterView, final View view, final int position, final long l) {
-                final Cursor cursor = mCheckInListAdapter.getCursor();
-                if (cursor != null && cursor.moveToPosition(position)) {
-                    final PatientCheckIn patientCheckIn = PatientCheckInContract.PatientCheckInEntry.readPatientCheckIn(cursor);
-                    Toast.makeText(getActivity(), patientCheckIn.getCheckinTime().toGMTString(), Toast.LENGTH_LONG);
-                }
+            public void onItemClick(final AdapterView<?> adapterView, final View view, final int position, final long id) {
+                final CheckInDetailsDialogFragment fragment = CheckInDetailsDialogFragment.createInstance(id);
+                fragment.show(getFragmentManager(), "checkin-details");
             }
         });
     }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Base64;
 
+import com.facebook.stetho.okhttp.StethoInterceptor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sharathp.symptom_management.app.ForApplication;
@@ -94,6 +95,8 @@ public class RestClientModule {
     OkClient provideOkClient() {
         final OkHttpClient okHttpClient = new OkHttpClient();
         final OkClient okClient = new OkClient(okHttpClient);
+        // FIXME - move to okHttp 2.2+ to fix this
+        // okClient.networkInterceptors().add(new StethoInterceptor());
         return okClient;
     }
 

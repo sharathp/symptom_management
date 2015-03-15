@@ -39,9 +39,6 @@ public class DefaultCheckinMedicationDao extends DefaultDao<MedicationIntake> im
 
         CHECKIN_MEDICATION_MEDICATION_PROJECTION.put(PatientCheckInContract.PatientCheckInMedicationIntakeEntry.COLUMN_MEDICATION_SERVER_ID,
                 "m." + MedicationTable.COLUMN_SERVER_ID + " AS " + PatientCheckInContract.PatientCheckInMedicationIntakeEntry.COLUMN_MEDICATION_SERVER_ID);
-
-        CHECKIN_MEDICATION_MEDICATION_PROJECTION.put(PatientCheckInContract.PatientCheckInMedicationIntakeEntry.COLUMN_CHECKIN_ID,
-                "c." + CheckinMedicationTable.COLUMN_CHECKIN_ID + " AS " + PatientCheckInContract.PatientCheckInMedicationIntakeEntry.COLUMN_CHECKIN_ID);
     }
 
     @Inject
