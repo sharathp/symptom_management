@@ -38,6 +38,7 @@
 
     <string name="checkin_detail_pain_label">Pain</string>
     <string name="checkin_detail_eating_label">Eating</string>
-    <string name="checkin_detail_time_format">Checkin Time @ %s</string>
+    <string name="checkin_detail_time_format">Check-in @ %s</string>
+    <string name="checkin_medications_table_label">Medications</string>
 
 </resources>

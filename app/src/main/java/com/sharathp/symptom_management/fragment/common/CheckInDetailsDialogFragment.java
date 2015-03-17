@@ -2,7 +2,6 @@ package com.sharathp.symptom_management.fragment.common;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.net.Uri;
@@ -12,12 +11,11 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.sharathp.symptom_management.R;
@@ -26,9 +24,9 @@ import com.sharathp.symptom_management.data.provider.contract.PatientCheckInCont
 import com.sharathp.symptom_management.model.MedicationIntake;
 import com.sharathp.symptom_management.model.PatientCheckIn;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -40,11 +38,8 @@ public class CheckInDetailsDialogFragment extends DialogFragment  implements Loa
 
     private static final String CHECKIN_ID_ARG = "checkinId";
 
-    @InjectView(R.id.checkin_medications_view)
-    RecyclerView mRecyclerView;
-
-    @InjectView(R.id.checkin_time_text_view)
-    TextView mCheckinTimeTextView;
+    @InjectView(R.id.checkin_medications_table)
+    TableLayout mMedicationsTable;
 
     @InjectView(R.id.checkin_pain_text_view)
     TextView mPainTextView;
@@ -57,6 +52,8 @@ public class CheckInDetailsDialogFragment extends DialogFragment  implements Loa
 
     @InjectView(R.id.eat_image_view)
     ImageView mEatingImageView;
+
+    private View rootView;
 
     private long mCheckinId;
 
@@ -78,11 +75,11 @@ public class CheckInDetailsDialogFragment extends DialogFragment  implements Loa
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
         final LayoutInflater inflater = getActivity().getLayoutInflater();
-        final View view = inflater.inflate(R.layout.c_fragment_checkin_details, null);
+        rootView = inflater.inflate(R.layout.c_fragment_checkin_details, null);
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         // FIXME - Refactor title and button text to string resources..
-        builder.setView(view)
+        builder.setView(rootView)
                .setTitle("Checkin Details")
                .setNeutralButton("OK", new DialogInterface.OnClickListener() {
                    @Override
@@ -91,9 +88,7 @@ public class CheckInDetailsDialogFragment extends DialogFragment  implements Loa
                    }
                });
 
-        ButterKnife.inject(this, view);
-
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        ButterKnife.inject(this, rootView);
 
         retrieveCheckInData();
 
@@ -128,7 +123,7 @@ public class CheckInDetailsDialogFragment extends DialogFragment  implements Loa
     public void onLoadFinished(final Loader<Cursor> loader, final Cursor cursor) {
         switch (loader.getId()) {
             case CHECKIN_LOADER_ID:
-                //TODO - should we move this to readPatientCheckIn()??
+                //TODO - should we move this cursor traversal to readPatientCheckIn()??
                 cursor.moveToNext();
                 final PatientCheckIn patientCheckIn = PatientCheckInContract.PatientCheckInEntry.readPatientCheckIn(cursor);
                 populateCheckInData(patientCheckIn);
@@ -155,16 +150,32 @@ public class CheckInDetailsDialogFragment extends DialogFragment  implements Loa
     }
 
     private void populateCheckInData(final PatientCheckIn patientCheckIn) {
-        mCheckinTimeTextView.setText(CheckInUtils.getDateString(patientCheckIn.getCheckinTime(), getActivity()));
         mEatingTextView.setText(patientCheckIn.getEating().name());
         mEatingImageView.setImageResource(CheckInUtils.getEatImage(patientCheckIn.getEating()));
         mPainTextView.setText(patientCheckIn.getPain().name());
         mPainImageView.setImageResource(CheckInUtils.getPainImage(patientCheckIn.getPain()));
+
+        final String title = getResources().getString(R.string.checkin_detail_time_format,
+                CheckInUtils.getDateString(patientCheckIn.getCheckinTime(), getActivity()));
+        getDialog().setTitle(title);
     }
 
     private void populateCheckInMedications(final List<MedicationIntake> medicationsIntake) {
-        final MedicationsAdapter medicationsAdapter = new MedicationsAdapter(medicationsIntake, getActivity());
-        mRecyclerView.setAdapter(medicationsAdapter);
+        if (medicationsIntake == null || medicationsIntake.isEmpty()) {
+            final TableRow tableRow = new TableRow(getActivity());
+            tableRow.addView(getTextViewInstance("-None-"));
+
+            mMedicationsTable.addView(tableRow);
+            return;
+        }
+
+        for (final MedicationIntake medicationIntake: medicationsIntake) {
+            final TableRow tableRow = new TableRow(getActivity());
+            tableRow.addView(getMedicationView(medicationIntake.getMedication().getName()));
+            // TODO - remove this?
+            // tableRow.addView(getMedicationTimeView(medicationIntake.getTime()));
+            mMedicationsTable.addView(tableRow);
+        }
     }
 
     @Override
@@ -172,49 +183,18 @@ public class CheckInDetailsDialogFragment extends DialogFragment  implements Loa
         // check-in is immutable, so, no-op..
     }
 
-    static class MedicationsAdapter extends RecyclerView.Adapter<MedicationIntakeViewHolder> {
-        private final List<MedicationIntake> mMedicationsIntake;
-        private final WeakReference<Context> mContext;
 
-        MedicationsAdapter(final List<MedicationIntake> medicationsIntake, final Context context) {
-            this.mMedicationsIntake = medicationsIntake;
-            this.mContext = new WeakReference<Context>(context);
-        }
-
-        @Override
-        public MedicationIntakeViewHolder onCreateViewHolder(final ViewGroup viewGroup, final int i) {
-            final View view = LayoutInflater.from(viewGroup.getContext()).inflate(android.R.layout.simple_list_item_2, null);
-            final MedicationIntakeViewHolder medicationIntakeViewHolder = new MedicationIntakeViewHolder(view);
-            return medicationIntakeViewHolder;
-        }
-
-        @Override
-        public void onBindViewHolder(final MedicationIntakeViewHolder medicationViewHolder, final int i) {
-            final MedicationIntake medicationIntake = mMedicationsIntake.get(i);
-            if (medicationIntake == null) {
-                return;
-            }
-            medicationViewHolder.mMedicationNameTextView.setText(medicationIntake.getMedication().getName());
-            medicationViewHolder.mMedicationTimeTextView.setText(CheckInUtils.getDateString(medicationIntake.getTime(), mContext.get()));
-        }
-
-        @Override
-        public int getItemCount() {
-            return (null != mMedicationsIntake ? mMedicationsIntake.size() : 0);
-        }
+    private View getMedicationView(final String medicationName) {
+        return getTextViewInstance(medicationName);
     }
 
-    static class MedicationIntakeViewHolder extends RecyclerView.ViewHolder {
+    private View getMedicationTimeView(final Date time) {
+        return getTextViewInstance(CheckInUtils.getDateString(time, getActivity()).toString());
+    }
 
-        @InjectView(android.R.id.text1)
-        TextView mMedicationNameTextView;
-
-        @InjectView(android.R.id.text2)
-        TextView mMedicationTimeTextView;
-
-        MedicationIntakeViewHolder(final View itemView) {
-            super(itemView);
-            ButterKnife.inject(this, itemView);
-        }
+    private TextView getTextViewInstance(final String text) {
+        final TextView textView = new TextView(getActivity());
+        textView.setText(text);
+        return textView;
     }
 }
